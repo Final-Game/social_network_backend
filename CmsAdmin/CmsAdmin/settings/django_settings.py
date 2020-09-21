@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "user_content",
     "chat_management",
+    "media_content",
 ]
 
 MIDDLEWARE = [
