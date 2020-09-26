@@ -23,3 +23,7 @@ class Profile(BaseModel):
     school = models.CharField(blank=True, null=True, max_length=200)
     address = models.CharField(blank=True, null=True, max_length=200)
     bio = models.CharField(blank=True, null=True, max_length=500)
+
+    @property
+    def full_name(self):
+        return f"{self.first_name or ''} {self.last_name or ''}"

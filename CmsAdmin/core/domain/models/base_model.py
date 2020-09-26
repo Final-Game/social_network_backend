@@ -20,3 +20,6 @@ class BaseModel(models.Model):
             return ""
 
         return id_string[:8]
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__} - {self.short_id}"

@@ -1,3 +1,4 @@
+from typing import Iterable, Optional
 from django.db import models
 
 from core.domain.models.base_model import BaseModel
