@@ -9,3 +9,4 @@ from .user_event import UserEvent
 from .post import Post
 from .user_comment_post import UserCommentPost
 from .user_react import UserReact
+from .access_token import AccessToken
