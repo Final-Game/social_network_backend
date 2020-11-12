@@ -126,3 +126,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+TOKEN_EXPIRATION_DURATION = 86400 * 30
+
+JWT_PRIVATE_SIGNATURE: str = (
+    "ip06kHDxHPDnI6wKavavpKKhTm02RC7dqZzngFGB3jr7BCKeFl4BtLROrcRm"
+)
