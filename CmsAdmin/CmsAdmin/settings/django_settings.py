@@ -35,12 +35,16 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "jet.dashboard",
     "jet",
+    # system
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # lib
+    "graphene_django",
+    # own app
     "user_content",
     "chat_management",
     "media_content",
@@ -54,6 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "CmsAdmin.urls"
@@ -132,3 +137,5 @@ TOKEN_EXPIRATION_DURATION = 86400 * 30
 JWT_PRIVATE_SIGNATURE: str = (
     "ip06kHDxHPDnI6wKavavpKKhTm02RC7dqZzngFGB3jr7BCKeFl4BtLROrcRm"
 )
+
+GRAPHENE = {"SCHEMA": "CmsAdmin.schema.schema"}
