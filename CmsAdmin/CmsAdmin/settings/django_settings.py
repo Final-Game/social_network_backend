@@ -27,7 +27,7 @@ SECRET_KEY = "-=2q3p#92yv=3s2asq%mt=6%)hb8$cxjm*j03i)m+ghv)&@6(h"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_os_env("IS_DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
