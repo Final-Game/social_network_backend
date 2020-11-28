@@ -1,3 +1,5 @@
+from user_content.domain.enums.marital_status_enum import MaritalStatusEnum
+from user_content.domain.enums.account_gender_enum import AccountGenderEnum
 from django.db import models
 
 from core.domain.models.base_model import BaseModel
@@ -14,10 +16,17 @@ class Profile(BaseModel):
     phone_number = models.CharField(blank=True, null=True, max_length=15)
     first_name = models.CharField(blank=True, null=True, max_length=15)
     last_name = models.CharField(blank=True, null=True, max_length=15)
-    gender = models.BooleanField(blank=True, null=True)
+    gender = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=AccountGenderEnum.to_choices(),
+    )
 
     marital_status = models.IntegerField(
-        blank=True, null=True, help_text="Marital status: 0 - Single, 1 - Got married"
+        blank=True,
+        null=True,
+        help_text="Marital status: 0 - Single, 1 - Got married",
+        choices=MaritalStatusEnum.to_choices(),
     )
     birth_date = models.DateField(blank=True, null=True)
     school = models.CharField(blank=True, null=True, max_length=200)
