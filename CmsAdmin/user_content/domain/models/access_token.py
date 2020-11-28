@@ -53,14 +53,17 @@ class AccessToken(BaseModel):
         choices=AccessTokenStatusEnum.to_choices(),
     )
 
-    def generate_token(self):
+    def generate_token(self, is_refresh: bool = False):
+        exp_time: int = self.exp
+        if is_refresh:
+            exp_time += 30 * 86400
         return jwt.encode(
             {
-                "jti": self.id,
+                "jti": str(self.id),
                 "scopes": json.loads(self.scopes),
-                "sub": self.sub_id,
+                "sub": str(self.sub_id),
                 "iss": self.iss,
-                "exp": self.exp,
+                "exp": exp_time,
                 "iat": self.iat,
                 "user_type": self.sub.type,
             },

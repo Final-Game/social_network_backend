@@ -1,3 +1,4 @@
+from user_content.domain.managers.account_manager import AccountManager
 from user_content.domain.enums.account_type_enum import AccountTypeEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
@@ -20,12 +21,24 @@ class Account(BaseModel):
         choices=AccountTypeEnum.to_choices(),
     )
 
+    objects: AccountManager = AccountManager()
+
+    def generate_token(self):
+        from user_content.domain.models import AccessToken
+
+        access_token: AccessToken = AccessToken.objects.create(sub=self)
+        return {
+            "auth_token": access_token.generate_token(),
+            "refresh_token": access_token.generate_token(is_refresh=True),
+        }
+
     @classmethod
     def check_email(cls, email: str):
         from user_content.domain.models.profile import Profile
 
         return Profile.objects.filter(email=email).first() is None
 
+    @classmethod
     def check_username(cls, username: str):
         return cls.objects.filter(username=username).first() is None
 
