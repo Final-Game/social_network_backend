@@ -9,6 +9,7 @@ bus: Bus = Bus()
 
 class LoginAccountMutation(graphene.Mutation):
 
+    account_id = graphene.String(description="Account id")
     auth_token = graphene.String(description="Auth token to access data by user")
     refresh_token = graphene.String(description="Token is used to refresh new token")
 
