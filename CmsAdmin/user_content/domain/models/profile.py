@@ -10,7 +10,7 @@ class Profile(BaseModel):
     cover = models.CharField(
         blank=True, null=True, max_length=200, help_text="Cover url"
     )
-    email = models.CharField(blank=True, null=True, max_length=30)
+    email = models.CharField(blank=True, null=True, max_length=30, unique=True)
     phone_number = models.CharField(blank=True, null=True, max_length=15)
     first_name = models.CharField(blank=True, null=True, max_length=15)
     last_name = models.CharField(blank=True, null=True, max_length=15)
