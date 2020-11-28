@@ -7,8 +7,8 @@ from .update_account_profile_mutation import UpdateAccountProfileMutation
 
 
 class Mutation(graphene.ObjectType):
-    test_mutation = TestMutation.Field()
-    register_account_mutation = RegisterAccountMutation.Field()
-    login_account_mutation = LoginAccountMutation.Field()
-    change_account_password_mutation = ChangeAccountPasswordMutation.Field()
-    update_account_profile_mutation = UpdateAccountProfileMutation.Field()
+    test = TestMutation.Field()
+    register_account = RegisterAccountMutation.Field()
+    login_account = LoginAccountMutation.Field()
+    change_account_password = ChangeAccountPasswordMutation.Field()
+    update_account_profile = UpdateAccountProfileMutation.Field()
