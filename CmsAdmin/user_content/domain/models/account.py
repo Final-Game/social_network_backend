@@ -1,6 +1,7 @@
 from user_content.domain.enums.account_type_enum import AccountTypeEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
+from django.contrib.auth.hashers import make_password
 
 
 class Account(BaseModel):
@@ -18,3 +19,25 @@ class Account(BaseModel):
         default=int(AccountTypeEnum.NORMAL),
         choices=AccountTypeEnum.to_choices(),
     )
+
+    @classmethod
+    def check_email(cls, email: str):
+        from user_content.domain.models.profile import Profile
+
+        return Profile.objects.filter(email=email).first() is None
+
+    def check_username(cls, username: str):
+        return cls.objects.filter(username=username).first() is None
+
+    @classmethod
+    def new_normal_account(cls, username: str, password: str, email: str):
+        from user_content.domain.models.profile import Profile
+
+        profile: Profile = Profile.objects.create(email=email)
+
+        return cls(
+            username=username,
+            password=make_password(password),
+            type=int(AccountTypeEnum.NORMAL),
+            profile=profile,
+        )
