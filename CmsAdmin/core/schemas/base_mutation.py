@@ -18,7 +18,7 @@ class BaseMutation(graphene.Mutation):
     def authenticate(cls, *args, **kwargs):
         for auth_class in cls.authentication_classes:
             auth_class.check_permission(
-                auth_token=kwargs["auth_token"], account_id=kwargs.get("account_id")
+                auth_token=kwargs.pop("auth_token"), account_id=kwargs.get("account_id")
             )
 
         return True

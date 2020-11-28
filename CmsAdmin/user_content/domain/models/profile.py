@@ -1,3 +1,4 @@
+from datetime import date
 from user_content.domain.enums.marital_status_enum import MaritalStatusEnum
 from user_content.domain.enums.account_gender_enum import AccountGenderEnum
 from django.db import models
@@ -36,3 +37,29 @@ class Profile(BaseModel):
     @property
     def full_name(self):
         return f"{self.first_name or ''} {self.last_name or ''}"
+
+    def update_data(
+        self,
+        avatar: str,
+        cover: str,
+        email: str,
+        phone_number: str,
+        first_name: str,
+        last_name: str,
+        gender: int,
+        marital_status: int,
+        birth_date: date,
+        school: str,
+        address: str,
+        bio: str,
+    ):
+        self.avatar = avatar
+        self.cover, self.email, self.phone_number = cover, email, phone_number
+        self.first_name, self.last_name = first_name, last_name
+        self.gender, self.marital_status, self.birth_date = (
+            gender,
+            marital_status,
+            birth_date,
+        )
+        self.school, self.address, self.bio = school, address, bio
+        return

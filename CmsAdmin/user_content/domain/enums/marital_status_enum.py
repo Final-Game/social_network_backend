@@ -15,3 +15,12 @@ class MaritalStatusEnum(BaseEnum):
     @classmethod
     def to_dict(cls) -> dict:
         return {int(cls.SINGLE): "SINGLE", int(cls.MARRIED): "MARRIED"}
+
+    @classmethod
+    def from_value(cls, val_str: str):
+        if val_str == "SINGLE":
+            return int(cls.SINGLE)
+        elif val_str == "MARRIED":
+            return int(cls.MARRIED)
+        else:
+            return None
