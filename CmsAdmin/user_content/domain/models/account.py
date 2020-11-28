@@ -32,6 +32,9 @@ class Account(BaseModel):
             "refresh_token": access_token.generate_token(is_refresh=True),
         }
 
+    def change_password(self, new_password):
+        self.password = make_password(new_password)
+
     @classmethod
     def check_email(cls, email: str):
         from user_content.domain.models.profile import Profile

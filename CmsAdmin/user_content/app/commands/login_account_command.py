@@ -28,4 +28,6 @@ class LoginAccountCommandHandler(CommandHandler):
         if not check_password(command.dto.password, existed_account.password):
             raise BaseApiException("Wrong password.")
 
-        return LoginAccountResponseDto(**existed_account.generate_token())
+        return LoginAccountResponseDto(
+            account_id=str(existed_account.id), **existed_account.generate_token()
+        )
