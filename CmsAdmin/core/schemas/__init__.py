@@ -1,1 +1,1 @@
-from .base_mutation import BaseMutation
+from .base_auth import BaseAuth

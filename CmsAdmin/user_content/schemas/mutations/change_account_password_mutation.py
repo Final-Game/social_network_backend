@@ -5,12 +5,12 @@ from user_content.app.commands.change_account_password_command import (
 from core.authenticates.account_authentication import AccountAuthentication
 import graphene
 from core.app.bus import Bus
-from core.schemas.base_mutation import BaseMutation, authenticate_permission
+from core.schemas.base_auth import BaseAuth, authenticate_permission
 
 bus: Bus = Bus()
 
 
-class ChangeAccountPasswordMutation(BaseMutation):
+class ChangeAccountPasswordMutation(graphene.Mutation, BaseAuth):
     status = graphene.String(default_value="Success")
 
     authentication_classes = [AccountAuthentication]

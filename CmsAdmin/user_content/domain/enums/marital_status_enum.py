@@ -24,3 +24,12 @@ class MaritalStatusEnum(BaseEnum):
             return int(cls.MARRIED)
         else:
             return None
+
+    @classmethod
+    def to_value(cls, val_int: int):
+        if val_int == cls.SINGLE:
+            return "SINGLE"
+        elif val_int == cls.MARRIED:
+            return "MARRIED"
+        else:
+            return None

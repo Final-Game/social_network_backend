@@ -35,3 +35,14 @@ class AccountGenderEnum(BaseEnum):
             return int(cls.UN_KNOWN)
         else:
             return None
+
+    @classmethod
+    def to_value(cls, val_int: int):
+        if val_int == cls.MALE:
+            return "MALE"
+        elif val_int == cls.FEMALE:
+            return "FEMALE"
+        elif val_int == cls.UN_KNOWN:
+            return "UN_KNOWN"
+        else:
+            return None

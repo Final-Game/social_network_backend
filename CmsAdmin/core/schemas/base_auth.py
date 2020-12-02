@@ -11,7 +11,7 @@ def authenticate_permission(method):
     return inner
 
 
-class BaseMutation(graphene.Mutation):
+class BaseAuth(object):
     authentication_classes: List[BaseAuthentication] = []
 
     @classmethod
@@ -22,7 +22,3 @@ class BaseMutation(graphene.Mutation):
             )
 
         return True
-
-    @classmethod
-    def mutate(cls, *args, **kwargs):
-        return cls(*args, **kwargs)

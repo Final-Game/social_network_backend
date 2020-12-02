@@ -3,14 +3,14 @@ from user_content.app.commands.update_account_profile_command import (
     UpdateAccountProfileCommand,
 )
 import graphene
-from core.schemas.base_mutation import BaseMutation, authenticate_permission
+from core.schemas.base_auth import BaseAuth, authenticate_permission
 from core.app.bus import Bus
 from core.authenticates.account_authentication import AccountAuthentication
 
 bus: Bus = Bus()
 
 
-class UpdateAccountProfileMutation(BaseMutation):
+class UpdateAccountProfileMutation(graphene.Mutation, BaseAuth):
     status = graphene.String(default_value="Success")
 
     authentication_classes = [AccountAuthentication]
