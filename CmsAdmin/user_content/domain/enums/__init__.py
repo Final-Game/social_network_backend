@@ -2,3 +2,4 @@ from .access_token_device_enum import AccessTokenDeviceEnum
 from .access_token_status_enum import AccessTokenStatusEnum
 from .account_gender_enum import AccountGenderEnum
 from .marital_status_enum import MaritalStatusEnum
+from .model_status_enum import ModelStatusEnum

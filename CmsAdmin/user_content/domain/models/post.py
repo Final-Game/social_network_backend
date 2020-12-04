@@ -1,3 +1,4 @@
+from user_content.domain.enums.model_status_enum import ModelStatusEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
 
@@ -14,3 +15,20 @@ class Post(BaseModel):
     base = models.ForeignKey(
         to="self", on_delete=models.SET_NULL, blank=True, null=True
     )
+
+    medias = models.ManyToManyField(
+        "media_content.Media",
+        through="media_content.MediaPost",
+        through_fields=["post", "media"],
+    )
+
+    status = models.IntegerField(
+        blank=False,
+        null=False,
+        choices=ModelStatusEnum.to_choices(),
+        default=int(ModelStatusEnum.ACTIVE),
+    )
+
+    @classmethod
+    def create_new_post(cls, account, content: str):
+        return cls(account=account, content=content)

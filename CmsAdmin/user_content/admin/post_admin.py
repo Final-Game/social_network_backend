@@ -14,5 +14,7 @@ class PostAdmin(BaseAdmin):
         "content",
         "type",
         linkify("base"),
+        "status",
     ]
-    fields = ["own_reaction", "account", "content", "type", "base"]
+    fields = ["own_reaction", "account", "content", "type", "base", "status"]
+    list_filter = ["status"]
