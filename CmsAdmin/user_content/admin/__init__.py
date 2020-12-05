@@ -10,3 +10,5 @@ from .post_admin import PostAdmin
 from .user_react_post_admin import UserReactPostAdmin
 from .user_comment_post_admin import UserCommentPostAdmin
 from .user_react_comment_admin import UserReactCommentAdmin
+from .user_story_admin import UserStoryAdmin
+from .story_viewer_admin import StoryViewerAdmin
