@@ -30,7 +30,8 @@ class Account(BaseModel):
     objects: AccountManager = AccountManager()
 
     def save(self, *args, **kwargs) -> None:
-        self.profile.save()
+        if self.profile:
+            self.profile.save()
         super(Account, self).save(*args, **kwargs)
 
     def generate_token(self):

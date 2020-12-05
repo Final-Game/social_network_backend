@@ -5,3 +5,4 @@ from .user_react_post_command import UserReactPostCommand
 from .user_react_comment_command import UserReactCommentCommand
 from .user_delete_comment_command import UserDeleteCommentCommand
 from .user_delete_post_command import UserDeletePostCommand
+from .user_follow_user_command import UserFollowUserCommand
