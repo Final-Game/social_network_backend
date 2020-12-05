@@ -8,6 +8,7 @@ from .user_create_post_mutation import UserCreatePostMutation
 from .user_comment_in_post_mutation import UserCommentInPostMutation
 from .user_react_post_mutation import UserReactPostMutation
 from .user_react_comment_mutation import UserReactCommentMutation
+from .user_delete_comment_mutation import UserDeleteCommentMutation
 
 
 class Mutation(graphene.ObjectType):
@@ -20,3 +21,4 @@ class Mutation(graphene.ObjectType):
     user_comment_in_post = UserCommentInPostMutation.Field()
     user_react_post = UserReactPostMutation.Field()
     user_react_comment = UserReactCommentMutation.Field()
+    user_delete_comment = UserDeleteCommentMutation.Field()
