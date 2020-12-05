@@ -1,3 +1,4 @@
+from user_content.domain.managers.post_manager import PostManager
 from user_content.domain.enums.model_status_enum import ModelStatusEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
@@ -28,6 +29,8 @@ class Post(BaseModel):
         choices=ModelStatusEnum.to_choices(),
         default=int(ModelStatusEnum.ACTIVE),
     )
+
+    objects: PostManager = PostManager()
 
     @classmethod
     def create_new_post(cls, account, content: str):

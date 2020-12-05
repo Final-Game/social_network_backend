@@ -4,3 +4,4 @@ from .login_account_response_dto import LoginAccountResponseDto
 from .change_account_password_dto import ChangeAccountPasswordDto
 from .update_account_profile_dto import UpdateAccountProfileDto
 from .user_create_post_dto import UserCreatePostDto
+from .comment_dto import CommentDto
