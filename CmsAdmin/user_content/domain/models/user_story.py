@@ -1,3 +1,4 @@
+from user_content.domain.exceptions.uc_domain_exception import UcDomainException
 from user_content.domain.enums.model_status_enum import ModelStatusEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
@@ -5,7 +6,7 @@ from core.domain.models.base_model import BaseModel
 
 class UserStory(BaseModel):
     account = models.ForeignKey(
-        to="Account", on_delete=models.CASCADE, blank=False, null=False
+        to="Account", on_delete=models.CASCADE, blank=True, null=True
     )
     content = models.CharField(max_length=300, null=True, blank=True)
     media_url = models.CharField(max_length=500, null=True, blank=True)
@@ -18,8 +19,16 @@ class UserStory(BaseModel):
     )
 
     viewers = models.ManyToManyField(
-        "Account", through="StoryViewer", through_fields=["story", "viewer"], related_name="story_viewers"
+        "Account",
+        through="StoryViewer",
+        through_fields=["story", "viewer"],
+        related_name="story_viewers",
     )
+
+    def save(self, *args, **kwargs) -> None:
+        if not (self.media_url or self.content):
+            raise UcDomainException("Invalid data")
+        return super().save(*args, **kwargs)
 
     class Meta:
         db_table = "user_content_user_story"
