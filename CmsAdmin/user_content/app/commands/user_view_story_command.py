@@ -1,3 +1,5 @@
+from user_content.domain.models.story_viewer import StoryViewer
+from user_content.app.dtos.react_tory_dto import ReactStoryDto
 from django.db import transaction
 
 from core.common.base_api_exception import BaseApiException
@@ -9,10 +11,14 @@ from core.app.bus import Command, CommandHandler
 class UserViewStoryCommand(Command):
     account_id: str
     story_id: str
+    dto: ReactStoryDto
 
-    def __init__(self, account_id: str, story_id: str) -> None:
+    def __init__(
+        self, account_id: str, story_id: str, dto: ReactStoryDto = ReactStoryDto()
+    ) -> None:
         self.account_id = account_id
         self.story_id = story_id
+        self.dto = dto
 
 
 class UserViewStoryCommandHandler(CommandHandler):
@@ -29,6 +35,11 @@ class UserViewStoryCommandHandler(CommandHandler):
             if account not in story.viewers.all():
                 story.viewers.add(account)
                 story.save()
+            storyviewer: StoryViewer = StoryViewer.objects.get(
+                story=story, viewer=account
+            )
+            storyviewer.change_react_type(command.dto.type)
+            storyviewer.save()
 
         return True
 

@@ -16,3 +16,6 @@ class StoryViewer(BaseModel):
     class Meta:
         db_table = "user_content_story_viewer"
         unique_together = ["story", "viewer"]
+
+    def change_react_type(self, type: str = None):
+        self.react_type = ReactTypeEnum.from_value(type)

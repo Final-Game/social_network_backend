@@ -1,3 +1,4 @@
+from typing import List
 from core.common.base_enum import BaseEnum
 
 
@@ -15,6 +16,10 @@ class ReactTypeEnum(BaseEnum):
     @classmethod
     def to_dict(cls) -> dict:
         return {int(cls.LIKE): "Like", int(cls.LOVE): "Love"}
+
+    @classmethod
+    def values(cls) -> List[str]:
+        return ["LIKE", "LOVE"]
 
     @classmethod
     def from_value(cls, val_str: str):
