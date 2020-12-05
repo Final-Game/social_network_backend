@@ -1,3 +1,4 @@
+from core.common.base_api_exception import BaseApiException
 from django.db import transaction
 from user_content.domain.models.account import Account
 from core.app.bus import Command, CommandHandler
@@ -10,6 +11,12 @@ class UserFollowUserCommand(Command):
     def __init__(self, account_id: str, target_id: str) -> None:
         self.account_id = account_id
         self.target_id = target_id
+
+        self.validate()
+
+    def validate(self):
+        if self.account_id == self.target_id:
+            raise BaseApiException("Can't follow owner.")
 
 
 class UserFollowUserCommandHandler(CommandHandler):
