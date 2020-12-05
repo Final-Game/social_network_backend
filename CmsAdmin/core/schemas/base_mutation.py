@@ -8,5 +8,10 @@ class BaseMutation(graphene.Mutation):
         return bus
 
     @classmethod
+    @property
+    def bus(cls) -> Bus:
+        return cls.get_bus()
+
+    @classmethod
     def mutate(cls, *args, **kwargs):
         return cls()
