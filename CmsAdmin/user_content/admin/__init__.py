@@ -7,5 +7,5 @@ from .collection_admin import CollectionAdmin
 from .event_admin import EventAdmin
 from .user_event_admin import UserEventAdmin
 from .post_admin import PostAdmin
-from .user_react_admin import UserReactAdmin
+from .user_react_post_admin import UserReactPostAdmin
 from .user_comment_post_admin import UserCommentPostAdmin
