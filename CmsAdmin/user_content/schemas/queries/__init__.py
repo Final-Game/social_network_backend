@@ -1,3 +1,9 @@
+from typing import List
+from user_content.app.queries.get_user_follow_list_query import (
+    GetUserFollowListQuery,
+    UserFollowMetadata,
+)
+from user_content.domain.models.account import Account
 from core.authenticates.account_authentication import AccountAuthentication
 from core.schemas.base_auth import BaseAuth, authenticate_permission
 from user_content.domain.models.profile import Profile
@@ -7,6 +13,12 @@ import graphene
 
 from .test_type import TestType
 from .account_profile_type import AccountProfileType
+from .user_follow_type import UserFollowType
+
+auth_data: dict = {
+    "auth_token": graphene.String(required=True, description="Auth token"),
+    "account_id": graphene.String(required=True, description="Account id"),
+}
 
 
 class Query(graphene.ObjectType, BaseAuth):
@@ -19,6 +31,7 @@ class Query(graphene.ObjectType, BaseAuth):
         auth_token=graphene.String(required=True, description="Auth token"),
         account_id=graphene.String(required=True, description="Account Id"),
     )
+    user_followers = graphene.List(UserFollowType, **auth_data)
 
     @classmethod
     def get_bus(cls):
@@ -36,3 +49,15 @@ class Query(graphene.ObjectType, BaseAuth):
         account_profile: Profile = __bus.dispatch(GetAccountProfileQuery(account_id))
 
         return account_profile
+
+    @classmethod
+    @authenticate_permission
+    def resolve_user_followers(cls, *args, **kwargs):
+        __bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        user_followes: List[Account] = __bus.dispatch(
+            GetUserFollowListQuery(account_id, UserFollowMetadata(page=0, limit=15))
+        )
+
+        return user_followes

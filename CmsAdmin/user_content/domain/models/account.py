@@ -20,6 +20,12 @@ class Account(BaseModel):
         default=int(AccountTypeEnum.NORMAL),
         choices=AccountTypeEnum.to_choices(),
     )
+    followers = models.ManyToManyField(
+        "self",
+        through="UserFollow",
+        through_fields=["target", "source"],
+        symmetrical=False,
+    )
 
     objects: AccountManager = AccountManager()
 

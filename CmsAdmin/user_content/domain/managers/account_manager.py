@@ -1,3 +1,4 @@
+from core.common.pageable import Pageable
 from user_content.domain.exceptions.uc_domain_exception import UcDomainException
 from django.db.models import Manager, Q
 
@@ -20,3 +21,13 @@ class AccountManager(Manager):
             raise UcDomainException(f"Username {username} not found.")
 
         return account
+
+    def query_user_follows_for_account(self, account, pageable: Pageable = None):
+        condition = ~Q(followers__id=account.id) & ~Q(id=account.id)
+
+        account_list = super(AccountManager, self).get_queryset().filter(condition)
+        if pageable:
+            offset_page: int = pageable.limit * pageable.page
+            account_list = account_list[offset_page : offset_page + pageable.limit]
+
+        return account_list
