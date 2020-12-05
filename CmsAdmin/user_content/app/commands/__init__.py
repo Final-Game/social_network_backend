@@ -7,3 +7,4 @@ from .user_delete_comment_command import UserDeleteCommentCommand
 from .user_delete_post_command import UserDeletePostCommand
 from .user_follow_user_command import UserFollowUserCommand
 from .user_create_story_command import UserCreateStoryCommand
+from .user_view_story_command import UserViewStoryCommand
