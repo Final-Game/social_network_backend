@@ -10,3 +10,4 @@ from .post import Post
 from .user_comment_post import UserCommentPost
 from .user_react_post import UserReactPost
 from .access_token import AccessToken
+from .user_react_comment import UserReactComment

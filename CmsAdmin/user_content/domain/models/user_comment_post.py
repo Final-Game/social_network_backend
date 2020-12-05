@@ -1,3 +1,6 @@
+from user_content.domain.managers.user_comment_post_manager import (
+    UserCommentPostManager,
+)
 from django.db import models
 from core.domain.models.base_model import BaseModel
 
@@ -11,3 +14,5 @@ class UserCommentPost(BaseModel):
         to="Account", on_delete=models.CASCADE, null=False, blank=False
     )
     base = models.ForeignKey(to="self", on_delete=models.CASCADE, null=True, blank=True)
+
+    objects: UserCommentPostManager = UserCommentPostManager()

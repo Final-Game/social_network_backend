@@ -7,6 +7,7 @@ from .update_account_profile_mutation import UpdateAccountProfileMutation
 from .user_create_post_mutation import UserCreatePostMutation
 from .user_comment_in_post_mutation import UserCommentInPostMutation
 from .user_react_post_mutation import UserReactPostMutation
+from .user_react_comment_mutation import UserReactCommentMutation
 
 
 class Mutation(graphene.ObjectType):
@@ -18,3 +19,4 @@ class Mutation(graphene.ObjectType):
     user_create_post = UserCreatePostMutation.Field()
     user_comment_in_post = UserCommentInPostMutation.Field()
     user_react_post = UserReactPostMutation.Field()
+    user_react_comment = UserReactCommentMutation.Field()
