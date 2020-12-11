@@ -1,4 +1,6 @@
 from typing import List
+from user_content.app.queries.get_post_detail_query import GetPostDetailQuery
+from user_content.app.dtos.post_detail_dto import PostDetailDto
 from user_content.app.queries.get_account_timeline_query import (
     AccountTimeLineMetadata,
     GetAccountTimeLineQuery,
@@ -27,6 +29,7 @@ from .account_profile_type import AccountProfileType
 from .user_follow_type import UserFollowType
 from .user_story_data_type import UserStoryDataType
 from .account_timeline_type import AccountTimeLineType
+from .post_detail_type import PostDetailType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -47,6 +50,11 @@ class Query(graphene.ObjectType, BaseAuth):
     user_followers = graphene.List(UserFollowType, **auth_data)
     user_stories = graphene.List(UserStoryDataType, **auth_data)
     account_timeline = graphene.Field(AccountTimeLineType, **auth_data)
+    user_post_detail = graphene.Field(
+        PostDetailType,
+        **auth_data,
+        post_id=graphene.String(required=True, description="Post id")
+    )
 
     @classmethod
     def get_bus(cls):
@@ -102,3 +110,17 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return account_timeline.__dict__
+
+    @classmethod
+    @authenticate_permission
+    def resolve_user_post_detail(cls, *args, **kwargs):
+        __bus: Bus = Bus()
+
+        account_id: str = kwargs["account_id"]
+        post_id: str = kwargs["post_id"]
+
+        post_detail_dto: PostDetailDto = __bus.dispatch(
+            GetPostDetailQuery(account_id, post_id)
+        )
+
+        return post_detail_dto.__dict__

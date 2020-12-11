@@ -1,16 +1,6 @@
 import graphene
-
-
-class MediaDataType(graphene.ObjectType):
-    url = graphene.String(description="Url")
-    type = graphene.Int(description="Type")
-
-
-class ArticlePostType(graphene.ObjectType):
-    id = graphene.String(description="Id")
-    account_id = graphene.String(description="Account id")
-    content = graphene.String(description="Content")
-    medias = graphene.List(MediaDataType, description="medias")
+from .article_post_type import ArticlePostType
+from .media_data_type import MediaDataType
 
 
 class AccountTimeLineType(graphene.ObjectType):
