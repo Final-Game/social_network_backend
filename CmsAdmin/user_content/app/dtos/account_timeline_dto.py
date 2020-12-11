@@ -1,21 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-
-@dataclass
-class MediaData:
-    url: str
-    type: int
-
-
-@dataclass
-class ArticlePost:
-    id: str
-    account_id: str
-    content: str = ""
-    medias: List[MediaData] = None
+from .article_post_dto import ArticlePostDto as ArticlePost
+from .media_data_dto import MediaDataDto as MediaData
 
 
 @dataclass
 class AccountTimeLineDto:
-    article_posts: ArticlePost
+    article_posts: List[ArticlePost]

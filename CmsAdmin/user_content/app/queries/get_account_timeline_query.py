@@ -31,13 +31,14 @@ class GetAccountTimeLineQueryHandler(QueryHandler):
             query.account_id, raise_exception=True
         )
 
+        offset_page: int = query.metadata.limit * query.metadata.page
         return AccountTimeLineDto(
             article_posts=list(
                 map(
                     lambda x: map_post_model_to_article_post_dto(x),
                     account.article_posts,
                 )
-            )
+            )[offset_page : offset_page + query.metadata.limit]
         )
 
 
@@ -45,4 +46,14 @@ def map_post_model_to_article_post_dto(post: Post) -> ArticlePost:
     medias: List[MediaData] = list(
         map(lambda x: MediaData(url=x.url, type=x.type), list(post.medias.all()))
     )
-    return ArticlePost(post.id, post.account_id, content=post.content, medias=medias)
+    user_comment_count: int = post.usercommentpost_set.count()
+    user_react_count: int = post.userreactpost_set.count()
+
+    return ArticlePost(
+        post.id,
+        post.account_id,
+        content=post.content,
+        medias=medias,
+        user_comment_count=user_comment_count,
+        user_react_account=user_react_count,
+    )

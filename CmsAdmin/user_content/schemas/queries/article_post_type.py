@@ -7,3 +7,5 @@ class ArticlePostType(graphene.ObjectType):
     account_id = graphene.String(description="Account id")
     content = graphene.String(description="Content")
     medias = graphene.List(MediaDataType, description="medias")
+    user_comment_count = graphene.Int(description="User comment count")
+    user_react_account = graphene.Int(description="User react count")
