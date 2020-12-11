@@ -1,4 +1,10 @@
 from typing import List
+from user_content.app.queries.get_user_story_list_query import (
+    GetUserStoryListQuery,
+    GetUserStoryListQueryHandler,
+    UserStoryListMetadata,
+)
+from user_content.app.dtos.user_story_data_dto import UserStoryDataDto
 from user_content.app.queries.get_user_follow_list_query import (
     GetUserFollowListQuery,
     UserFollowMetadata,
@@ -14,6 +20,7 @@ import graphene
 from .test_type import TestType
 from .account_profile_type import AccountProfileType
 from .user_follow_type import UserFollowType
+from .user_story_data_type import UserStoryDataType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -32,6 +39,7 @@ class Query(graphene.ObjectType, BaseAuth):
         account_id=graphene.String(required=True, description="Account Id"),
     )
     user_followers = graphene.List(UserFollowType, **auth_data)
+    user_stories = graphene.List(UserStoryDataType, **auth_data)
 
     @classmethod
     def get_bus(cls):
@@ -61,3 +69,15 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return user_followes
+
+    @classmethod
+    @authenticate_permission
+    def resolve_user_stories(cls, *args, **kwargs):
+        __bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        user_stories: List[UserStoryDataDto] = __bus.dispatch(
+            GetUserStoryListQuery(account_id, UserStoryListMetadata(page=0, limit=10))
+        )
+
+        return list(map(lambda x: x.to_dict(), user_stories))

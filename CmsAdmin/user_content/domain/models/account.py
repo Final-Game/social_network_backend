@@ -1,3 +1,4 @@
+from typing import List
 from user_content.domain.managers.account_manager import AccountManager
 from user_content.domain.enums.account_type_enum import AccountTypeEnum
 from django.db import models
@@ -25,6 +26,14 @@ class Account(BaseModel):
         through="UserFollow",
         through_fields=["target", "source"],
         symmetrical=False,
+    )
+
+    following_users = models.ManyToManyField(
+        "self",
+        through="UserFollow",
+        through_fields=["source", "target"],
+        symmetrical=False,
+        related_name="following_user_relate",
     )
 
     objects: AccountManager = AccountManager()
