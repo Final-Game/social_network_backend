@@ -55,6 +55,10 @@ class Account(BaseModel):
     def change_password(self, new_password):
         self.password = make_password(new_password)
 
+    @property
+    def article_posts(self):
+        return list(self.post_set.all())
+
     @classmethod
     def check_email(cls, email: str):
         from user_content.domain.models.profile import Profile

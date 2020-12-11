@@ -1,4 +1,9 @@
 from typing import List
+from user_content.app.queries.get_account_timeline_query import (
+    AccountTimeLineMetadata,
+    GetAccountTimeLineQuery,
+)
+from user_content.app.dtos.account_timeline_dto import AccountTimeLineDto
 from user_content.app.queries.get_user_story_list_query import (
     GetUserStoryListQuery,
     GetUserStoryListQueryHandler,
@@ -21,6 +26,7 @@ from .test_type import TestType
 from .account_profile_type import AccountProfileType
 from .user_follow_type import UserFollowType
 from .user_story_data_type import UserStoryDataType
+from .account_timeline_type import AccountTimeLineType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -40,6 +46,7 @@ class Query(graphene.ObjectType, BaseAuth):
     )
     user_followers = graphene.List(UserFollowType, **auth_data)
     user_stories = graphene.List(UserStoryDataType, **auth_data)
+    account_timeline = graphene.Field(AccountTimeLineType, **auth_data)
 
     @classmethod
     def get_bus(cls):
@@ -81,3 +88,17 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return list(map(lambda x: x.to_dict(), user_stories))
+
+    @classmethod
+    @authenticate_permission
+    def resolve_account_timeline(cls, *args, **kwargs):
+        __bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        account_timeline: AccountTimeLineDto = __bus.dispatch(
+            GetAccountTimeLineQuery(
+                account_id, AccountTimeLineMetadata(page=0, limit=10)
+            )
+        )
+
+        return account_timeline.__dict__
