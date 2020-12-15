@@ -10,3 +10,6 @@ class UserRoom(BaseModel):
         to="user_content.Account", on_delete=models.CASCADE, blank=False, null=False
     )
     nick_name = models.CharField(blank=False, null=False, max_length=36)
+
+    class Meta:
+        db_table = "cm_user_rooms"

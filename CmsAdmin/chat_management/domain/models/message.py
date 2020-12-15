@@ -7,6 +7,12 @@ class Message(BaseModel):
         to="Room", on_delete=models.CASCADE, blank=False, null=False
     )
     sender = models.ForeignKey(
-        to="user_content.Account", on_delete=models.CASCADE, blank=False, null=False
+        to="user_content.Account",
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
     )
     content = models.CharField(blank=True, null=True, max_length=200)
+
+    class Meta:
+        db_table = "cm_messages"

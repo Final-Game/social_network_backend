@@ -38,6 +38,9 @@ class Account(BaseModel):
 
     objects: AccountManager = AccountManager()
 
+    class Meta:
+        db_table = "uc_accounts"
+
     def save(self, *args, **kwargs) -> None:
         if self.profile:
             self.profile.save()
