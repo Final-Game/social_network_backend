@@ -48,7 +48,7 @@ paths:
         in: path
         description: User Id
         required: true
-        type: integer
+        type: string
       responses:
         200:
           description: 'OK'
@@ -67,7 +67,7 @@ paths:
         in: path
         description: user Id
         required: true
-        type: integer
+        type: string
       - name: body
         in: body
         description: user Data
@@ -94,7 +94,7 @@ paths:
         in: path
         description: user Id
         required: true
-        type: integer
+        type: string
       responses:
         200:
           description: 'OK'
@@ -103,20 +103,32 @@ paths:
         500:
           description: 'Server Error'
 
+# [GET] users
+  /rooms:
+    get:
+      tags:
+      - rooms
+      summary: Find All Rooms
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
 # definitions
 definitions:
   users:
     type: object
     required:
-        - email
+        - username
         - password
     properties:
       id:
-        type: integer
-        description: user Id
-      email:
         type: string
-        description: user Email
+        description: user Id
+      username:
+        type: string
+        description: user Name
       password:
         type: string
         description: user Password

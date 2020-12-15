@@ -16,6 +16,6 @@
     "noEmit": false,
     "esModuleInterop": true
   },
-  "include": ["./src/**/*", ".env"],
+  "include": ["./src/**/*", ".env", "src/chat_management/api/.gitkeep", "src/chat_management/app/.gitkeep"],
   "exclude": ["node_modules"]
 }

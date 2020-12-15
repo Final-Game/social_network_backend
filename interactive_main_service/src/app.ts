@@ -9,10 +9,12 @@ import compression from 'compression';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { createConnection } from 'typeorm';
-import { dbConnection } from './database';
-import Routes from './interfaces/routes.interface';
-import errorMiddleware from './middlewares/error.middleware';
-import { logger, stream } from './utils/logger';
+import { dbConnection } from './configs/database';
+import Routes from './common/interfaces/routes.interface';
+import errorMiddleware from './configs/middlewares/error.middleware';
+import { logger, stream } from './common/utils/logger';
+import registerAuthDI from './auth_management/domain/di.registers';
+import container from './container';
 
 class App {
   public app: express.Application;
@@ -24,6 +26,7 @@ class App {
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'production';
 
+    this.connectContainer();
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -92,6 +95,11 @@ class App {
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
+  }
+
+  private connectContainer() {
+    registerAuthDI();
+    container.createUnexposedInstances();
   }
 }
 
