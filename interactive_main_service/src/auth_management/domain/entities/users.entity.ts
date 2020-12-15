@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, AfterInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, AfterInsert, BeforeUpdate, BeforeInsert } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { User } from '../models/users.model';
 
@@ -26,10 +26,14 @@ export class UserEntity implements User {
   // @UpdateDateColumn()
   updatedAt: Date;
 
-  // @AfterInsert()
-  // initializeDefault() {
-  //   if (!this.type) {
-  //     this.type = 0;
-  //   }
-  // }
+  @BeforeUpdate()
+  updateEntity() {
+    this.updatedAt = new Date();
+  }
+
+  @BeforeInsert()
+  createEntity() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
 }

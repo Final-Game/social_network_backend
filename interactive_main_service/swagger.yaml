@@ -57,51 +57,51 @@ paths:
         500:
           description: 'Server Error'
 
-# [PUT] users/id
-    put:
-      tags:
-      - users
-      summary: Update User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: string
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
-      responses:
-        200:
-          description: 'OK'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
+# # [PUT] users/id
+#     put:
+#       tags:
+#       - users
+#       summary: Update User By Id
+#       parameters:
+#       - name: id
+#         in: path
+#         description: user Id
+#         required: true
+#         type: string
+#       - name: body
+#         in: body
+#         description: user Data
+#         required: true
+#         schema:
+#           $ref: '#/definitions/users'
+#       responses:
+#         200:
+#           description: 'OK'
+#         400:
+#           description: 'Bad Request'
+#         409:
+#           description: 'Conflict'
+#         500:
+#           description: 'Server Error'
 
-# [DELETE] users/id
-    delete:
-      tags:
-      - users
-      summary: Delete User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: string
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
+# # [DELETE] users/id
+#     delete:
+#       tags:
+#       - users
+#       summary: Delete User By Id
+#       parameters:
+#       - name: id
+#         in: path
+#         description: user Id
+#         required: true
+#         type: string
+#       responses:
+#         200:
+#           description: 'OK'
+#         409:
+#           description: 'Conflict'
+#         500:
+#           description: 'Server Error'
 
 # [GET] users
   /rooms:
