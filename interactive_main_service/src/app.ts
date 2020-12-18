@@ -15,16 +15,22 @@ import errorMiddleware from './configs/middlewares/error.middleware';
 import { logger, stream } from './common/utils/logger';
 import registerAuthDI from './auth_management/domain/di.registers';
 import container from './container';
+import { createServer, Server as HTTPServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
+  private server: HTTPServer;
+  private io: SocketIOServer;
 
   constructor(routes: Routes[]) {
     this.app = express();
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'production';
+    this.server = createServer(this.app);
+    this.io = new SocketIOServer(this.server);
 
     this.connectContainer();
     this.connectToDatabase();
@@ -32,16 +38,17 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+    this.handleSocketConnection();
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       logger.info(`🚀 App listening on the port ${this.port}`);
     });
   }
 
   public getServer() {
-    return this.app;
+    return this.server;
   }
 
   private connectToDatabase() {
@@ -85,7 +92,7 @@ class App {
           version: '1.0.0',
           description: 'Example docs',
         },
-      },
+      },o
       apis: ['swagger.yaml'],
     };
 
@@ -100,6 +107,40 @@ class App {
   private connectContainer() {
     registerAuthDI();
     container.createUnexposedInstances();
+  }
+
+  private handleSocketConnection() {
+    this.io.on('connection', socket => {
+      console.log('A user connected');
+      console.log(socket.rooms);
+
+      socket.on('join-room', data => {
+        const userId: string = data['userId'];
+        const roomId: string = data['roomId'];
+
+        // Validate user can join current room
+
+        socket.join(roomId);
+        console.log(`Joined to room: ${roomId}`);
+      });
+
+      socket.on('message', data => {
+        console.log(data);
+        // socket.broadcast.emit('message', {
+        //   data: data,
+        // });
+
+        const roomId: string = data.roomId;
+
+        socket.to(roomId).emit('hello', 'Nguyen Minh Tuan');
+      });
+      socket.on('disconnect', () => {
+        console.log(`User ${socket.id} disconnected`);
+      });
+    });
+    this.io.on('connect', socket => {
+      console.log(`On connect: ${socket.id}`);
+    });
   }
 }
 

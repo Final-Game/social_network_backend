@@ -1,5 +1,4 @@
 class HttpException extends Error {
-  [x: string]: string;
   public status: number;
   public message: string;
 
