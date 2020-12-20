@@ -13,6 +13,8 @@
     "lint:fix": "pnpm run lint -- --fix"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.2.2",
+    "@grpc/proto-loader": "^0.5.5",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
@@ -23,10 +25,13 @@
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "express": "^4.17.1",
+    "google-proto-files": "^2.3.0",
+    "grpc": "^1.24.4",
     "helmet": "^4.2.0",
     "hpp": "^0.2.3",
     "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
+    "minimist": "^1.2.5",
     "morgan": "^1.10.0",
     "node-cqrs": "^0.15.1",
     "pg": "^8.5.1",
