@@ -1,8 +1,10 @@
 import grpc, { Server as GrpcServer } from 'grpc';
 import { logger } from './common/utils/logger';
 import path from 'path';
-import {load, loadSync} from '@grpc/proto-loader';
-import protoFiles from 'google-proto-files';
+import {loadSync} from '@grpc/proto-loader';
+import registerContainer from './register.container';
+import { createConnection } from 'typeorm';
+import { dbConnection } from './configs/database';
 
 function sayHello(call, callback) {
   callback(null, { message: 'Hello ' + call.request.name });
@@ -14,6 +16,8 @@ class GrpcApp {
   constructor() {
     this.server = new GrpcServer();
     this.loadProtos();
+    this.connectToDatabase();
+    this.connectContainer();
   }
 
   public listen() {
@@ -39,6 +43,20 @@ class GrpcApp {
 
     this.server.addService(hello_proto.Greeter.service, { sayHello: sayHello });
     return;
+  }
+
+  private connectContainer() {
+    registerContainer();
+  }
+
+  private connectToDatabase() {
+    createConnection(dbConnection)
+      .then(() => {
+        logger.info('🟢 The gRPC database is connected.');
+      })
+      .catch((error: Error) => {
+        logger.error(`🔴 Unable to connect to the gRPC database: ${error}.`);
+      });
   }
 }
 

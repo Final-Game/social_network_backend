@@ -13,10 +13,9 @@ import { dbConnection } from './configs/database';
 import Routes from './common/interfaces/routes.interface';
 import errorMiddleware from './configs/middlewares/error.middleware';
 import { logger, stream } from './common/utils/logger';
-import registerAuthDI from './auth_management/domain/di.registers';
-import container from './container';
 import { createServer, Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import registerContainer from './register.container';
 
 class App {
   public app: express.Application;
@@ -54,10 +53,10 @@ class App {
   private connectToDatabase() {
     createConnection(dbConnection)
       .then(() => {
-        logger.info('🟢 The database is connected.');
+        logger.info('🟢 The REST database is connected.');
       })
       .catch((error: Error) => {
-        logger.error(`🔴 Unable to connect to the database: ${error}.`);
+        logger.error(`🔴 Unable to connect to the REST database: ${error}.`);
       });
   }
 
@@ -105,8 +104,7 @@ class App {
   }
 
   private connectContainer() {
-    registerAuthDI();
-    container.createUnexposedInstances();
+    registerContainer()
   }
 
   private handleSocketConnection() {
