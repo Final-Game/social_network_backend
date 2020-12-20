@@ -92,7 +92,7 @@ class App {
           version: '1.0.0',
           description: 'Example docs',
         },
-      },o
+      },
       apis: ['swagger.yaml'],
     };
 
