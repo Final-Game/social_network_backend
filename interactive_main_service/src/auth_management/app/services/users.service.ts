@@ -24,15 +24,15 @@ class UserService {
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await this.userRepos.findAllUser();
 
-    const payload: ITestCommandPayload = {
-      test: 'xyz',
-    };
+    // const payload: ITestCommandPayload = {
+    //   test: 'xyz',
+    // };
 
-    await this.commandBus.send('testCommand', undefined, { payload });
+    // await this.commandBus.send('testCommand', undefined, { payload });
 
-    container.eventStore.once('testEvent', event => {
-      logger.info(`User aggregate created with ID ${event.aggregateId}`);
-    });
+    // container.eventStore.once('testEvent', event => {
+    //   logger.info(`User aggregate created with ID ${event.aggregateId}`);
+    // });
     return users;
   }
 
