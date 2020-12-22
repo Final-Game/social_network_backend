@@ -11,6 +11,7 @@
     "module": "commonjs",
     "pretty": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": "./build",
     "allowJs": true,
     "noEmit": false,
