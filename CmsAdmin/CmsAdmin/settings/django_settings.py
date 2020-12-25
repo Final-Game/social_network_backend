@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     "jet.dashboard",
     "jet",
+    "corsheaders",
     # system
     "django.contrib.admin",
     "django.contrib.auth",
@@ -137,5 +138,9 @@ TOKEN_EXPIRATION_DURATION = 86400 * 30
 JWT_PRIVATE_SIGNATURE: str = (
     "ip06kHDxHPDnI6wKavavpKKhTm02RC7dqZzngFGB3jr7BCKeFl4BtLROrcRm"
 )
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
+
 
 GRAPHENE = {"SCHEMA": "CmsAdmin.schema.schema"}
