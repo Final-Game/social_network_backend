@@ -1,7 +1,7 @@
 import grpc, { Server as GrpcServer } from 'grpc';
 import { logger } from './common/utils/logger';
 import path from 'path';
-import {loadSync} from '@grpc/proto-loader';
+import { loadSync } from '@grpc/proto-loader';
 import registerContainer from './register.container';
 import { createConnection } from 'typeorm';
 import { dbConnection } from './configs/database';
