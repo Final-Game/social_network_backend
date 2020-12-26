@@ -7,10 +7,10 @@ class Message(BaseModel):
         to="Room", on_delete=models.CASCADE, blank=False, null=False
     )
     sender = models.ForeignKey(
-        to="user_content.Account",
+        to="UserRoom",
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
     )
     content = models.CharField(blank=True, null=True, max_length=200)
 
