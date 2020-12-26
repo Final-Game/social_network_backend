@@ -41,6 +41,9 @@ class Account(BaseModel):
     class Meta:
         db_table = "uc_accounts"
 
+    def __str__(self) -> str:
+        return super().__str__() + f" {self.username}"
+
     def save(self, *args, **kwargs) -> None:
         if self.profile:
             self.profile.save()

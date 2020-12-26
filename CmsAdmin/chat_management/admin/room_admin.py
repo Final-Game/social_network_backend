@@ -8,7 +8,7 @@ from chat_management.models import Room
 
 @admin.register(Room)
 class RoomAdmin(BaseAdmin):
-    list_display = ["general_name"]
+    list_display = ["general_name", "type"]
     list_display_links = ["general_name"]
 
-    fields = ["general_name"]
+    fields = ["general_name", "type"]
