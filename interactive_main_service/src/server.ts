@@ -5,6 +5,7 @@ import validateEnv from './common/utils/validateEnv';
 import cluster from 'cluster';
 import os from 'os';
 import GrpcApp from './grpc.app';
+import { chatHandlers } from './chat_management/api/msg_handlers';
 
 validateEnv();
 
@@ -22,7 +23,8 @@ if (cluster.isMaster) {
   });
 } else {
   if (cluster.worker.id === 1) {
-    const grpcApp = new GrpcApp();
+    const protoHandlers = chatHandlers;
+    const grpcApp = new GrpcApp(protoHandlers);
     grpcApp.listen();
   } else {
     const app = new App(AuthManagementRoutes);

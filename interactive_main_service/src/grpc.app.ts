@@ -1,10 +1,11 @@
 import grpc, { Server as GrpcServer } from 'grpc';
 import { logger } from './common/utils/logger';
 import path from 'path';
-import { loadSync } from '@grpc/proto-loader';
 import registerContainer from './register.container';
 import { createConnection } from 'typeorm';
 import { dbConnection } from './configs/database';
+import protoLoader from './common/grpc/protoLoader';
+import { HELLO_PROTO_PATH } from './common/grpc/contants';
 
 function sayHello(call, callback) {
   callback(null, { message: 'Hello ' + call.request.name });
@@ -13,9 +14,9 @@ function sayHello(call, callback) {
 class GrpcApp {
   private server: GrpcServer;
 
-  constructor() {
+  constructor(protoHandlers: Array<any>) {
     this.server = new GrpcServer();
-    this.loadProtos();
+    this.loadProtos(protoHandlers);
     this.connectToDatabase();
     this.connectContainer();
   }
@@ -27,19 +28,13 @@ class GrpcApp {
     });
   }
 
-  private loadProtos() {
-    const HELLO_PROTO_PATH = path.join(__dirname, './../../protos/hello.proto');
+  private loadProtos(handlers: Array<any>) {
+    const hello_proto: any = protoLoader(HELLO_PROTO_PATH).helloworld;
 
-    const options = {
-      keepCase: true,
-      longs: String,
-      enums: String,
-      defaults: true,
-      oneofs: true,
-    };
-    const packageDefinition = loadSync(HELLO_PROTO_PATH, options);
-
-    const hello_proto: any = grpc.loadPackageDefinition(packageDefinition).helloworld;
+    for (let idx = 0; idx < handlers.length; idx++) {
+      const element: any = handlers[idx];
+      this.server.addService(element.key, element.value);
+    }
 
     this.server.addService(hello_proto.Greeter.service, { sayHello: sayHello });
     return;
