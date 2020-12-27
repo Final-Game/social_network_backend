@@ -1,4 +1,4 @@
-import { cleanEnv, port, str } from 'envalid';
+import { cleanEnv, port, str, bool } from 'envalid';
 
 const validateEnv = () => {
   cleanEnv(process.env, {
@@ -10,6 +10,8 @@ const validateEnv = () => {
     POSTGRESQL_PASSWORD: str(),
     POSTGRESQL_DATABASE: str(),
     JWT_SECRET: str(),
+    DEBUG_GRPC: bool(),
+    DEBUG_REST: bool(),
   });
 };
 

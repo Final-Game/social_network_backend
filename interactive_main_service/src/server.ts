@@ -9,25 +9,42 @@ import { chatHandlers } from './chat_management/api/msg_handlers';
 
 validateEnv();
 
-if (cluster.isMaster) {
-  const numCPUs = os.cpus().length;
-  console.log(`Master ${process.pid} is running`);
+function runGrpc() {
+  const protoHandlers = chatHandlers;
+  const grpcApp = new GrpcApp(protoHandlers);
+  grpcApp.listen();
+}
 
-  // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
+function runRest() {
+  const app = new App(AuthManagementRoutes);
+  app.listen();
+}
 
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid} died`);
-  });
+const isDebugGRPC = process.env.DEBUG_GRPC;
+const isDebugREST = process.env.DEBUG_REST;
+
+if (isDebugGRPC) {
+  runGrpc();
+} else if (isDebugREST) {
+  runRest();
 } else {
-  if (cluster.worker.id === 1) {
-    const protoHandlers = chatHandlers;
-    const grpcApp = new GrpcApp(protoHandlers);
-    grpcApp.listen();
+  if (cluster.isMaster) {
+    const numCPUs = os.cpus().length;
+    console.log(`Master ${process.pid} is running`);
+
+    // Fork workers.
+    for (let i = 0; i < numCPUs; i++) {
+      cluster.fork();
+    }
+
+    cluster.on('exit', (worker, code, signal) => {
+      console.log(`worker ${worker.process.pid} died`);
+    });
   } else {
-    const app = new App(AuthManagementRoutes);
-    app.listen();
+    if (cluster.worker.id === 1) {
+      runGrpc();
+    } else {
+      runRest();
+    }
   }
 }
