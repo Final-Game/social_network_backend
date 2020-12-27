@@ -1,6 +1,7 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { MatchSetting } from '../models/match_settings.model';
 
+@Entity('cm_match_settings')
 export class MatchSettingEntity implements MatchSetting {
   @PrimaryGeneratedColumn('uuid')
   id: string;
