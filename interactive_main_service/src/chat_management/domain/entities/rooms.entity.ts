@@ -14,6 +14,9 @@ export class RoomEntity implements Room {
   @IsNotEmpty()
   generalName: string;
 
+  @Column()
+  type: number;
+
   @Column({ name: 'created_at' })
   // @CreateDateColumn()
   createdAt: Date;

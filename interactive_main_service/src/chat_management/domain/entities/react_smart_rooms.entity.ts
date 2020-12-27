@@ -1,29 +1,27 @@
 import { IsNotEmpty } from 'class-validator';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Message } from '../models/message.model';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ReactSmartRoom } from '../models/react_smart_rooms.model';
 import { RoomEntity } from './rooms.entity';
 import { UserRoomEntity } from './user_rooms.entity';
 
-@Entity('cm_messages')
-export class MessageEntity implements Message {
+@Entity('cm_react_smart_rooms')
+export class ReactSmartRoomEntity implements ReactSmartRoom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ManyToOne(type => RoomEntity)
+  room: RoomEntity;
 
   @ManyToOne(type => UserRoomEntity)
   sender: UserRoomEntity;
 
-  @ManyToOne(type => RoomEntity, room => room.messages)
-  room: RoomEntity;
-
   @Column()
   @IsNotEmpty()
-  content: string;
+  status: number;
 
   @Column({ name: 'created_at' })
-  @CreateDateColumn()
   createdAt: Date;
 
   @Column({ name: 'updated_at' })
-  @UpdateDateColumn()
   updatedAt: Date;
 }

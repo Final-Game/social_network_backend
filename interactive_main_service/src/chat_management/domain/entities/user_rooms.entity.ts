@@ -21,10 +21,10 @@ export class UserRoomEntity implements UserRoom {
   room: RoomEntity;
 
   @Column({ name: 'created_at' })
-  @CreateDateColumn()
+  // @CreateDateColumn()
   createdAt: Date;
 
   @Column({ name: 'updated_at' })
-  @UpdateDateColumn()
+  // @UpdateDateColumn()
   updatedAt: Date;
 }
