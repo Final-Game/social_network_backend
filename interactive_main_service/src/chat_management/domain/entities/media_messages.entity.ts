@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { MediaMessage } from '../models/media_messages.model';
 import { MessageEntity } from './message.entity';
 
+@Entity('cm_media_messages')
 export class MediaMessageEntity implements MediaMessage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
