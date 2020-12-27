@@ -42,6 +42,20 @@ class MatchAggregate extends AbstractAggregate {
     if (!Object.values(MatchStatus).includes(status)) {
       throw new BaseException(`Can't react with invalid status`);
     }
+    const senderId: string = _payload.senderId;
+    const receiverId: string = _payload.dto.receiverId;
+
+    const existedMatch: Match = await this.matchRepos.findMatchBySenderIdAndReceiverId(senderId, receiverId, false);
+
+    if (existedMatch) {
+      if (existedMatch.status == MatchStatus.CLOSE) {
+        existedMatch.status = status;
+
+        this.matchRepos.update(existedMatch.id, { status: status });
+      }
+      return;
+    }
+
     const match: Match = new MatchEntity(_payload.senderId, _payload.dto.receiverId, _payload.dto.status);
     const createdMatch: Match = await this.matchRepos.save(match);
 
