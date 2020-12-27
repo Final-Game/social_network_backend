@@ -5,4 +5,6 @@ export interface Match {
   status: number;
   createdAt: Date;
   updatedAt: Date;
+
+  updateStatus: (status: number);
 }

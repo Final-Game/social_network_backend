@@ -35,4 +35,10 @@ export class MatchEntity extends GenericEntity implements Match {
 
     this.triggerCreate();
   }
+
+  public updateStatus(status: number) {
+    this.status = status;
+
+    this.triggerUpdate();
+  }
 }

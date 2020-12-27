@@ -48,10 +48,10 @@ class MatchAggregate extends AbstractAggregate {
     const existedMatch: Match = await this.matchRepos.findMatchBySenderIdAndReceiverId(senderId, receiverId, false);
 
     if (existedMatch) {
-      if (existedMatch.status == MatchStatus.CLOSE) {
-        existedMatch.status = status;
+      if (existedMatch.status == MatchStatus.CLOSE && status != MatchStatus.CLOSE) {
+        existedMatch.updateStatus(status);
 
-        this.matchRepos.update(existedMatch.id, { status: status });
+        this.matchRepos.update(existedMatch.id, existedMatch);
       }
       return;
     }
