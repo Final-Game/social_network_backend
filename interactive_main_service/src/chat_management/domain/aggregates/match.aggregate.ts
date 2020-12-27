@@ -1,6 +1,7 @@
 import { AbstractAggregate } from 'node-cqrs';
 import BaseException from '../../../common/exceptions/BaseException';
 import { logger } from '../../../common/utils/logger';
+import { MatchEntity } from '../entities/matches.entity';
 import { MatchStatus } from '../enums/matchStatus.enum';
 import { Match } from '../models/matches.model';
 import { IMatchRepository, MatchRepository } from '../repositories/match.repos';
@@ -41,12 +42,8 @@ class MatchAggregate extends AbstractAggregate {
     if (!Object.values(MatchStatus).includes(status)) {
       throw new BaseException(`Can't react with invalid status`);
     }
-
-    const createdMatch: Match = await this.matchRepos.save({
-      senderId: _payload.senderId,
-      receiverId: _payload.dto.receiverId,
-      status: _payload.dto.status,
-    });
+    const match: Match = new MatchEntity(_payload.senderId, _payload.dto.receiverId, _payload.dto.status);
+    const createdMatch: Match = await this.matchRepos.save(match);
 
     this.emit('matchCreatedEvent', {
       id: createdMatch.id,

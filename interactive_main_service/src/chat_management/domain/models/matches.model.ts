@@ -3,4 +3,6 @@ export interface Match {
   senderId: string;
   receiverId: string;
   status: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

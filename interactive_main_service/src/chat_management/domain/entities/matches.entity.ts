@@ -1,9 +1,10 @@
 import { IsNotEmpty } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { GenericEntity } from '../../../common/entities/generic.entity';
 import { Match } from '../models/matches.model';
 
 @Entity('cm_matches')
-export class MatchEntity implements Match {
+export class MatchEntity extends GenericEntity implements Match {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,4 +25,14 @@ export class MatchEntity implements Match {
 
   @Column({ name: 'updated_at' })
   updatedAt: Date;
+
+  constructor(senderId: string, receiverId: string, status: number) {
+    super();
+
+    this.senderId = senderId;
+    this.receiverId = receiverId;
+    this.status = status;
+
+    this.triggerCreate();
+  }
 }
