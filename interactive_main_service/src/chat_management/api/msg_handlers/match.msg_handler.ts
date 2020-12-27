@@ -3,6 +3,7 @@ import { INTERACTIVE_MAIN_PROTO_PATH, MATCH_PROTO_PATH } from '../../../common/g
 import protoLoader from '../../../common/grpc/protoLoader';
 import MatchService from '../../app/services/matches.service';
 import grpc from 'grpc';
+import { MatchSettingDto } from './dtos/match_setting.dto';
 
 export class GrpcInternalError {
   public code: number;
@@ -41,6 +42,19 @@ class MatchMsgHandler {
         callback(new GrpcInternalError(error.message));
       });
   };
+
+  public static getAccountMatchSetting = (call, callback) => {
+    const accountId: string = call.request.account_id;
+
+    MatchMsgHandler.matchService
+      .getAccountMatchSetting(accountId)
+      .then(data => {
+        callback(null, new MatchSettingDto(data));
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
 }
 
 // function createMatch(call, callback) {
@@ -56,6 +70,12 @@ export const matchHandlers = [
     key: matchProto.MatchService.service,
     value: {
       CreateMatch: MatchMsgHandler.createMatch,
+    },
+  },
+  {
+    key: interactiveMainProto.MatchServiceV1.service,
+    value: {
+      GetAccountMatchSetting: MatchMsgHandler.getAccountMatchSetting,
     },
   },
 ];

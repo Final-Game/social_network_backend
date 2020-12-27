@@ -1,29 +1,15 @@
 import { getConnection } from 'typeorm';
 import BaseException from '../../../common/exceptions/BaseException';
+import { BaseRepository, IBaseRepository } from '../../../common/repos/base.repos';
 import { MatchEntity } from '../entities/matches.entity';
 import { Match } from '../models/matches.model';
 
-export interface IMatchRepository {
-  save: (match: any) => Promise<Match>;
-  update: (matchId: string, data: any) => Promise<void>;
+export interface IMatchRepository extends IBaseRepository {
   findMatchBySenderIdAndReceiverId(senderId: string, receiverId: string, raiseException: boolean);
-  // async function save(match):Promise<Match>
 }
 
-export class MatchRepository implements IMatchRepository {
-  private model = MatchEntity;
-
-  public async save(match: any): Promise<Match> {
-    const manager = getConnection().manager;
-
-    return await manager.save(this.model, match);
-  }
-
-  public async update(matchId: string, data: any): Promise<void> {
-    const manager = getConnection().manager;
-
-    await manager.update(this.model, matchId, data);
-  }
+export class MatchRepository extends BaseRepository implements IMatchRepository {
+  protected model = MatchEntity;
 
   async findMatchBySenderIdAndReceiverId(senderId: string, receiverId: string, raiseException = false): Promise<Match> {
     const manager = getConnection().manager;

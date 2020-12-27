@@ -1,8 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { GenericEntity } from '../../../common/entities/generic.entity';
 import { MatchSetting } from '../models/match_settings.model';
 
 @Entity('cm_match_settings')
-export class MatchSettingEntity implements MatchSetting {
+export class MatchSettingEntity extends GenericEntity implements MatchSetting {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,4 +27,16 @@ export class MatchSettingEntity implements MatchSetting {
 
   @Column({ name: 'updated_at' })
   updatedAt: Date;
+
+  constructor(accountId: string, targetGender: number, maxDistance = 0, minAge = 18, maxAge = 21) {
+    super();
+
+    this.accountId = accountId;
+    this.targetGender = targetGender;
+    this.maxDistance = maxDistance;
+    this.maxAge = maxAge;
+    this.minAge = minAge;
+
+    this.triggerCreate();
+  }
 }

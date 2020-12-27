@@ -1,7 +1,18 @@
 syntax = "proto3";
 
-package at;
+package interactive_main_service;
 
 service MatchServiceV1 {
-    
+    rpc GetAccountMatchSetting(GetAccountMatchSettingRequest) returns (GetAccountMatchSettingReply);
+}
+
+message GetAccountMatchSettingRequest {
+    string account_id = 1;
+}
+
+message GetAccountMatchSettingReply {
+    int32 min_age = 1;
+    int32 max_age = 2;
+    int32 max_distance = 3;
+    string target_gender = 4;
 }

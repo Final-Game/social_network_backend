@@ -5,4 +5,6 @@ export interface MatchSetting {
   minAge: number;
   maxAge: number;
   maxDistance: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
