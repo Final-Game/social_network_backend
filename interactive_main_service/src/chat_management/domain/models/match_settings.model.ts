@@ -7,4 +7,6 @@ export interface MatchSetting {
   maxDistance: number;
   createdAt: Date;
   updatedAt: Date;
+
+  updateData: (targetGender: number, maxAge: number, minAge: number, maxDistance: number);
 }

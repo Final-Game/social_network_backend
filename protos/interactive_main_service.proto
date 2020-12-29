@@ -4,6 +4,7 @@ package interactive_main_service;
 
 service MatchServiceV1 {
     rpc GetAccountMatchSetting(GetAccountMatchSettingRequest) returns (GetAccountMatchSettingReply);
+    rpc UpdateAccountMatchSetting(UpdateAccountMatchSettingRequest) returns (UpdateAccountMatchSettingReply);
 }
 
 message GetAccountMatchSettingRequest {
@@ -15,4 +16,17 @@ message GetAccountMatchSettingReply {
     int32 max_age = 2;
     int32 max_distance = 3;
     string target_gender = 4;
+}
+
+
+message UpdateAccountMatchSettingRequest {
+    string account_id = 1;
+    int32 min_age = 2;
+    int32 max_age = 3;
+    int32 max_distance = 4;
+    string target_gender = 5;
+}
+
+message UpdateAccountMatchSettingReply {
+    string status = 1;    
 }

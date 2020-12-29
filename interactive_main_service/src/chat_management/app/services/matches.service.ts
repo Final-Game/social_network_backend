@@ -9,6 +9,7 @@ import { MatchSetting } from '../../domain/models/match_settings.model';
 import { IMatchRepository, MatchRepository } from '../../domain/repositories/match.repos';
 import { IMatchSettingRepository, MatchSettingRepository } from '../../domain/repositories/match_setting.repos';
 import { CreateMatchDto } from '../dtos/matches.dto';
+import { MatchSettingDto } from '../dtos/match_setting.dto';
 
 class MatchService {
   private commandBus: CommandBus;
@@ -56,6 +57,21 @@ class MatchService {
     }
 
     return matchSetting;
+  }
+
+  public async updateAccountMatchSetting(accountId: string, data: MatchSettingDto) {
+    const payload = {
+      accountId: accountId,
+      data: data,
+    };
+
+    data = await this.commandBus.send('updateMatchSettingCommand', undefined, { payload });
+
+    container.eventStore.once('matchSettingUpdatedEvent', event => {
+      logger.info(`Match aggregate created with ID ${event.aggregateId}`);
+    });
+
+    console.log(data);
   }
 }
 

@@ -39,4 +39,13 @@ export class MatchSettingEntity extends GenericEntity implements MatchSetting {
 
     this.triggerCreate();
   }
+
+  public updateData(targetGender: number, maxAge: number, minAge: number, maxDistance: number) {
+    this.targetGender = targetGender;
+    this.maxAge = maxAge;
+    this.minAge = minAge;
+    this.maxDistance = maxDistance;
+
+    this.triggerUpdate();
+  }
 }

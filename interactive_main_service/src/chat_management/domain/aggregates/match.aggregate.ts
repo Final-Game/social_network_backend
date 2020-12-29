@@ -2,24 +2,34 @@ import { AbstractAggregate } from 'node-cqrs';
 import BaseException from '../../../common/exceptions/BaseException';
 import { logger } from '../../../common/utils/logger';
 import { MatchEntity } from '../entities/matches.entity';
+import { MatchSettingEntity } from '../entities/match_settings.entity';
+import { Gender, getGender } from '../enums/gender.enum';
 import { MatchStatus } from '../enums/matchStatus.enum';
 import { Match } from '../models/matches.model';
+import { MatchSetting } from '../models/match_settings.model';
 import { IMatchRepository, MatchRepository } from '../repositories/match.repos';
+import { IMatchSettingRepository, MatchSettingRepository } from '../repositories/match_setting.repos';
 import { ICreateMatchPayload } from './payloads/createMatch.payload';
+import { UpdateMatchSettingPayload } from './payloads/updateMatchSetting.payload';
 
 class MatchAggregateState {
   matchCreatedEvent(event) {
     logger.info(`Create Match Event is created: ${JSON.stringify(event)}`);
+  }
+
+  matchSettingUpdatedEvent(event) {
+    logger.info(`Update Match Setting Event is created ${JSON.stringify(event)}`);
   }
 }
 
 class MatchAggregate extends AbstractAggregate {
   [x: string]: any;
   static get handles() {
-    return ['createMatchCommand'];
+    return ['createMatchCommand', 'updateMatchSettingCommand'];
   }
 
   private matchRepos: IMatchRepository;
+  private matchSettingRepos: IMatchSettingRepository;
 
   /**
    * Creates an instance of UserAggregate
@@ -35,6 +45,7 @@ class MatchAggregate extends AbstractAggregate {
       state: new MatchAggregateState(),
     });
     this.matchRepos = new MatchRepository();
+    this.matchSettingRepos = new MatchSettingRepository();
   }
 
   async createMatchCommand(_payload: ICreateMatchPayload) {
@@ -65,6 +76,25 @@ class MatchAggregate extends AbstractAggregate {
       receiverId: createdMatch.receiverId,
       status: createdMatch.status,
     });
+  }
+
+  async updateMatchSettingCommand(_payload: UpdateMatchSettingPayload) {
+    const accountId: string = _payload.accountId;
+    const { targetGender, maxAge, maxDistance, minAge } = _payload.data;
+
+    const gender = getGender(targetGender);
+
+    let matchSetting: MatchSetting = await this.matchSettingRepos.findMatchSettingByAccountId(accountId, false);
+
+    if (!matchSetting) {
+      matchSetting = new MatchSettingEntity(accountId, gender, maxDistance, minAge, maxAge);
+      await this.matchSettingRepos.save(matchSetting);
+    } else {
+      matchSetting.updateData(gender, maxAge, minAge, maxDistance);
+      await this.matchSettingRepos.update(matchSetting.id, matchSetting);
+    }
+
+    this.emit('matchSettingUpdatedEvent', { id: matchSetting.id, accountId: accountId });
   }
 }
 

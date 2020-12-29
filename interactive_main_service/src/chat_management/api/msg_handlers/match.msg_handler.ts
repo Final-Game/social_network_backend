@@ -35,7 +35,7 @@ class MatchMsgHandler {
           status: status,
         },
       })
-      .then(data => {
+      .then(() => {
         callback(null, { status: 'Success' });
       })
       .catch(error => {
@@ -51,6 +51,23 @@ class MatchMsgHandler {
       .then(data => {
         callback(null, new MatchSettingDto(data));
       })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
+
+  public static updateAccountMatchSetting = (call, callback) => {
+    const accountId: string = call.request.account_id;
+
+    const data: any = {
+      minAge: call.request.min_age,
+      maxAge: call.request.max_age,
+      maxDistance: call.request.max_distance,
+      targetGender: call.request.target_gender,
+    };
+    MatchMsgHandler.matchService
+      .updateAccountMatchSetting(accountId, data)
+      .then(() => callback(null, { status: 'Success' }))
       .catch(error => {
         callback(new GrpcInternalError(error.message));
       });
@@ -76,6 +93,7 @@ export const matchHandlers = [
     key: interactiveMainProto.MatchServiceV1.service,
     value: {
       GetAccountMatchSetting: MatchMsgHandler.getAccountMatchSetting,
+      UpdateAccountMatchSetting: MatchMsgHandler.updateAccountMatchSetting,
     },
   },
 ];
