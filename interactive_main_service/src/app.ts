@@ -16,6 +16,7 @@ import { logger, stream } from './common/utils/logger';
 import { createServer, Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import registerContainer from './register.container';
+import registerChatServiceSocket from './chat_management/api/socket_handlers';
 
 class App {
   public app: express.Application;
@@ -112,15 +113,7 @@ class App {
       console.log('A user connected');
       console.log(socket.rooms);
 
-      socket.on('join-room', data => {
-        const userId: string = data['userId'];
-        const roomId: string = data['roomId'];
-
-        // Validate user can join current room
-
-        socket.join(roomId);
-        console.log(`Joined to room: ${roomId}`);
-      });
+      registerChatServiceSocket(this.io, socket);
 
       socket.on('message', data => {
         console.log(data);

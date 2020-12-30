@@ -58,7 +58,7 @@ export class UserEntity implements User {
       .where('user_room.account_id = :account_id', { account_id: this.id })
       .getMany();
 
-    return userRooms.map(item => item.getRoom());
+    return await Promise.all(userRooms.map(async item => await item.getRoom()));
   }
 
   public async joinRoom(room: any): Promise<void> {
@@ -67,5 +67,10 @@ export class UserEntity implements User {
     await getRepository(UserRoomEntity).save(userRoom);
 
     return;
+  }
+
+  public async getUserRefRoom(room: any): Promise<any> {
+    const userRoomRepos = getRepository(UserRoomEntity);
+    return await userRoomRepos.findOne({ where: { accountId: this.id, roomId: room.id } });
   }
 }

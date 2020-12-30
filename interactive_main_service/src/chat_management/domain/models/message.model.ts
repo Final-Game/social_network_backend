@@ -3,7 +3,7 @@ import { UserRoom } from './user_rooms.model';
 
 export interface Message {
   id: string;
-  sender: UserRoom;
-  room: Room;
+  senderId: string;
+  roomId: string;
   content: string;
 }

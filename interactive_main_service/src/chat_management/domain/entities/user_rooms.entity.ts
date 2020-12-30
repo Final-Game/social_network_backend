@@ -22,14 +22,6 @@ export class UserRoomEntity extends GenericEntity implements UserRoom {
   @IsNotEmpty()
   roomId: string;
 
-  @Column({ name: 'created_at' })
-  // @CreateDateColumn()
-  createdAt: Date;
-
-  @Column({ name: 'updated_at' })
-  // @UpdateDateColumn()
-  updatedAt: Date;
-
   constructor(accountId: string, roomId: string) {
     super();
 

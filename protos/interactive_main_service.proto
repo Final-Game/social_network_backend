@@ -7,6 +7,10 @@ service MatchServiceV1 {
     rpc UpdateAccountMatchSetting(UpdateAccountMatchSettingRequest) returns (UpdateAccountMatchSettingReply);
 }
 
+service ChatService {
+    rpc CreateRoomChat(CreateRoomChatRequest) returns (CreateRoomChatReply);
+}
+
 message GetAccountMatchSettingRequest {
     string account_id = 1;
 }
@@ -29,4 +33,13 @@ message UpdateAccountMatchSettingRequest {
 
 message UpdateAccountMatchSettingReply {
     string status = 1;    
+}
+
+message CreateRoomChatRequest {
+    string account_id = 1;
+    string receiver_id = 2;
+}
+
+message CreateRoomChatReply {
+    string room_id = 1;
 }

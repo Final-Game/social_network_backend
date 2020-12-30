@@ -6,4 +6,5 @@ export interface User {
 
   getRooms: () => Promise<Array<any>>;
   joinRoom: (room: any) => Promise<void>;
+  getUserRefRoom: (room: any) => Promise<any>;
 }

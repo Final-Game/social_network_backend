@@ -30,5 +30,7 @@ export class BaseRepository implements IBaseRepository {
     if (!entity && raiseException) {
       throw new BaseException(`Can't find entity with id: ${entityId}`);
     }
+
+    return entity;
   }
 }
