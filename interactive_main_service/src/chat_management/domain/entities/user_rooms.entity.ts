@@ -1,10 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { GenericEntity } from '../../../common/entities/generic.entity';
 import { UserRoom } from '../models/user_rooms.model';
 import { RoomEntity } from './rooms.entity';
 
 @Entity('cm_user_rooms')
-export class UserRoomEntity implements UserRoom {
+export class UserRoomEntity extends GenericEntity implements UserRoom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -16,9 +17,10 @@ export class UserRoomEntity implements UserRoom {
   @IsNotEmpty()
   nickName: string;
 
-  @ManyToOne(type => RoomEntity, room => room.userRooms)
+  @Column({ name: 'room_id' })
+  // @ManyToOne(type => RoomEntity, room => room.userRooms)
   @IsNotEmpty()
-  room: RoomEntity;
+  roomId: string;
 
   @Column({ name: 'created_at' })
   // @CreateDateColumn()
@@ -27,4 +29,22 @@ export class UserRoomEntity implements UserRoom {
   @Column({ name: 'updated_at' })
   // @UpdateDateColumn()
   updatedAt: Date;
+
+  constructor(accountId: string, roomId: string) {
+    super();
+
+    this.accountId = accountId;
+    this.roomId = roomId;
+
+    this.triggerCreate();
+  }
+
+  public async getRoom(): Promise<RoomEntity> {
+    const roomRepos = getRepository(RoomEntity);
+    return await roomRepos.findOne(this.roomId);
+  }
+
+  public updateNickName(nickName: string): void {
+    this.nickName = nickName;
+  }
 }

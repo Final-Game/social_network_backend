@@ -1,7 +1,8 @@
+import { chatHandlers } from './chat.msg_handlers';
 import { matchHandlers } from './match.msg_handler';
 
-let chatHandlers = [];
+let chatModuleHandler = [];
 
-chatHandlers = chatHandlers.concat(matchHandlers);
+chatModuleHandler = chatModuleHandler.concat(matchHandlers).concat(chatHandlers);
 
-export { chatHandlers };
+export { chatModuleHandler };

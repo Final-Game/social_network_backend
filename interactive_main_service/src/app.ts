@@ -104,7 +104,7 @@ class App {
   }
 
   private connectContainer() {
-    registerContainer()
+    registerContainer();
   }
 
   private handleSocketConnection() {

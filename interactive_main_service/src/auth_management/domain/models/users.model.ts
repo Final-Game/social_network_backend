@@ -3,4 +3,7 @@ export interface User {
   username: string;
   password: string;
   type: number;
+
+  getRooms: () => Promise<Array<any>>;
+  joinRoom: (room: any) => Promise<void>;
 }

@@ -5,12 +5,12 @@ import validateEnv from './common/utils/validateEnv';
 import cluster from 'cluster';
 import os from 'os';
 import GrpcApp from './grpc.app';
-import { chatHandlers } from './chat_management/api/msg_handlers';
+import { chatModuleHandler } from './chat_management/api/msg_handlers';
 
 validateEnv();
 
 function runGrpc() {
-  const protoHandlers = chatHandlers;
+  const protoHandlers = chatModuleHandler;
   const grpcApp = new GrpcApp(protoHandlers);
   grpcApp.listen();
 }
@@ -20,8 +20,8 @@ function runRest() {
   app.listen();
 }
 
-const isDebugGRPC = process.env.DEBUG_GRPC;
-const isDebugREST = process.env.DEBUG_REST;
+const isDebugGRPC = process.env.DEBUG_GRPC === 'true';
+const isDebugREST = process.env.DEBUG_REST === 'true';
 
 if (isDebugGRPC) {
   runGrpc();

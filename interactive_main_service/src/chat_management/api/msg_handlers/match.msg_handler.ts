@@ -2,21 +2,8 @@ import BaseException from '../../../common/exceptions/BaseException';
 import { INTERACTIVE_MAIN_PROTO_PATH, MATCH_PROTO_PATH } from '../../../common/grpc/contants';
 import protoLoader from '../../../common/grpc/protoLoader';
 import MatchService from '../../app/services/matches.service';
-import grpc from 'grpc';
+import { GrpcInternalError } from '../errors/internal.error';
 import { MatchSettingDto } from './dtos/match_setting.dto';
-
-export class GrpcInternalError {
-  public code: number;
-  public status: number;
-  public message: string;
-
-  constructor(message: string) {
-    this.message = message;
-
-    this.code = 500;
-    this.status = grpc.status.INTERNAL;
-  }
-}
 
 class MatchMsgHandler {
   public static matchService: MatchService = new MatchService();

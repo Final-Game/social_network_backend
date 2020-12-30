@@ -4,5 +4,8 @@ export interface UserRoom {
   id: string;
   accountId: string;
   nickName: string;
-  room: Room;
+  roomId: string;
+
+  updateNickName: (nickName: string) => void;
+  getRoom: () => Promise<Room>;
 }
