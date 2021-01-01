@@ -20,4 +20,4 @@ class AccountMapper(BaseModel):
     full_name = models.CharField(blank=True, null=True, max_length=100)
 
     class Meta:
-        db_table = "cm_account_mapper"
+        db_table = "cm_account_mappers"
