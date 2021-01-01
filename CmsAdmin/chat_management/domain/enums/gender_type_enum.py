@@ -10,12 +10,7 @@ class GenderTypeEnum(BaseEnum):
         return int(self.value)
 
     def __str__(self) -> str:
-        if self.value == self.MALE:
-            return "MALE"
-        elif self.value == self.FEMALE:
-            return "FEMALE"
-        elif self.value == self.UN_KNOWN:
-            return "UN_KNOWN"
+        return self.name
 
     @classmethod
     def to_choices(cls):

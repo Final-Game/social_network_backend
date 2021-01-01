@@ -7,7 +7,7 @@ class UserRoom(BaseModel):
         to="Room", on_delete=models.CASCADE, null=False, blank=False
     )
     account = models.ForeignKey(
-        to="user_content.Account", on_delete=models.CASCADE, blank=False, null=False
+        to="AccountMapper", on_delete=models.CASCADE, blank=True, null=True
     )
     nick_name = models.CharField(blank=False, null=False, max_length=36)
 

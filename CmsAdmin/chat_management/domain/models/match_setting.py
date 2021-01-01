@@ -5,7 +5,7 @@ from core.domain.models.base_model import BaseModel
 
 class MatchSetting(BaseModel):
     account = models.OneToOneField(
-        "user_content.Account", on_delete=models.CASCADE, null=False, blank=False
+        "AccountMapper", on_delete=models.CASCADE, blank=True, null=True
     )
 
     max_distance = models.IntegerField(

@@ -8,4 +8,10 @@ from chat_management.models import MatchSetting
 @admin.register(MatchSetting)
 class MatchSettingAdmin(BaseAdmin):
     list_display = [linkify("account"), "target_gender"]
-    fields = ["account", "target_gender", "max_distance", "min_age", "max_age"]
+    fields = [
+        "account",
+        "target_gender",
+        "max_distance",
+        "min_age",
+        "max_age",
+    ]

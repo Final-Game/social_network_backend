@@ -5,3 +5,4 @@ from .react_smart_room_admin import ReactSmartRoomAdmin
 from .match_admin import MatchAdmin
 from .media_message_admin import MediaMessageAdmin
 from .match_setting_admin import MatchSettingAdmin
+from .account_mapper_admin import AccountMapperAdmin

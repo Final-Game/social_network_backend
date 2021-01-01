@@ -5,18 +5,19 @@ from core.domain.models.base_model import BaseModel
 
 class Match(BaseModel):
     sender = models.ForeignKey(
-        "user_content.Account",
+        "AccountMapper",
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         related_name="account_sender_related",
     )
+
     receiver = models.ForeignKey(
-        "user_content.Account",
+        "AccountMapper",
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
-        related_name="account_receiver_related",
+        blank=True,
+        null=True,
+        related_name="account_mapper_receiver_related",
     )
     status = models.IntegerField(
         blank=False,
