@@ -34,6 +34,20 @@ class ChatMsgHandler {
         callback(new GrpcInternalError(error.message));
       });
   };
+
+  public static getMessagesInRoomChat = (call, callback) => {
+    const accountId = call.request.account_id;
+    const roomId = call.request.room_id;
+
+    ChatMsgHandler.roomService
+      .getMessagesInRoomChat(accountId, roomId)
+      .then(data => {
+        callback(null, { data: data.map(item => item.toResData()) });
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
 }
 
 const interactiveMainProto: any = protoLoader(INTERACTIVE_MAIN_PROTO_PATH).interactive_main_service;
@@ -44,6 +58,7 @@ export const chatHandlers = [
     value: {
       CreateRoomChat: ChatMsgHandler.createRoomChat,
       GetListRoomChat: ChatMsgHandler.getRoomChatList,
+      GetMessagesInRoomChat: ChatMsgHandler.getMessagesInRoomChat,
     },
   },
 ];

@@ -10,6 +10,7 @@ service MatchServiceV1 {
 service ChatService {
     rpc CreateRoomChat(CreateRoomChatRequest) returns (CreateRoomChatReply);
     rpc GetListRoomChat(GetListRoomChatRequest) returns (GetListRoomChatReply);
+    rpc GetMessagesInRoomChat(GetListMessagesInRoomChatRequest) returns (GetListMessagesInRoomChatReply);
 }
 
 message GetAccountMatchSettingRequest {
@@ -61,4 +62,26 @@ message RoomChatListResult {
 
 message GetListRoomChatReply {
     repeated RoomChatListResult data = 1;
+}
+
+message MediaChat {
+    string url = 1;
+    string type = 2;
+}
+
+message MessageChat {
+    string id = 1;
+    string sender_id = 2;
+    string content = 3;
+    repeated MediaChat media_data = 4;
+    string created_at = 5;
+}
+
+message GetListMessagesInRoomChatRequest {
+    string account_id = 1;
+    string room_id =2;
+}
+
+message GetListMessagesInRoomChatReply {
+    repeated MessageChat data = 1;
 }

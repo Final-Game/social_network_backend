@@ -1,3 +1,5 @@
+import { Message } from './message.model';
+
 export interface Room {
   id: string;
   generalName: string;
@@ -7,4 +9,5 @@ export interface Room {
 
   getMemberIds: () => Promise<Array<any>>;
   getLastestMsg: () => Promise<any>;
+  getMsgs: () => Promise<Array<Message>>;
 }

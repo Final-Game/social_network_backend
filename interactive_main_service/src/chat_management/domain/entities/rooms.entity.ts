@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, getRepository } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, OneToMany, getRepository, Not, IsNull } from 'typeorm';
 import { GenericEntity } from '../../../common/entities/generic.entity';
 import { Message } from '../models/message.model';
 import { Room } from '../models/rooms.model';
@@ -41,8 +41,13 @@ export class RoomEntity extends GenericEntity implements Room {
   }
 
   public async getLastestMsg(): Promise<any> {
-    const msgRepos = getRepository(MessageEntity);
-    const msgList = await msgRepos.find({ where: { roomId: this.id }, order: { createdAt: 'DESC' } });
+    const msgList = await this.getMsgs();
     return msgList[0];
+  }
+
+  public async getMsgs(): Promise<Array<Message>> {
+    const msgRepos = getRepository(MessageEntity);
+
+    return await msgRepos.find({ where: { roomId: this.id, senderId: Not(IsNull()) }, order: { createdAt: 'DESC' } });
   }
 }

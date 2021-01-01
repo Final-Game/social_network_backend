@@ -11,6 +11,7 @@ import { Room } from '../../domain/models/rooms.model';
 import { UserRoom } from '../../domain/models/user_rooms.model';
 import { IMessageRepository, MessageRepository } from '../../domain/repositories/message.repos';
 import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
+import { MessageDto } from '../dtos/message.dto';
 import { RoomChatDto } from '../dtos/room_chat.dto';
 
 class RoomService {
@@ -87,6 +88,20 @@ class RoomService {
       return new RoomChatDto(item.id, '', item.generalName, 0, lastMsg.content, lastMsg.createdAt);
     });
     return await Promise.all(data);
+  }
+
+  public async getMessagesInRoomChat(accountId: string, roomId: string): Promise<Array<MessageDto>> {
+    const account = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    const availableRooms: Array<Room> = await account.getRooms();
+    if (!availableRooms.some(item => item.id == room.id)) {
+      throw new BaseException(`This user can't access to room ${room.id}`);
+    }
+
+    const msgs = await room.getMsgs();
+
+    return msgs.map(item => new MessageDto(item, []));
   }
 }
 
