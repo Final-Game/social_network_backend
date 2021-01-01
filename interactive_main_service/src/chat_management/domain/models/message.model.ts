@@ -6,4 +6,6 @@ export interface Message {
   senderId: string;
   roomId: string;
   content: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

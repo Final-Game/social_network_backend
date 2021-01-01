@@ -39,4 +39,10 @@ export class RoomEntity extends GenericEntity implements Room {
     const userRooms = await userRoomsRepos.createQueryBuilder('user_room').where('user_room.room_id = :room_id', { room_id: this.id }).getMany();
     return userRooms.map(item => item.accountId);
   }
+
+  public async getLastestMsg(): Promise<any> {
+    const msgRepos = getRepository(MessageEntity);
+    const msgList = await msgRepos.find({ where: { roomId: this.id }, order: { createdAt: 'DESC' } });
+    return msgList[0];
+  }
 }

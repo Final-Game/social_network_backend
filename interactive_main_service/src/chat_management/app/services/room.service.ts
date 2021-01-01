@@ -11,6 +11,7 @@ import { Room } from '../../domain/models/rooms.model';
 import { UserRoom } from '../../domain/models/user_rooms.model';
 import { IMessageRepository, MessageRepository } from '../../domain/repositories/message.repos';
 import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
+import { RoomChatDto } from '../dtos/room_chat.dto';
 
 class RoomService {
   private commandBus: CommandBus;
@@ -73,6 +74,19 @@ class RoomService {
     const accountRefRoom: UserRoom = await account.getUserRefRoom(room);
     // Create message
     await this.messageRepos.save(new MessageEntity(accountRefRoom, room, content));
+  }
+
+  public async getAccountRoomChatList(accountId: string): Promise<any> {
+    const account = await this.userRepos.findUserById(accountId, true);
+
+    const availableRooms: Array<Room> = await account.getRooms();
+
+    const data: Array<Promise<RoomChatDto>> = availableRooms.map(async item => {
+      const lastMsg: Message = await item.getLastestMsg();
+
+      return new RoomChatDto(item.id, '', item.generalName, 0, lastMsg.content, lastMsg.createdAt);
+    });
+    return await Promise.all(data);
   }
 }
 

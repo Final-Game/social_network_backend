@@ -9,6 +9,7 @@ service MatchServiceV1 {
 
 service ChatService {
     rpc CreateRoomChat(CreateRoomChatRequest) returns (CreateRoomChatReply);
+    rpc GetListRoomChat(GetListRoomChatRequest) returns (GetListRoomChatReply);
 }
 
 message GetAccountMatchSettingRequest {
@@ -42,4 +43,22 @@ message CreateRoomChatRequest {
 
 message CreateRoomChatReply {
     string room_id = 1;
+}
+
+message GetListRoomChatRequest {
+    string account_id = 1;
+}
+
+
+message RoomChatListResult {
+    string id = 1;
+    string avt_icon_url = 2;
+    string name = 3;
+    string latest_msg = 4;
+    string latest_msg_time = 5;
+    int32 num_un_read_msg = 6;
+}
+
+message GetListRoomChatReply {
+    repeated RoomChatListResult data = 1;
 }

@@ -6,4 +6,5 @@ export interface Room {
   updatedAt: Date;
 
   getMemberIds: () => Promise<Array<any>>;
+  getLastestMsg: () => Promise<any>;
 }
