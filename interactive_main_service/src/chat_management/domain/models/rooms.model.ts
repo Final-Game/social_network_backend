@@ -8,6 +8,7 @@ export interface Room {
   updatedAt: Date;
 
   getMemberIds: () => Promise<Array<any>>;
+  getMembers: () => Promise<Array<any>>;
   getLastestMsg: () => Promise<any>;
   getMsgs: () => Promise<Array<Message>>;
 }

@@ -52,22 +52,12 @@ class UserService {
     return this.userRepos.findUserById(userId);
   }
 
-  // public async updateUser(userId: string, userData: User): Promise<User> {
-  //   // if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
-  //   // const findUser: User = await this.userRepos.findOne({ where: { id: userId } });
-  //   // if (!findUser) throw new HttpException(409, "You're not user");
-  //   // const hashedPassword = await bcrypt.hash(userData.password, 10);
-  //   // await this.userRepos.update(userId, { ...userData, password: hashedPassword });
-  //   // const updateUser: User = await this.userRepos.findOne({ where: { id: userId } });
-  //   // return updateUser;
-  // }
+  public async checkUserCanMatch(userAId: string, userBId: string): Promise<boolean> {
+    const userA: User = await this.userRepos.findUserById(userAId, true);
+    const userB: User = await this.userRepos.findUserById(userBId, true);
 
-  // public async deleteUser(userId: string): Promise<User> {
-  //   // const findUser: User = await this.userRepos.findOne({ where: { id: userId } });
-  //   // if (!findUser) throw new HttpException(409, "You're not user");
-  //   // await this.userRepos.delete({ id: userId });
-  //   // return findUser;
-  // }
+    return userA.canMatch(userB) && userB.canMatch(userA);
+  }
 }
 
 export default UserService;

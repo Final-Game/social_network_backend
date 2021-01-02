@@ -8,5 +8,5 @@ export interface MatchSetting {
   createdAt: Date;
   updatedAt: Date;
 
-  updateData: (targetGender: number, maxAge: number, minAge: number, maxDistance: number);
+  updateData: (targetGender: number, maxAge: number, minAge: number, maxDistance: number) => any;
 }

@@ -1,4 +1,5 @@
 import { CommandBus } from 'node-cqrs';
+import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
 import BaseException from '../../../common/exceptions/BaseException';
 import container from '../../../container';
@@ -13,6 +14,7 @@ import { IMessageRepository, MessageRepository } from '../../domain/repositories
 import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
 import { MessageDto } from '../dtos/message.dto';
 import { RoomChatDto } from '../dtos/room_chat.dto';
+import { RoomSimpleDto } from '../dtos/room_simple.dto';
 
 class RoomService {
   private commandBus: CommandBus;
@@ -102,6 +104,40 @@ class RoomService {
     const msgs = await room.getMsgs();
 
     return msgs.map(item => new MessageDto(item, []));
+  }
+
+  public async createSmartRoom(partnerAId: string, partnerBId: string): Promise<any> {
+    const partnerA = await this.userRepos.findUserById(partnerAId, true);
+    const partnerB = await this.userRepos.findUserById(partnerBId, true);
+
+    // Validate
+    const availableSmartRoomsOfPartnerA = await partnerA.getCurrentSmartRooms();
+    if (availableSmartRoomsOfPartnerA && availableSmartRoomsOfPartnerA.length > 0) {
+      const defaultAvailableSmartRoom = availableSmartRoomsOfPartnerA[0];
+      if (await this.checkAccountInRoom(partnerB, defaultAvailableSmartRoom)) {
+        return new RoomSimpleDto(defaultAvailableSmartRoom);
+      }
+
+      throw new BaseException('Parter A is not available.');
+    }
+
+    const availableSmartRoomsOfPartnerB = await partnerB.getCurrentSmartRooms();
+    if (availableSmartRoomsOfPartnerB && availableSmartRoomsOfPartnerB.length > 0) {
+      throw new BaseException('Partner B is not available.');
+    }
+
+    // Create room
+    const room: Room = await this.roomRepos.save(new RoomEntity(RoomType.SMART));
+    await partnerA.joinRoom(room);
+    await partnerB.joinRoom(room);
+
+    return new RoomSimpleDto(room);
+  }
+
+  public async checkAccountInRoom(account: User, room: Room): Promise<boolean> {
+    const availableMembers: Array<User> = await Promise.all(await room.getMembers());
+
+    return availableMembers.some(mem => mem.id == account.id);
   }
 }
 
