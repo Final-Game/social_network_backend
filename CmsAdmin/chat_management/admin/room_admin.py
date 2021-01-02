@@ -10,5 +10,5 @@ from chat_management.models import Room
 class RoomAdmin(BaseAdmin):
     list_display = ["general_name", "type"]
     list_display_links = ["general_name"]
-
+    list_filter = ["type"]
     fields = ["general_name", "type"]
