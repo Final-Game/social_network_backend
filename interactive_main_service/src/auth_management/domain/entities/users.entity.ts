@@ -19,6 +19,7 @@ import { RoomType } from '../../../chat_management/domain/enums/roomType.enum';
 import { MatchSettingEntity } from '../../../chat_management/domain/entities/match_settings.entity';
 import { GenericEntity } from '../../../common/entities/generic.entity';
 import { MatchSetting } from '../../../chat_management/domain/models/match_settings.model';
+import { dateToString, stringToDate } from '../../../common/utils/util';
 
 @Entity('cm_account_mappers')
 export class UserEntity extends GenericEntity implements User {
@@ -32,7 +33,7 @@ export class UserEntity extends GenericEntity implements User {
   avatar: string;
 
   @Column({ name: 'birth_date' })
-  birthDate: Date;
+  birthDate: string;
 
   @Column()
   gender: number;
@@ -46,6 +47,15 @@ export class UserEntity extends GenericEntity implements User {
     this.refId = refId;
 
     this.triggerCreate();
+  }
+
+  public async updateData(fullName: string, avatar: string, birthDate: Date, gender: number) {
+    this.fullName = fullName;
+    this.avatar = avatar;
+    this.birthDate = dateToString(birthDate);
+    this.gender = gender;
+
+    this.triggerUpdate();
   }
 
   public async getRooms(): Promise<Array<any>> {
@@ -110,7 +120,7 @@ export class UserEntity extends GenericEntity implements User {
 
   public getAge(): number {
     const today = new Date();
-    const birthDate = this.birthDate;
+    const birthDate = this.getBirthDate();
 
     if (!birthDate) {
       return 0;
@@ -122,5 +132,9 @@ export class UserEntity extends GenericEntity implements User {
       age--;
     }
     return age;
+  }
+
+  public getBirthDate(): Date {
+    return stringToDate(this.birthDate);
   }
 }

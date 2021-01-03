@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const isEmpty = (value: any): boolean => {
   if (value === null) {
     return true;
@@ -10,4 +12,12 @@ export const isEmpty = (value: any): boolean => {
   } else {
     return false;
   }
+};
+
+export const dateToString = (value: Date): string => {
+  return (value && moment(value).format('YYYY-MM-DD')) || null;
+};
+
+export const stringToDate = (value: string): Date => {
+  return (value && new Date(value)) || null;
 };

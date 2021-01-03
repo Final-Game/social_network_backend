@@ -11,13 +11,18 @@ import { logger } from '../../../common/utils/logger';
 import { CommandBus } from 'node-cqrs';
 import ITestCommandPayload from '../../domain/aggregates/payloads/testCommand.payload';
 import CreateUserCommandPayload from '../../domain/aggregates/payloads/createUserCommand.payload';
+import { AccountGateway } from '../gateways/account.gateway';
+import { AccountGatewayImpl } from '../../infras/gateway_impls/account.gatewayImpl';
+import { AccountInfoDto } from '../gateways/dtos/accountInfo.dto';
 
 class UserService {
   private commandBus: CommandBus;
 
   private userRepos: UserRepository;
+  private accountGateway: AccountGateway;
   constructor() {
     this.userRepos = new UserRepository();
+    this.accountGateway = new AccountGatewayImpl();
     this.commandBus = container.commandBus;
   }
 
@@ -68,6 +73,22 @@ class UserService {
     const userB: User = await this.userRepos.findUserById(userBId, true);
 
     return userA.canMatch(userB) && userB.canMatch(userA);
+  }
+
+  public async syncAccountInfo(account: User): Promise<void> {
+    const accountInfo: AccountInfoDto = await this.accountGateway.getAccountInfo(account.refId);
+
+    logger.info(`Account info: ${JSON.stringify(accountInfo)}`);
+
+    account.updateData(accountInfo.fullName, accountInfo.avatar, accountInfo.birthDate, accountInfo.gender);
+
+    await this.userRepos.save(account);
+    return;
+  }
+
+  public async syncAllAccounts(): Promise<void> {
+    const accounts: Array<User> = await this.userRepos.findAllUser();
+    accounts.forEach(async account => await this.syncAccountInfo(account));
   }
 }
 

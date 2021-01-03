@@ -17,7 +17,10 @@ import { createServer, Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import registerContainer from './register.container';
 import registerChatServiceSocket from './chat_management/api/socket_handlers';
-
+import cron from 'node-cron';
+import { JobScheduler } from './common/jobs/scheduler.job';
+import CronJobScheduler from './configs/jobs/cronJob.scheduler';
+import { UserJobListener } from './auth_management/jobs/userJob.listener';
 class App {
   public app: express.Application;
   public port: string | number;
@@ -39,6 +42,7 @@ class App {
     this.initializeSwagger();
     this.initializeErrorHandling();
     this.handleSocketConnection();
+    this.handleBackgroundJobs();
   }
 
   public listen() {
@@ -106,6 +110,12 @@ class App {
 
   private connectContainer() {
     registerContainer();
+  }
+
+  private handleBackgroundJobs() {
+    const jobScheduler: JobScheduler = new CronJobScheduler();
+    jobScheduler.addListener(new UserJobListener(jobScheduler));
+    jobScheduler.execute();
   }
 
   private handleSocketConnection() {

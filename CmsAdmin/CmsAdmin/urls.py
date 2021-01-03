@@ -26,4 +26,5 @@ urlpatterns = [
     url(r"^jet/dashboard/", include("jet.dashboard.urls", "jet-dashboard")),
     path("admin/", admin.site.urls),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    url(r"^api/", include("user_content.urls")),
 ]
