@@ -13,4 +13,5 @@ export interface User {
   getUserRefRoom: (room: any) => Promise<any>;
   getMatchSetting: () => Promise<any>;
   canMatch: (partner: any) => Promise<boolean>;
+  isReadyForNewSmartRoom: () => Promise<boolean>;
 }

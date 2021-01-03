@@ -11,4 +11,5 @@ export interface Room {
   getMembers: () => Promise<Array<any>>;
   getLastestMsg: () => Promise<any>;
   getMsgs: () => Promise<Array<Message>>;
+  isSmartRoomAlive: () => boolean;
 }

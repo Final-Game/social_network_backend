@@ -19,6 +19,17 @@ class UserRepository {
     return user;
   }
 
+  public async findAccountByBaseAccountId(baseId: string, raiseException = false): Promise<User> {
+    const manager = getConnection().manager;
+
+    const account: User = await manager.findOne(this.model, { where: { refId: baseId } });
+
+    if (raiseException && !account) {
+      throw new BaseException(`Can't find account with ref id: ${baseId}`);
+    }
+    return account;
+  }
+
   public async findUserByUsername(username: string, raiseException = false): Promise<User> {
     const manager = getConnection().manager;
 

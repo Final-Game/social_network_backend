@@ -5,6 +5,7 @@ export interface IBaseRepository {
   save: (entity: any) => Promise<any>;
   update: (entityId: string, data: any) => Promise<void>;
   findById: (entityId: string, raiseException: boolean) => Promise<any>;
+  delete: (entityid: string) => Promise<any>;
 }
 
 export class BaseRepository implements IBaseRepository {
@@ -32,5 +33,11 @@ export class BaseRepository implements IBaseRepository {
     }
 
     return entity;
+  }
+
+  public async delete(entityId: string): Promise<void> {
+    const manager = getConnection().manager;
+
+    await manager.delete(this.model, entityId);
   }
 }

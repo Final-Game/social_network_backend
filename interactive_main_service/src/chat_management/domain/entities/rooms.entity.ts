@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../../auth_management/domain/entities/users.entity';
 import { GenericEntity } from '../../../common/entities/generic.entity';
+import { RoomType } from '../enums/roomType.enum';
 import { Message } from '../models/message.model';
 import { Room } from '../models/rooms.model';
 import { MessageEntity } from './message.entity';
@@ -69,5 +70,11 @@ export class RoomEntity extends GenericEntity implements Room {
     const msgRepos = getRepository(MessageEntity);
 
     return await msgRepos.find({ where: { roomId: this.id, senderId: Not(IsNull()) }, order: { createdAt: 'DESC' } });
+  }
+
+  public isSmartRoomAlive(): boolean {
+    const threshTime = new Date(this.createdAt.getTime() + 4 * 60 * 1000); // delay a minute for setup
+
+    return this.type == RoomType.SMART && new Date() <= threshTime;
   }
 }

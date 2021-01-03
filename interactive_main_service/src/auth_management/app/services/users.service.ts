@@ -40,6 +40,17 @@ class UserService {
     return this.userRepos.findUserById(userId, true);
   }
 
+  public async getOrCreateAccountByAccountId(accountBaseId: string): Promise<User> {
+    let account: User = await this.userRepos.findAccountByBaseAccountId(accountBaseId, false);
+
+    if (!account) {
+      // TODO verify account before create
+
+      account = await this.userRepos.save(new UserEntity(accountBaseId));
+    }
+    return account;
+  }
+
   public async createUser(userData: CreateUserDto): Promise<User> {
     const payload = { username: userData.username, password: userData.password };
 

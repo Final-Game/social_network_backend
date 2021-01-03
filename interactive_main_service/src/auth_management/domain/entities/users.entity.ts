@@ -40,6 +40,14 @@ export class UserEntity extends GenericEntity implements User {
   @Column({ name: 'ref_id' })
   refId: string;
 
+  constructor(refId: string) {
+    super();
+
+    this.refId = refId;
+
+    this.triggerCreate();
+  }
+
   public async getRooms(): Promise<Array<any>> {
     const userRoomRepos = getRepository(UserRoomEntity);
     const userRooms = await userRoomRepos
@@ -57,7 +65,13 @@ export class UserEntity extends GenericEntity implements User {
       .where('user_room.account_id = :account_id', { account_id: this.id })
       .getMany();
 
-    return (await Promise.all(userRooms.map(async ur => await ur.getRoom()))).filter(item => item.type == RoomType.SMART);
+    return (await Promise.all(userRooms.map(async ur => await ur.getRoom()))).filter(room => room.isSmartRoomAlive());
+  }
+
+  public async isReadyForNewSmartRoom(): Promise<boolean> {
+    const currentSmartRooms = await this.getCurrentSmartRooms();
+
+    return !(currentSmartRooms && currentSmartRooms.length > 0);
   }
 
   public async joinRoom(room: any): Promise<void> {

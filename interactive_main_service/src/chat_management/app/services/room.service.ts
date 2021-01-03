@@ -79,6 +79,27 @@ class RoomService {
     await this.messageRepos.save(new MessageEntity(accountRefRoom, room, content));
   }
 
+  public async sendSmartMsg(accountId: string, roomId: string, msg_data: any): Promise<void> {
+    const { content } = msg_data;
+
+    const account: User = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    // validate room active
+    if (!room.isSmartRoomAlive()) {
+      throw new BaseException(`Room ${roomId} isn't available.`);
+    }
+
+    // validate account in room
+    if (!(await this.checkAccountInRoom(account, room))) {
+      throw new BaseException(`User ${accountId} isn't existed in room ${roomId}.`);
+    }
+
+    const accountRefRoom: UserRoom = await account.getUserRefRoom(room);
+
+    await this.messageRepos.save(new MessageEntity(accountRefRoom, room, content));
+  }
+
   public async getAccountRoomChatList(accountId: string): Promise<any> {
     const account = await this.userRepos.findUserById(accountId, true);
 
@@ -111,19 +132,24 @@ class RoomService {
     const partnerB = await this.userRepos.findUserById(partnerBId, true);
 
     // Validate
-    const availableSmartRoomsOfPartnerA = await partnerA.getCurrentSmartRooms();
-    if (availableSmartRoomsOfPartnerA && availableSmartRoomsOfPartnerA.length > 0) {
-      const defaultAvailableSmartRoom = availableSmartRoomsOfPartnerA[0];
-      if (await this.checkAccountInRoom(partnerB, defaultAvailableSmartRoom)) {
-        return new RoomSimpleDto(defaultAvailableSmartRoom);
+    const existedRoom: Room = await this.roomRepos.findRoomByTwoPartners(partnerA, partnerB);
+
+    if (existedRoom) {
+      if (existedRoom.type != RoomType.SMART) {
+        throw new BaseException("Can't create smart chat for two partners.");
       }
 
-      throw new BaseException('Parter A is not available.');
+      if (existedRoom.isSmartRoomAlive()) {
+        return new RoomSimpleDto(existedRoom);
+      } else {
+        await this.roomRepos.delete(existedRoom.id);
+      }
     }
 
-    const availableSmartRoomsOfPartnerB = await partnerB.getCurrentSmartRooms();
-    if (availableSmartRoomsOfPartnerB && availableSmartRoomsOfPartnerB.length > 0) {
-      throw new BaseException('Partner B is not available.');
+    const partnerAIsReady: boolean = await partnerA.isReadyForNewSmartRoom();
+    const partnerBIsReady: boolean = await partnerB.isReadyForNewSmartRoom();
+    if (!(partnerAIsReady && partnerBIsReady)) {
+      throw new BaseException("A partner isn't ready for new smart chat.");
     }
 
     // Create room
@@ -138,6 +164,13 @@ class RoomService {
     const availableMembers: Array<User> = await Promise.all(await room.getMembers());
 
     return availableMembers.some(mem => mem.id == account.id);
+  }
+
+  public async checkAccountInRoomType(accountId: string, roomId: string, type: number): Promise<boolean> {
+    const account: User = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    return room.type == type && this.checkAccountInRoom(account, room);
   }
 }
 

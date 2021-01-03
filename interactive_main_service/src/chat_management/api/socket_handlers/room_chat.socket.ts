@@ -1,49 +1,95 @@
 import { Server as SocketIOServer } from 'socket.io';
 import UserService from '../../../auth_management/app/services/users.service';
+import { User } from '../../../auth_management/domain/models/users.model';
+import BaseException from '../../../common/exceptions/BaseException';
 import { RoomSimpleDto } from '../../app/dtos/room_simple.dto';
 import RoomService from '../../app/services/room.service';
+import { RoomType } from '../../domain/enums/roomType.enum';
 import smartChatListener from '../utils/smart_chat_listener';
 
 const roomService: RoomService = new RoomService();
 const userService: UserService = new UserService();
 
+async function getAccountReference(accountId: string): Promise<User> {
+  const user: User = await userService.getOrCreateAccountByAccountId(accountId);
+  if (!user) {
+    throw new BaseException("Can't find account.");
+  }
+  return user;
+}
+
 const roomChatSocket = (io: SocketIOServer, socket: any) => {
-  socket.on('join-room', data => {
+  socket.on('join-room', async data => {
     const userId: string = data['userId'];
     const roomId: string = data['roomId'];
 
     // Validate user can join current room
+    const account = await getAccountReference(userId);
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.NORMAL))) {
+      throw new BaseException(`Account ${account.refId} can't join this room.`);
+    }
 
     socket.join(roomId);
     console.log(`Joined to room: ${roomId}`);
 
-    io.to(roomId).emit('new-mem-joined', { userId: userId });
+    io.to(roomId).emit('new-mem-joined', { accountId: account.refId });
   });
 
-  socket.on('send-msg', data => {
+  socket.on('join-smart-room', async data => {
+    const { accountId, roomId } = data;
+
+    // validate user can join smart room
+    const account = await getAccountReference(accountId);
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+      throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
+    }
+    // join room.
+    socket.join(roomId);
+    console.log(`User ${account.refId} joined to room ${roomId}`);
+
+    io.to(roomId).emit('new-mem-joined-smart-chat', { accountId: account.refId });
+  });
+
+  socket.on('send-msg', async data => {
     const { roomId, senderId, message } = data;
     const { content, media } = message;
     const { mediaUrl, type } = media;
 
-    roomService.sendMessage(senderId, roomId, { content: content, media: { mediaUrl: mediaUrl, type: type } });
+    const sender = await getAccountReference(senderId);
+
+    roomService.sendMessage(sender.id, roomId, { content: content, media: { mediaUrl: mediaUrl, type: type } });
   });
 
-  socket.on('join-smart-chat', async data => {
-    const { userId } = data;
+  socket.on('send-smart-msg', async data => {
+    const { roomId, senderId, message } = data;
+    const { content } = message;
 
-    const user: any = await userService.findUserById(userId);
-    if (!user) {
-      return;
-    }
+    socket.join(roomId);
 
-    const finderId = await smartChatListener.findAvailableUserMatcher(userId);
+    const sender = await getAccountReference(senderId);
+
+    roomService.sendSmartMsg(sender.id, roomId, { content: content });
+
+    io.to(roomId).emit('new-smart-msg', { accountId: sender.id, message: { content: content } });
+  });
+
+  socket.on('find-smart-chat', async data => {
+    let { accountId } = data;
+    accountId = (await getAccountReference(accountId)).id;
+
+    const finderId = await smartChatListener.findAvailableUserMatcher(accountId);
     if (finderId) {
-      const room: RoomSimpleDto = await roomService.createSmartRoom(finderId, userId);
+      const room: RoomSimpleDto = await roomService.createSmartRoom(finderId, accountId);
 
       const broadCastId: string = smartChatListener.getAvailableRoomWaiterForUserId(finderId);
       smartChatListener.notifyMatchSmartChat(broadCastId, { roomId: room.id });
     }
 
+    return;
+  });
+
+  socket.on('exit-smart-chat', async data => {
+    const accountId = getAccountReference(data['accountId']);
     return;
   });
 };

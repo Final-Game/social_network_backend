@@ -18,6 +18,7 @@ class SmartChatListener {
   }
 
   public addNewWaitingUser(userId: string) {
+    console.log(`User ${userId} is waiting for smart chat.`);
     this.available_user_ids.push(userId);
 
     // create room owner for waiting matcher
