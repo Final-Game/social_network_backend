@@ -7,6 +7,7 @@ from grpc_tools import protoc
 proto_paths: List[str] = [
     "./../protos/hello.proto",
     "./../protos/match_service.proto",
+    "./../protos/interactive_main_service.proto",
 ]
 
 existed_proto_names: List[str] = []
