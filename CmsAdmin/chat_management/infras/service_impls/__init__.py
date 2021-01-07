@@ -1,1 +1,3 @@
 from .match_service_impl import MatchServiceImpl
+from .match_v1_service_impl import MatchV1ServiceImpl
+from .chat_service_impl import ChatServiceImpl

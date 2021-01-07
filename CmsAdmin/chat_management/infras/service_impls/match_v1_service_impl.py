@@ -49,7 +49,9 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
             stub = MatchServiceV1Stub(channel)
 
             res: UpdateAccountMatchSettingReply = await stub.UpdateAccountMatchSetting(
-                account_id=account_id, **match_setting_dto.__dict__
+                UpdateAccountMatchSettingRequest(
+                    account_id=account_id, **match_setting_dto.__dict__
+                )
             )
             result = res
 
