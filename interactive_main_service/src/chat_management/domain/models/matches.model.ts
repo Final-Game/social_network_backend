@@ -6,5 +6,5 @@ export interface Match {
   createdAt: Date;
   updatedAt: Date;
 
-  updateStatus: (status: number);
+  updateStatus: (status: number) => any;
 }

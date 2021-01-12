@@ -1,11 +1,15 @@
-FROM node:14.14.0-alpine3.12
+FROM node:12.20.0-alpine
 
 COPY . ./app
 
 WORKDIR /app
 
-RUN npm install
- 
-EXPOSE 3000
+RUN npm install -g pnpm
 
-CMD ["npm", "start"]
+RUN pnpm install
+
+EXPOSE 3002
+EXPOSE 50051
+
+
+CMD ["pnpm", "start"]

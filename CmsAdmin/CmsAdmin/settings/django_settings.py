@@ -140,8 +140,8 @@ JWT_PRIVATE_SIGNATURE: str = (
     "ip06kHDxHPDnI6wKavavpKKhTm02RC7dqZzngFGB3jr7BCKeFl4BtLROrcRm"
 )
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
 
 
 GRAPHENE = {"SCHEMA": "CmsAdmin.schema.schema"}

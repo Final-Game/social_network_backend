@@ -1,6 +1,5 @@
 import grpc, { Server as GrpcServer } from 'grpc';
 import { logger } from './common/utils/logger';
-import path from 'path';
 import registerContainer from './register.container';
 import { createConnection } from 'typeorm';
 import { dbConnection } from './configs/database';
@@ -13,18 +12,20 @@ function sayHello(call, callback) {
 
 class GrpcApp {
   private server: GrpcServer;
+  private port: string | number;
 
   constructor(protoHandlers: Array<any>) {
     this.server = new GrpcServer();
+    this.port = process.env.GRPC_PORT || 50051;
     this.loadProtos(protoHandlers);
     this.connectToDatabase();
     this.connectContainer();
   }
 
   public listen() {
-    this.server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    this.server.bindAsync(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure(), () => {
       this.server.start();
-      logger.info('🚀 gRPC App listening on the port 50051');
+      logger.info(`🚀 gRPC App listening on the port ${this.port}`);
     });
   }
 

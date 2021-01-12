@@ -17,7 +17,6 @@ import { createServer, Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import registerContainer from './register.container';
 import registerChatServiceSocket from './chat_management/api/socket_handlers';
-import cron from 'node-cron';
 import { JobScheduler } from './common/jobs/scheduler.job';
 import CronJobScheduler from './configs/jobs/cronJob.scheduler';
 import { UserJobListener } from './auth_management/jobs/userJob.listener';
@@ -30,7 +29,7 @@ class App {
 
   constructor(routes: Routes[]) {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.port = process.env.PORT || 3002;
     this.env = process.env.NODE_ENV || 'production';
     this.server = createServer(this.app);
     this.io = new SocketIOServer(this.server);

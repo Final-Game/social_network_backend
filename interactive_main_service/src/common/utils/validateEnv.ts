@@ -10,6 +10,7 @@ const validateEnv = () => {
     POSTGRESQL_PASSWORD: str(),
     POSTGRESQL_DATABASE: str(),
     JWT_SECRET: str(),
+    GRPC_PORT: port(),
     DEBUG_GRPC: bool(),
     DEBUG_REST: bool(),
   });

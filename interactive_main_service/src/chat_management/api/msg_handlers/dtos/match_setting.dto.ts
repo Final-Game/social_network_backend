@@ -2,10 +2,6 @@ import { Gender } from '../../../domain/enums/gender.enum';
 import { MatchSetting } from '../../../domain/models/match_settings.model';
 
 const convertGenderName = (gender: Gender): string => {
-  if (gender == Gender.MALE) {
-    return 'MALE';
-  }
-
   switch (gender) {
     case Gender.MALE:
       return 'MALE';
