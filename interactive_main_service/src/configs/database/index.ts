@@ -11,9 +11,9 @@ export const dbConnection: ConnectionOptions = {
   database: '/Users/kakavip/Developers/moonsmile-dev/social_network_backend/CmsAdmin/config/db/db.sqlite3',
   synchronize: false,
   logging: false,
-  entities: [process.env.NODE_ENV === 'production' ? 'build/*/domain/entities/*{.ts,.js}' : 'src/*/domain/entities/*{.ts,.js}'],
-  migrations: [process.env.NODE_ENV === 'production' ? 'build/migration/*{.ts,.js}' : 'src/*/infras/migration/*{.ts,.js}'],
-  subscribers: [process.env.NODE_ENV === 'production' ? 'build/subscriber/*{.ts,.js}' : 'src/subscriber/*{.ts,.js}'],
+  entities: [process.env.NODE_ENV !== 'local' ? 'build/*/domain/entities/*{.ts,.js}' : 'src/*/domain/entities/*{.ts,.js}'],
+  migrations: [process.env.NODE_ENV !== 'local' ? 'build/migration/*{.ts,.js}' : 'src/*/infras/migration/*{.ts,.js}'],
+  subscribers: [process.env.NODE_ENV !== 'local' ? 'build/subscriber/*{.ts,.js}' : 'src/subscriber/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src/entity',
     migrationsDir: 'src/migration',

@@ -5,13 +5,16 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "pnpm run build && cross-env NODE_ENV=production node build/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon",
+    "start": "pnpm run build && cross-env NODE_ENV=prod node build/server.js",
+    "start:dev": "pnpm run build && cross-env NODE_ENV=dev node build/server.js",
+    "dev": "cross-env NODE_ENV=local nodemon",
     "build": "tsc",
     "test": "jest --forceExit --detectOpenHandles",
     "test:socket": "babel-node --presets es2015 tests/test.socket.js",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "pnpm run lint -- --fix"
+    "lint:fix": "pnpm run lint -- --fix",
+    "postbuild": "pnpm run copy_files",
+    "copy_files": "/bin/sh -c ./cp_non_ts.sh"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.2.2",

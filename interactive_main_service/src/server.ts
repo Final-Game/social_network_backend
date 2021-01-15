@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import App from './app';
 import AuthManagementRoutes from './auth_management/api/routes';
 import validateEnv from './common/utils/validateEnv';
@@ -6,8 +6,7 @@ import cluster from 'cluster';
 import os from 'os';
 import GrpcApp from './grpc.app';
 import { chatModuleHandler } from './chat_management/api/msg_handlers';
-
-validateEnv();
+import path from 'path';
 
 function runGrpc() {
   const protoHandlers = chatModuleHandler;
@@ -20,31 +19,44 @@ function runRest() {
   app.listen();
 }
 
-const isDebugGRPC = process.env.DEBUG_GRPC === 'true';
-const isDebugREST = process.env.DEBUG_REST === 'true';
+function loadEnv() {
+  dotenv.config({ path: path.join(__dirname, `./configs/envs/${process.env.NODE_ENV}.env`) });
 
-if (isDebugGRPC) {
-  runGrpc();
-} else if (isDebugREST) {
-  runRest();
-} else {
-  if (cluster.isMaster) {
-    const numCPUs = os.cpus().length;
-    console.log(`Master ${process.pid} is running`);
+  validateEnv();
+}
 
-    // Fork workers.
-    for (let i = 0; i < numCPUs; i++) {
-      cluster.fork();
-    }
+function main() {
+  loadEnv();
 
-    cluster.on('exit', (worker, code, signal) => {
-      console.log(`worker ${worker.process.pid} died`);
-    });
+  const isDebugGRPC = process.env.DEBUG_GRPC === 'true';
+  const isDebugREST = process.env.DEBUG_REST === 'true';
+
+  if (isDebugGRPC) {
+    runGrpc();
+  } else if (isDebugREST) {
+    runRest();
   } else {
-    if (cluster.worker.id === 1) {
-      runGrpc();
+    if (cluster.isMaster) {
+      const numCPUs = os.cpus().length;
+      console.log(`Master ${process.pid} is running`);
+
+      // Fork workers.
+      for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      cluster.on('exit', (worker, _code, _signal) => {
+        console.log(`worker ${worker.process.pid} died`);
+      });
     } else {
-      runRest();
+      if (cluster.worker.id === 1) {
+        runGrpc();
+      } else {
+        runRest();
+      }
     }
   }
 }
+
+main();

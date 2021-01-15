@@ -30,7 +30,7 @@ class App {
   constructor(routes: Routes[]) {
     this.app = express();
     this.port = process.env.PORT || 3002;
-    this.env = process.env.NODE_ENV || 'production';
+    this.env = process.env.NODE_ENV || 'prod';
     this.server = createServer(this.app);
     this.io = new SocketIOServer(this.server);
 
@@ -65,7 +65,7 @@ class App {
   }
 
   private initializeMiddlewares() {
-    if (this.env === 'production') {
+    if (this.env === 'prod') {
       this.app.use(morgan('combined', { stream }));
       this.app.use(cors({ origin: 'your.domain.com', credentials: true }));
     } else if (this.env === 'development') {
