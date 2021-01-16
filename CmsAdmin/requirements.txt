@@ -34,3 +34,4 @@ gunicorn==20.0.4
 grpcio==1.34.0
 grpcio-tools==1.34.0
 djangorestframework==3.12.2
+mysqlclient==1.4.0

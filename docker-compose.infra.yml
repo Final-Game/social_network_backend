@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  nginx:
+    container_name: sn_nginx
+    build: ./nginx
+    restart: always
+    volumes:
+      - staticdata:/etc/nginx/html/cms/static/
+    ports:
+      - $NGINX_PORT:80
+
+  proxysql:
+    container_name: sn_proxysql
+    image: perconalab/proxysql
+    ports:
+      - "3306:3306"
+      - "6032:6032"
+    env_file: ./percona_proxysql/proxysql.env
+
+  etcd:
+    container_name: sn_etcd
+    image: quay.io/coreos/etcd
+    command: etcd
+    volumes:
+      - /usr/share/ca-certificates/:/etc/ssl/certs
+    env_file: ./percona_proxysql/etcd.env
+
+  percona-xtradb-cluster:
+    container_name: sn_pxc
+    build:
+      context: ./percona_proxysql
+      dockerfile: Dockerfile.pxc
+    env_file: ./percona_proxysql/pxc.env
+    depends_on:
+      - etcd
+
+  phpmyadmin:
+    container_name: sn_phpmyadmin
+    image: phpmyadmin/phpmyadmin:5.0
+    environment:
+      PMA_HOST: percona-xtradb-cluster
+    ports:
+      - "8080:80"
+
+networks:
+  default:
+    name: sn_network
+volumes:
+  staticdata:

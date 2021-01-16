@@ -1,5 +1,22 @@
+#!make
+include ./envs/dev.env
+export $(shell sed 's/=.*//' ./envs/dev.env)
+
+
+start_infra:
+	docker-compose -f docker-compose.infra.yml up --build -d
+
+shutdown_infra:
+	docker-compose -f docker-compose.infra.yml down
+
 start: 
-	export `cat ./envs/dev.env | xargs` && docker-compose up --build -d
+	docker-compose up --build -d
 
 shutdown:
-	export `cat ./envs/dev.env | xargs` && docker-compose down
+	docker-compose down
+
+start_all:
+	make start_infra && make start
+
+shutdown_all:
+	make shutdown && make shutdown_infra

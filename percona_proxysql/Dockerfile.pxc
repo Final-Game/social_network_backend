@@ -1,0 +1,3 @@
+FROM percona/percona-xtradb-cluster:5.7
+
+ADD  ./schema/init.sql /docker-entrypoint-initdb.d
