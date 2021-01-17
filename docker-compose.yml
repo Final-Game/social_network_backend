@@ -5,8 +5,8 @@ services:
     container_name: cms_admin
     build: ./CmsAdmin
     # entrypoint: ["./entrypoint.sh"]
-    ports:
-      - "8002:8000"
+    # ports:
+    #   - "8002:8000"
     volumes:
       - staticdata:/code/staticfiles
     env_file: ./CmsAdmin/config/envs/dev.env
@@ -16,9 +16,9 @@ services:
     build:
       context: ./interactive_main_service
       dockerfile: Dockerfile.dev
-    ports:
-      - "3002:3002"
-      - "50051:50051"
+    # ports:
+    #   - "3002:3002"
+    #   - "50051:50051"
 
 networks:
   default:
