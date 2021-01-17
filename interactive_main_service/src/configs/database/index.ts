@@ -1,14 +1,12 @@
 import { ConnectionOptions } from 'typeorm';
 
 export const dbConnection: ConnectionOptions = {
-  // type: 'postgres',
-  type: 'sqlite',
-  // host: process.env.POSTGRESQL_HOST,
-  // port: Number(process.env.POSTGRESQL_PORT),
-  // username: process.env.POSTGRESQL_USERNAME,
-  // password: process.env.POSTGRESQL_PASSWORD,
-  // database: process.env.POSTGRESQL_DATABASE,
-  database: '/Users/kakavip/Developers/moonsmile-dev/social_network_backend/CmsAdmin/config/db/db.sqlite3',
+  type: 'mysql',
+  host: process.env.DB_HOST,
+  port: Number.parseInt(process.env.DB_PORT || '3306'),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   synchronize: false,
   logging: false,
   entities: [process.env.NODE_ENV !== 'local' ? 'build/*/domain/entities/*{.ts,.js}' : 'src/*/domain/entities/*{.ts,.js}'],
