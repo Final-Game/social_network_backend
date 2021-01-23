@@ -71,7 +71,7 @@ class Query(graphene.ObjectType, BaseAuth):
         return TestType(x="Nguyen Minh Tuan")
 
     @classmethod
-    @authenticate_permission
+    # @authenticate_permission
     def resolve_account_profile(cls, *args, **kwargs):
         __bus: Bus = cls.get_bus()
 

@@ -11,4 +11,4 @@ class ArticlePostDto:
     content: str = ""
     medias: List[MediaData] = None
     user_comment_count: int = 0
-    user_react_account: int = 0
+    user_react_count: int = 0

@@ -1,3 +1,4 @@
+from core.common.base_enum import BaseEnum
 from user_content.app.dtos.account_home_page_dto import AccountHomePageDto
 from user_content.app.dtos.media_data_dto import MediaDataDto
 from user_content.app.dtos.article_post_dto import ArticlePostDto
@@ -53,14 +54,17 @@ class GetAccountHomePageQueryHandler(QueryHandler):
         offset_page: int = pageable.limit * pageable.page
 
         related_posts: List[Post] = Post.objects.filter(
-            Q(account__in=account.followers.all())
+            Q(account__in=account.following_users.all())
         ).order_by("-created_at")[offset_page : offset_page + pageable.limit]
         return list(related_posts)
 
 
 def map_post_model_to_article_post_dto(post: Post) -> ArticlePostDto:
     medias: List[MediaDataDto] = list(
-        map(lambda x: MediaDataDto(url=x.url, type=x.type), list(post.medias.all()))
+        map(
+            lambda x: MediaDataDto(url=x.url, type=map_media_type(x.type)),
+            list(post.medias.all()),
+        )
     )
     user_comment_count: int = post.usercommentpost_set.count()
     user_react_count: int = post.userreactpost_set.count()
@@ -70,5 +74,17 @@ def map_post_model_to_article_post_dto(post: Post) -> ArticlePostDto:
         content=post.content,
         medias=medias,
         user_comment_count=user_comment_count,
-        user_react_account=user_react_count,
+        user_react_count=user_react_count,
     )
+
+
+class MediaTypeDto(BaseEnum):
+    VIDEO: int = 1
+    PHOTO: int = 0
+
+
+def map_media_type(media_type: int) -> str:
+    if media_type == MediaTypeDto.PHOTO:
+        return MediaTypeDto.PHOTO.name
+    elif media_type == MediaTypeDto.VIDEO:
+        return MediaTypeDto.VIDEO.name
