@@ -105,7 +105,7 @@ class Query(graphene.ObjectType, BaseAuth):
         return list(map(lambda x: x.to_dict(), user_stories))
 
     @classmethod
-    @authenticate_permission
+    # @authenticate_permission
     def resolve_account_timeline(cls, *args, **kwargs):
         __bus: Bus = cls.get_bus()
 

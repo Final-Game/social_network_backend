@@ -67,4 +67,3 @@ class Profile(BaseModel):
             birth_date,
         )
         self.school, self.address, self.bio = school, address, bio
-        return

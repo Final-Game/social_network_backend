@@ -55,5 +55,5 @@ def map_post_model_to_article_post_dto(post: Post) -> ArticlePost:
         content=post.content,
         medias=medias,
         user_comment_count=user_comment_count,
-        user_react_account=user_react_count,
+        user_react_count=user_react_count,
     )
