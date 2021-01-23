@@ -3,7 +3,7 @@ from user_content.domain.managers.account_manager import AccountManager
 from user_content.domain.enums.account_type_enum import AccountTypeEnum
 from django.db import models
 from core.domain.models.base_model import BaseModel
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 
 
 class Account(BaseModel):
@@ -47,6 +47,15 @@ class Account(BaseModel):
     def save(self, *args, **kwargs) -> None:
         if self.profile:
             self.profile.save()
+
+        # support create account over django admin.
+        old_account = Account.objects.find_account_by_id(self.id)
+        if not old_account or not (
+            old_account.password == self.password
+            or check_password(self.password, old_account.password)
+        ):
+            self.password = make_password(self.password)
+
         super(Account, self).save(*args, **kwargs)
 
     def generate_token(self):

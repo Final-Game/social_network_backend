@@ -20,7 +20,7 @@ class UserFollow(BaseModel):
     )
 
     def save(self, *args, **kwargs) -> None:
-        if self.target == self.source:
+        if self.target_id == self.source_id:
             raise UcDomainException("Invalid data.")
         return super().save(*args, **kwargs)
 

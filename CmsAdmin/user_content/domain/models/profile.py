@@ -34,6 +34,11 @@ class Profile(BaseModel):
     address = models.CharField(blank=True, null=True, max_length=200)
     bio = models.CharField(blank=True, null=True, max_length=500)
 
+    def __str__(
+        self,
+    ) -> str:
+        return super().__str__() + f" - {self.email}"
+
     @property
     def full_name(self):
         return f"{self.first_name or ''} {self.last_name or ''}"
