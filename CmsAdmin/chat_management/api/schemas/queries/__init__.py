@@ -1,3 +1,7 @@
+from chat_management.app.queries.get_account_match_setting_query import (
+    GetAccountMatchSettingQuery,
+)
+from chat_management.app.dtos.match_setting_response_dto import MatchSettingResponseDto
 from chat_management.app.queries.get_messages_in_room_chat_query import (
     GetMessagesInRoomChatQuery,
 )
@@ -15,6 +19,7 @@ from core.app.bus import Bus
 from .user_room_type import UserRoomType
 from .media_chat_type import MediaChatType
 from .message_chat_type import MessageChatType
+from .match_setting_type import MatchSettingType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -30,6 +35,9 @@ class Query(graphene.ObjectType, BaseAuth):
         MessageChatType,
         **auth_data,
         room_id=graphene.String(required=True, description="Room id")
+    )
+    user_match_setting = graphene.Field(
+        MatchSettingType, **auth_data, description="Match setting"
     )
 
     @classmethod
@@ -62,3 +70,16 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return list(map(lambda msg: msg.__dict__, room_msgs))
+
+    @classmethod
+    @authenticate_permission
+    def resolve_user_match_setting(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+
+        match_setting: MatchSettingResponseDto = _bus.dispatch(
+            GetAccountMatchSettingQuery(account_id)
+        )
+
+        return match_setting.__dict__

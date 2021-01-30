@@ -46,9 +46,9 @@ class MatchService {
   }
 
   public async getAccountMatchSetting(accountId: string): Promise<MatchSetting> {
-    const account = await this.userRepos.findUserById(accountId, true);
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
 
-    let matchSetting: MatchSetting = await this.matchSettingRepos.findMatchSettingByAccountId(accountId, false);
+    let matchSetting: MatchSetting = await this.matchSettingRepos.findMatchSettingByAccountId(account.id, false);
 
     if (!matchSetting) {
       matchSetting = new MatchSettingEntity(account.id, Gender.UN_KNOWN);
