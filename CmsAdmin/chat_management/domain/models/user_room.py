@@ -3,9 +3,7 @@ from core.domain.models.base_model import BaseModel
 
 
 class UserRoom(BaseModel):
-    room = models.ForeignKey(
-        to="Room", on_delete=models.CASCADE, null=False, blank=False
-    )
+    room = models.ForeignKey(to="Room", on_delete=models.CASCADE, null=True, blank=True)
     account = models.ForeignKey(
         to="AccountMapper", on_delete=models.CASCADE, blank=True, null=True
     )
