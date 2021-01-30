@@ -15,6 +15,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         fields = [
             "id",
+            "short_id",
             "avatar",
             "name",
             "phone_number",
