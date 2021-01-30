@@ -1,5 +1,6 @@
 import { AbstractAggregate } from 'node-cqrs';
 import BaseException from '../../../common/exceptions/BaseException';
+import { RunInTransaction } from '../../../common/repos/transaction';
 import { logger } from '../../../common/utils/logger';
 import { MatchEntity } from '../entities/matches.entity';
 import { MatchSettingEntity } from '../entities/match_settings.entity';
@@ -86,13 +87,15 @@ class MatchAggregate extends AbstractAggregate {
 
     let matchSetting: MatchSetting = await this.matchSettingRepos.findMatchSettingByAccountId(accountId, false);
 
-    if (!matchSetting) {
-      matchSetting = new MatchSettingEntity(accountId, gender, maxDistance, minAge, maxAge);
-      await this.matchSettingRepos.save(matchSetting);
-    } else {
-      matchSetting.updateData(gender, maxAge, minAge, maxDistance);
-      await this.matchSettingRepos.update(matchSetting.id, matchSetting);
-    }
+    await RunInTransaction(async _ => {
+      if (!matchSetting) {
+        matchSetting = new MatchSettingEntity(accountId, gender, maxDistance, minAge, maxAge);
+        await this.matchSettingRepos.save(matchSetting);
+      } else {
+        matchSetting.updateData(gender, maxAge, minAge, maxDistance);
+        await this.matchSettingRepos.update(matchSetting.id, matchSetting);
+      }
+    });
 
     this.emit('matchSettingUpdatedEvent', { id: matchSetting.id, accountId: accountId });
   }

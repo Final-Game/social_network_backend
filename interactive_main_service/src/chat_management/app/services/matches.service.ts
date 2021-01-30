@@ -60,8 +60,10 @@ class MatchService {
   }
 
   public async updateAccountMatchSetting(accountId: string, data: MatchSettingDto) {
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
+
     const payload = {
-      accountId: accountId,
+      accountId: account.id,
       data: data,
     };
 

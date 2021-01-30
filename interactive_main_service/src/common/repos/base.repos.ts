@@ -20,7 +20,7 @@ export class BaseRepository implements IBaseRepository {
   }
 
   public async update(entityId: string, data: any): Promise<void> {
-    const manager = getConnection().manager;
+    const manager = ConnectManager.getManager();
 
     await manager.update(this.model, entityId, data);
   }
