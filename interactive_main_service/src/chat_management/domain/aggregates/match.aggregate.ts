@@ -59,17 +59,21 @@ class MatchAggregate extends AbstractAggregate {
 
     const existedMatch: Match = await this.matchRepos.findMatchBySenderIdAndReceiverId(senderId, receiverId, false);
 
-    if (existedMatch) {
-      if (existedMatch.status == MatchStatus.CLOSE && status != MatchStatus.CLOSE) {
-        existedMatch.updateStatus(status);
+    let createdMatch: Match = null;
 
-        this.matchRepos.update(existedMatch.id, existedMatch);
+    await RunInTransaction(async _ => {
+      if (existedMatch) {
+        if (existedMatch.status == MatchStatus.CLOSE && status != MatchStatus.CLOSE) {
+          existedMatch.updateStatus(status);
+
+          this.matchRepos.update(existedMatch.id, existedMatch);
+        }
+        return;
       }
-      return;
-    }
 
-    const match: Match = new MatchEntity(_payload.senderId, _payload.dto.receiverId, _payload.dto.status);
-    const createdMatch: Match = await this.matchRepos.save(match);
+      const match: Match = new MatchEntity(_payload.senderId, _payload.dto.receiverId, _payload.dto.status);
+      createdMatch = await this.matchRepos.save(match);
+    });
 
     this.emit('matchCreatedEvent', {
       id: createdMatch.id,

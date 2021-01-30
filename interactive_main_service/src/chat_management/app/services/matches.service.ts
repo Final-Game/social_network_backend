@@ -25,8 +25,8 @@ class MatchService {
   }
 
   public async createMatch(data: CreateMatchDto): Promise<Match> {
-    const sender = await this.userRepos.findUserById(data.accountId, true);
-    const receiver = await this.userRepos.findUserById(data.dto.receiverId, true);
+    const sender = await this.userRepos.findAccountByBaseAccountId(data.accountId, true);
+    const receiver = await this.userRepos.findAccountByBaseAccountId(data.dto.receiverId, true);
 
     const payload = {
       senderId: sender.id,
