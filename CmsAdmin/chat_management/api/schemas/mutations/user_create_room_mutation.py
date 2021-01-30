@@ -1,5 +1,5 @@
+from chat_management.app.commands.user_create_room_command import UserCreateRoomCommand
 from chat_management.app.dtos.create_room_response_dto import CreateRoomResponseDto
-from user_content.app.commands.user_create_room_command import UserCreateRoomCommand
 from core.app.bus import Bus
 from core.schemas.base_auth import authenticate_permission
 import graphene

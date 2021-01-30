@@ -1,5 +1,10 @@
 import asyncio
-from user_content.domain.models.account import Account
+from core.common.base_api_exception import BaseApiException
+from chat_management.app.dtos.account_info_dto import AccountInfoDto
+from chat_management.infras.gateway_impls.user_content_gateway_impl import (
+    UserContentGatewayImpl,
+)
+from chat_management.app.gateways.user_content_gateway import UserContentGateway
 
 from chat_management.app.dtos.create_room_response_dto import CreateRoomResponseDto
 from chat_management.infras.service_impls.chat_service_impl import ChatServiceImpl
@@ -18,16 +23,22 @@ class UserCreateRoomCommand(Command):
 
 class UserCreateRoomCommandHandler(CommandHandler):
     _chat_service: ChatService
+    _user_content_gateway: UserContentGateway
 
-    def __init__(self, chat_service: ChatService = ChatServiceImpl()) -> None:
+    def __init__(
+        self,
+        chat_service: ChatService = ChatServiceImpl(),
+        user_content_gw: UserContentGateway = UserContentGatewayImpl(),
+    ) -> None:
         self._chat_service = chat_service
+        self._user_content_gateway = user_content_gw
 
     def handle(self, command: UserCreateRoomCommand) -> CreateRoomResponseDto:
-        account: Account = Account.objects.find_account_by_id(
-            command.account_id, raise_exception=True
+        account: AccountInfoDto = self._user_content_gateway.get_account_info(
+            command.account_id
         )
-        receiver: Account = Account.objects.find_account_by_id(
-            command.receiver_id, raise_exception=True
+        receiver: AccountInfoDto = self._user_content_gateway.get_account_info(
+            command.receiver_id
         )
 
         # validate
@@ -40,6 +51,10 @@ class UserCreateRoomCommandHandler(CommandHandler):
         return room_data
 
     def validate_account_can_create_room_with_receiver(
-        self, account: Account, receiver: Account
+        self, account: AccountInfoDto, receiver: AccountInfoDto
     ):
-        return
+        if not account:
+            raise BaseApiException("Account not found!")
+
+        if not receiver:
+            raise BaseApiException("Receiver not found!")
