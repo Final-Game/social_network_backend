@@ -105,14 +105,16 @@ class RoomService {
   }
 
   public async getAccountRoomChatList(accountId: string): Promise<any> {
-    const account = await this.userRepos.findUserById(accountId, true);
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
 
     const availableRooms: Array<Room> = await account.getRooms();
 
     const data: Array<Promise<RoomChatDto>> = availableRooms.map(async item => {
       const lastMsg: Message = await item.getLastestMsg();
+      const content: string = (lastMsg && lastMsg.content) || '';
+      const createdAt: Date = (lastMsg && lastMsg.createdAt) || new Date();
 
-      return new RoomChatDto(item.id, '', item.generalName, 0, lastMsg.content, lastMsg.createdAt);
+      return new RoomChatDto(item.id, '', item.generalName, 0, content, createdAt);
     });
     return await Promise.all(data);
   }

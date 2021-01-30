@@ -1,3 +1,5 @@
+from datetime import datetime
+import maya
 from core.common.base_api_exception import BaseApiException
 from codegen_protos.interactive_main_service_pb2_grpc import ChatServiceStub
 from core.services.grpc_service import GrpcService
@@ -48,17 +50,16 @@ class ChatServiceImpl(GrpcService, ChatService):
     async def get_list_room_chat(self, account_id: str) -> List[RoomChatResponseDto]:
         result: list
 
-        async with self.get_connection() as channel:
-            stub = ChatServiceStub(channel)
-
-            try:
+        try:
+            async with self.get_connection() as channel:
+                stub = ChatServiceStub(channel)
                 res: GetListRoomChatReply = await stub.GetListRoomChat(
                     GetListMessagesInRoomChatRequest(account_id=account_id)
                 )
-            except Exception as ex:
-                res = None
 
-            result = res.data
+                result = res.data
+        except grpc.RpcError as ex:
+            raise BaseApiException(ex.details())
 
         return list(
             map(
@@ -67,7 +68,7 @@ class ChatServiceImpl(GrpcService, ChatService):
                     x.avt_icon_url,
                     x.name,
                     x.latest_msg,
-                    x.latest_msg_time,
+                    maya.parse(x.latest_msg_time).datetime(),
                     x.num_un_read_msg,
                 ),
                 result,
