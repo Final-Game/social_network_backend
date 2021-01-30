@@ -1,1 +1,2 @@
 from .get_account_room_list_query import GetAccountRoomListQuery
+from .get_messages_in_room_chat_query import GetMessagesInRoomChatQuery

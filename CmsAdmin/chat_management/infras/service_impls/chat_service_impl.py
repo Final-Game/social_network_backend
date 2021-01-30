@@ -94,7 +94,7 @@ class ChatServiceImpl(GrpcService, ChatService):
                     x.id,
                     x.sender_id,
                     x.content,
-                    x.created_at,
+                    x.created_at and maya.parse(x.created_at).datetime() or None,
                     list(map(lambda _x: MediaChatDto(_x.url, _x.type), x.media_data)),
                 ),
                 result,

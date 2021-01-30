@@ -120,7 +120,7 @@ class RoomService {
   }
 
   public async getMessagesInRoomChat(accountId: string, roomId: string): Promise<Array<MessageDto>> {
-    const account = await this.userRepos.findUserById(accountId, true);
+    const account = await this.userRepos.findAccountByBaseAccountId(accountId, true);
     const room: Room = await this.roomRepos.findById(roomId, true);
 
     const availableRooms: Array<Room> = await account.getRooms();

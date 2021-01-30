@@ -38,7 +38,7 @@ export class MessageDto {
       sender_id: this.senderId,
       content: this.content,
       media_data: this.mediaData.map(item => item.toResData()),
-      createdAt: this.createdAt.toISOString(),
+      created_at: this.createdAt.toISOString(),
     };
   }
 }
