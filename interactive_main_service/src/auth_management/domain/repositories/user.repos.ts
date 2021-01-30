@@ -30,6 +30,16 @@ class UserRepository {
     return account;
   }
 
+  public async getOrCreateAccountByBaseAccountId(baseId: string): Promise<User> {
+    let account: User = await this.findAccountByBaseAccountId(baseId, false);
+
+    if (!account) {
+      account = await this.save(new UserEntity(baseId));
+    }
+
+    return account;
+  }
+
   public async findUserByUsername(username: string, raiseException = false): Promise<User> {
     const manager = getConnection().manager;
 

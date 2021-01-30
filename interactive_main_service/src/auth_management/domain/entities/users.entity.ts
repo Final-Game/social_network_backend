@@ -20,6 +20,7 @@ import { MatchSettingEntity } from '../../../chat_management/domain/entities/mat
 import { GenericEntity } from '../../../common/entities/generic.entity';
 import { MatchSetting } from '../../../chat_management/domain/models/match_settings.model';
 import { dateToString, stringToDate } from '../../../common/utils/util';
+import { ConnectManager } from '../../../common/repos/transaction';
 
 @Entity('cm_account_mappers')
 export class UserEntity extends GenericEntity implements User {
@@ -87,9 +88,7 @@ export class UserEntity extends GenericEntity implements User {
   public async joinRoom(room: any): Promise<void> {
     const userRoom: UserRoom = new UserRoomEntity(this.id, room.id);
     userRoom.updateNickName(this.fullName);
-    await getRepository(UserRoomEntity).save(userRoom);
-
-    return;
+    await ConnectManager.getManager().save(UserRoomEntity, userRoom);
   }
 
   public async getUserRefRoom(room: any): Promise<any> {

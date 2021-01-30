@@ -1,7 +1,9 @@
 import { CommandBus } from 'node-cqrs';
+import { EntityManager, getManager } from 'typeorm';
 import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
 import BaseException from '../../../common/exceptions/BaseException';
+import { RunInTransaction } from '../../../common/repos/transaction';
 import container from '../../../container';
 import { MessageEntity } from '../../domain/entities/message.entity';
 import { RoomEntity } from '../../domain/entities/rooms.entity';
@@ -30,8 +32,8 @@ class RoomService {
   }
 
   public async createRoomChat(accountId: string, receiverId: string): Promise<Room> {
-    const account = await this.userRepos.findUserById(accountId, true);
-    const receiver = await this.userRepos.findUserById(receiverId, true);
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
+    const receiver = await this.userRepos.getOrCreateAccountByBaseAccountId(receiverId);
 
     // find existed room chat.
     const availableRooms = await account.getRooms();
@@ -49,11 +51,13 @@ class RoomService {
       return room;
     }
 
-    // Create new room chat
-    room = new RoomEntity(RoomType.NORMAL);
-    room = await this.roomRepos.save(room);
-    await account.joinRoom(room);
-    await receiver.joinRoom(room);
+    await RunInTransaction(async (_manager: EntityManager) => {
+      // Create new room chat
+      room = new RoomEntity(RoomType.NORMAL);
+      room = await this.roomRepos.save(room);
+      await account.joinRoom(room);
+      await receiver.joinRoom(room);
+    });
 
     return room;
   }

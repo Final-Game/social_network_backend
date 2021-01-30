@@ -1,5 +1,6 @@
 import { getConnection } from 'typeorm';
 import BaseException from '../exceptions/BaseException';
+import { ConnectManager } from './transaction';
 
 export interface IBaseRepository {
   save: (entity: any) => Promise<any>;
@@ -13,7 +14,7 @@ export class BaseRepository implements IBaseRepository {
   protected model: any;
 
   public async save(entity: any): Promise<any> {
-    const manager = getConnection().manager;
+    const manager = ConnectManager.getManager();
 
     return await manager.save(this.model, entity);
   }

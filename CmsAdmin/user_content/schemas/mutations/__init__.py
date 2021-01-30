@@ -14,6 +14,7 @@ from .user_follow_user_mutation import UserFollowUserMutation
 from .user_create_story_mutation import UserCreateStoryMutation
 from .user_view_story_mutation import UserViewStoryMutation
 from .user_delete_story_mutation import UserDeleteStoryMutation
+from .user_create_room_mutation import UserCreateRoomMutation
 
 
 class Mutation(graphene.ObjectType):
@@ -32,3 +33,4 @@ class Mutation(graphene.ObjectType):
     user_create_story = UserCreateStoryMutation.Field()
     user_view_story = UserViewStoryMutation.Field()
     user_delete_story = UserDeleteStoryMutation.Field()
+    user_create_room = UserCreateRoomMutation.Field()

@@ -37,6 +37,6 @@ export class UserRoomEntity extends GenericEntity implements UserRoom {
   }
 
   public updateNickName(nickName: string): void {
-    this.nickName = nickName;
+    this.nickName = nickName || 'Anonymous';
   }
 }

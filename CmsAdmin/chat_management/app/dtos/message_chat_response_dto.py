@@ -15,4 +15,4 @@ class MessageChatReponseDto:
     sender_id: str
     content: str
     created_at: datetime
-    media_data: List[MediaChatDto] = []
+    media_data: List[MediaChatDto]
