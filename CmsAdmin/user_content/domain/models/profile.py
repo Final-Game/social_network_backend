@@ -58,12 +58,12 @@ class Profile(BaseModel):
         address: str,
         bio: str,
     ):
-        self.avatar = avatar
-        self.cover, self.email, self.phone_number = cover, email, phone_number
+        # self.avatar = avatar
+        # self.cover, self.email,
+        self.phone_number = phone_number
         self.first_name, self.last_name = first_name, last_name
-        self.gender, self.marital_status, self.birth_date = (
+        self.gender, self.birth_date = (
             gender,
-            marital_status,
             birth_date,
         )
         self.school, self.address, self.bio = school, address, bio

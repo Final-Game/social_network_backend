@@ -72,7 +72,7 @@ class Account(BaseModel):
 
     @property
     def article_posts(self):
-        return list(self.post_set.all())
+        return list(self.post_set.order_by("-created_at"))
 
     @classmethod
     def check_email(cls, email: str):

@@ -46,10 +46,10 @@ class UpdateAccountProfileDto(object):
         ):
             raise BaseApiException("Invalid gender")
 
-        if self.marital_status and self.marital_status not in list(
-            MaritalStatusEnum.to_dict().values()
-        ):
-            raise BaseApiException("Invalid marital status")
+        # if self.marital_status and self.marital_status not in list(
+        #     MaritalStatusEnum.to_dict().values()
+        # ):
+        #     raise BaseApiException("Invalid marital status")
 
     def map_to_profile_model_data(self) -> dict:
         data: dict = self.to_dict().copy()
@@ -59,8 +59,6 @@ class UpdateAccountProfileDto(object):
         data.pop("avatar_url")
 
         data.update({"gender": AccountGenderEnum.from_value(data.get("gender"))})
-        data.update(
-            {"marital_status": MaritalStatusEnum.from_value(data.get("marital_status"))}
-        )
+        data.update({"marital_status": MaritalStatusEnum.SINGLE})
 
         return data

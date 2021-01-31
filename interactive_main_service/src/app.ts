@@ -32,7 +32,11 @@ class App {
     this.port = process.env.PORT || 3002;
     this.env = process.env.NODE_ENV || 'prod';
     this.server = createServer(this.app);
-    this.io = new SocketIOServer(this.server);
+    this.io = new SocketIOServer(this.server, {
+      cors: {
+        origin: '*',
+      },
+    });
 
     this.connectContainer();
     this.connectToDatabase();
