@@ -3,4 +3,5 @@
 . ~/.nvm/nvm.sh
 nvm use v12.20.0
 
-pnpm install && pnpm run dev
+export `cat src/configs/envs/local.env| xargs`
+pnpm install && npm run dev

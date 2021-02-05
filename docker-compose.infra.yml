@@ -34,6 +34,10 @@ services:
     env_file: ./percona_proxysql/pxc.env
     depends_on:
       - etcd
+    volumes:
+      - percona-xtradb:/var/lib/mysql
+      - percona-xtradb-log:/var/log/mysql
+      - percona-xtradb-run:/var/run/mysqld
 
   phpmyadmin:
     container_name: sn_phpmyadmin
@@ -48,3 +52,6 @@ networks:
     name: sn_network
 volumes:
   staticdata:
+  percona-xtradb:
+  percona-xtradb-log:
+  percona-xtradb-run:
