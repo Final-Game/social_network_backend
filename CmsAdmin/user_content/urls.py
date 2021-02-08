@@ -1,5 +1,6 @@
 from user_content.api.resources.account_verify_api import AccountVerifyApi
 from user_content.api.resources.user_account_api import UserAccountApi
+from user_content.api.resources.account_report_api import AccountReportApi
 from django.urls import path
 from user_content.api import account_info_api
 from django.conf.urls import url
@@ -17,6 +18,14 @@ cms_urlpatterns = [
     url(
         r"^account_verifies/(?P<pk>[\w-]+)/$",
         AccountVerifyApi.as_view({"get": "retrieve", "put": "update"}),
+    ),
+    url(
+        r"^account_reports/$",
+        AccountReportApi.as_view({"get": "list", "post": "create"}),
+    ),
+    url(
+        r"^account_reports/(?P<pk>[\w-]+)/$",
+        AccountReportApi.as_view({"get": "retrieve", "put": "update"}),
     ),
 ]
 

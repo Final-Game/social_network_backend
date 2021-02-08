@@ -11,6 +11,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
     age = serializers.SerializerMethodField(source="get_age")
     created_date = serializers.DateTimeField(source="created_at")
     updated_date = serializers.DateTimeField(source="updated_at")
+    num_reports = serializers.SerializerMethodField(source="get_num_reports")
 
     class Meta:
         fields = [
@@ -22,6 +23,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
             "marital_status",
             "age",
             "status",
+            "num_reports",
             "created_date",
             "updated_date",
         ]
@@ -45,6 +47,9 @@ class UserAccountSerializer(serializers.ModelSerializer):
             and account.profile.birth_date
             and calculate_age(account.profile.birth_date)
         )
+
+    def get_num_reports(self, account: Account):
+        return account.reporters.count()
 
 
 def calculate_age(birth_date):
