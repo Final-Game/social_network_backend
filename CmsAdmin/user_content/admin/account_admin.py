@@ -9,6 +9,13 @@ from user_content.models import Account
 
 @admin.register(Account)
 class AccountAdmin(BaseAdmin):
-    list_display = ["username", linkify("connection"), linkify("profile"), "type"]
+    list_display = [
+        "username",
+        linkify("connection"),
+        linkify("profile"),
+        "type",
+        "status",
+    ]
+    list_filter = ["type", "status"]
     list_display_links = ["username"]
-    fields = ["username", "password", "connection", "profile", "type"]
+    fields = ["username", "password", "connection", "profile", "type", "status"]

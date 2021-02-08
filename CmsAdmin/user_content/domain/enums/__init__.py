@@ -6,3 +6,5 @@ from .model_status_enum import ModelStatusEnum
 from .react_type_enum import ReactTypeEnum
 from .post_type_enum import PostTypeEnum
 from .verify_status_enum import VerifyStatusEnum
+from .account_status_enum import AccountStatusEnum
+from .account_report_status_enum import AccountReportStatusEnum
