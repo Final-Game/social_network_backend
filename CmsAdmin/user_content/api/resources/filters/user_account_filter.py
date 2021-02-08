@@ -9,4 +9,4 @@ class UserAccountFilter(FilterSet):
 
     class Meta:
         model = Account
-        fields = ["marital_status"]
+        fields = ["marital_status", "status"]

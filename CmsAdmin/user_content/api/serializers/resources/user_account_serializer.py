@@ -21,6 +21,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
             "phone_number",
             "marital_status",
             "age",
+            "status",
             "created_date",
             "updated_date",
         ]
