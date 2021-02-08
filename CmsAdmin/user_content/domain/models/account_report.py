@@ -9,14 +9,14 @@ class AccountReport(BaseModel):
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        related_name="sender_account",
+        related_name="sender_account_reports",
     )
     receiver = models.ForeignKey(
         to="Account",
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        related_name="receiver_account",
+        related_name="receiver_account_reports",
     )
     related_post = models.ForeignKey(
         to="Post", on_delete=models.SET_NULL, blank=True, null=True
@@ -31,3 +31,4 @@ class AccountReport(BaseModel):
 
     class Meta:
         db_table = "uc_account_reports"
+        unique_together = ["sender", "receiver", "related_post"]
