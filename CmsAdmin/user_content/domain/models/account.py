@@ -64,7 +64,7 @@ class Account(BaseModel):
 
         # support create account over django admin.
         old_account = Account.objects.find_account_by_id(self.id)
-        if not old_account or not (
+        if old_account and not (
             old_account.password == self.password
             or check_password(self.password, old_account.password)
         ):
