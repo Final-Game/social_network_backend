@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { Column, CreateDateColumn, Entity, getRepository, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { UserEntity } from '../../../auth_management/domain/entities/users.entity';
 import { GenericEntity } from '../../../common/entities/generic.entity';
 import { UserRoom } from '../models/user_rooms.model';
 import { RoomEntity } from './rooms.entity';
@@ -34,6 +35,11 @@ export class UserRoomEntity extends GenericEntity implements UserRoom {
   public async getRoom(): Promise<RoomEntity> {
     const roomRepos = getRepository(RoomEntity);
     return await roomRepos.findOne(this.roomId);
+  }
+
+  public async getAccount(): Promise<UserEntity> {
+    const accountRepos = getRepository(UserEntity);
+    return await accountRepos.findOne(this.accountId);
   }
 
   public updateNickName(nickName: string): void {

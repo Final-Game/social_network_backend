@@ -24,9 +24,9 @@ export class MessageDto {
   mediaData: Array<MediaMessageDto>;
   createdAt: Date;
 
-  constructor(message: Message, mediaData: Array<MediaMessageDto> = null) {
+  constructor(message: Message, accountId: string, mediaData: Array<MediaMessageDto> = null) {
     this.id = message.id;
-    this.senderId = message.senderId;
+    this.senderId = accountId;
     this.content = message.content;
     this.mediaData = mediaData;
     this.createdAt = message.createdAt;

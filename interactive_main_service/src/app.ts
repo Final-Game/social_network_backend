@@ -123,13 +123,13 @@ class App {
 
   private handleSocketConnection() {
     this.io.on('connection', socket => {
-      console.log('A user connected');
-      console.log(socket.rooms);
+      logger.info('A user connected');
+      logger.info(socket.rooms);
 
       registerChatServiceSocket(this.io, socket);
 
       socket.on('message', data => {
-        console.log(data);
+        logger.info(data);
         // socket.broadcast.emit('message', {
         //   data: data,
         // });
@@ -139,11 +139,11 @@ class App {
         socket.to(roomId).emit('hello', 'Nguyen Minh Tuan');
       });
       socket.on('disconnect', () => {
-        console.log(`User ${socket.id} disconnected`);
+        logger.info(`User ${socket.id} disconnected`);
       });
     });
     this.io.on('connect', socket => {
-      console.log(`On connect: ${socket.id}`);
+      logger.info(`On connect: ${socket.id}`);
     });
   }
 }

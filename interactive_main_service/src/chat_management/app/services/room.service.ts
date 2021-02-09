@@ -63,12 +63,12 @@ class RoomService {
   }
 
   public async sendMessage(accountId: string, roomId: string, message_data: any): Promise<void> {
-    const { content, media } = message_data;
-    const { mediaUrl, type } = media;
+    const { content } = message_data;
+    // const { mediaUrl, type } = media;
 
-    if (![MediaType.PHOTO, MediaType.VIDEO].includes(type)) {
-      throw new BaseException(`Type photo is not existed.`);
-    }
+    // if (![MediaType.PHOTO, MediaType.VIDEO].includes(type)) {
+    //   throw new BaseException(`Type photo is not existed.`);
+    // }
 
     const account = await this.userRepos.findUserById(accountId, true);
     const room: Room = await this.roomRepos.findById(roomId, true);
@@ -130,7 +130,7 @@ class RoomService {
 
     const msgs = await room.getMsgs();
 
-    return msgs.map(item => new MessageDto(item, []));
+    return Promise.all(msgs.map(async item => new MessageDto(item, (await (await item.getSender()).getAccount()).refId, [])));
   }
 
   public async createSmartRoom(partnerAId: string, partnerBId: string): Promise<any> {

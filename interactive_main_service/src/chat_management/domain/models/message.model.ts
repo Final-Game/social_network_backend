@@ -10,4 +10,5 @@ export interface Message {
   createdAt: Date;
   updatedAt: Date;
   getMedias: () => Promise<Array<MediaMessage>>;
+  getSender: () => Promise<UserRoom>;
 }

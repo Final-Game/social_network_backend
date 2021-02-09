@@ -1,3 +1,4 @@
+import { User } from '../../../auth_management/domain/models/users.model';
 import { Room } from './rooms.model';
 
 export interface UserRoom {
@@ -8,4 +9,5 @@ export interface UserRoom {
 
   updateNickName: (nickName: string) => void;
   getRoom: () => Promise<Room>;
+  getAccount: () => Promise<User>;
 }

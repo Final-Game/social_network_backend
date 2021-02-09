@@ -39,4 +39,9 @@ export class MessageEntity extends GenericEntity implements Message {
       .getMany();
     return await Promise.all(mediaMsgs);
   }
+
+  public async getSender(): Promise<UserRoomEntity> {
+    const userRoomRepos = getRepository(UserRoomEntity);
+    return await userRoomRepos.findOne(this.senderId);
+  }
 }

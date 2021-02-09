@@ -2,6 +2,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import UserService from '../../../auth_management/app/services/users.service';
 import { User } from '../../../auth_management/domain/models/users.model';
 import BaseException from '../../../common/exceptions/BaseException';
+import { logger } from '../../../common/utils/logger';
 import { RoomSimpleDto } from '../../app/dtos/room_simple.dto';
 import RoomService from '../../app/services/room.service';
 import { RoomType } from '../../domain/enums/roomType.enum';
@@ -30,7 +31,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     }
 
     socket.join(roomId);
-    console.log(`Joined to room: ${roomId}`);
+    logger.info(`userId: ${userId} joined to room: ${roomId}`);
 
     io.to(roomId).emit('new-mem-joined', { accountId: account.refId });
   });
@@ -52,12 +53,12 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
   socket.on('send-msg', async data => {
     const { roomId, senderId, message } = data;
-    const { content, media } = message;
-    const { mediaUrl, type } = media;
-
+    const { content } = message;
     const sender = await getAccountReference(senderId);
 
-    roomService.sendMessage(sender.id, roomId, { content: content, media: { mediaUrl: mediaUrl, type: type } });
+    roomService.sendMessage(sender.id, roomId, { content: content });
+
+    io.to(roomId).emit('new-msg', { accountId: sender.refId, message: { content: content } });
   });
 
   socket.on('send-smart-msg', async data => {
