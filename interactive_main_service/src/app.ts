@@ -15,6 +15,7 @@ import errorMiddleware from './configs/middlewares/error.middleware';
 import { logger, stream } from './common/utils/logger';
 import { createServer, Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import * as redisAdapter from 'socket.io-redis';
 import registerContainer from './register.container';
 import registerChatServiceSocket from './chat_management/api/socket_handlers';
 import { JobScheduler } from './common/jobs/scheduler.job';
@@ -37,6 +38,7 @@ class App {
         origin: '*',
       },
     });
+    this.io.adapter(redisAdapter.createAdapter(process.env.REDIS_URL));
 
     this.connectContainer();
     this.connectToDatabase();
