@@ -126,19 +126,15 @@ class App {
   private handleSocketConnection() {
     this.io.on('connection', socket => {
       logger.info('A user connected');
-      logger.info(socket.rooms);
-
       registerChatServiceSocket(this.io, socket);
 
-      socket.on('message', data => {
+      socket.on('hello', data => {
         logger.info(data);
-        // socket.broadcast.emit('message', {
-        //   data: data,
-        // });
 
-        const roomId: string = data.roomId;
+        const roomId: string = data['roomId'];
+        socket.join(roomId);
 
-        socket.to(roomId).emit('hello', 'Nguyen Minh Tuan');
+        this.io.in(roomId).emit('hello', 'Hello worlds!');
       });
       socket.on('disconnect', () => {
         logger.info(`User ${socket.id} disconnected`);

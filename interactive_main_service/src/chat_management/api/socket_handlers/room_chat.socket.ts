@@ -31,9 +31,10 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     }
 
     socket.join(roomId);
-    logger.info(`userId: ${userId} joined to room: ${roomId}`);
+    logger.info(`UserId: ${userId} joined to room: ${roomId}`);
 
-    io.to(roomId).emit('new-mem-joined', { accountId: account.refId });
+    io.sockets.in(roomId).emit('new-mem-joined', { accountId: account.refId });
+    logger.info(`Notify new member ${account.refId} join room ${roomId} to other members.`);
   });
 
   socket.on('join-smart-room', async data => {

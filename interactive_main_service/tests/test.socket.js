@@ -4,7 +4,7 @@ const args = process.argv.slice(2);
 console.log(`Args pass: ${args}`);
 const accountId = args[0];
 
-const socket = io('http://127.0.0.1:3002');
+const socket = io('http://127.0.0.1:3002', { transports: ['websocket'], rejectUnauthorized: false, secure: true });
 
 // socket.on('connect', () => {
 //   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
@@ -29,7 +29,10 @@ function runEventListener(socket) {
 }
 
 runEventListener(socket);
-// const data = { userId: '123', roomId: '345' };
+const data = { userId: accountId, roomId: '10lmzXhC6PV58lxCAAAB' };
+socket.emit('hello', data => {
+  console.log('Nguyen Minh Tuan');
+});
 // socket.emit('join-room', data);
 // const sendMsgData = {
 //   roomId: 'd08e91e8-f982-48a1-ba57-cfa6ff795dde',
@@ -38,8 +41,8 @@ runEventListener(socket);
 // };
 // socket.emit('send-msg', sendMsgData);
 
-const testSmartChatData = { accountId: accountId };
-socket.emit('find-smart-chat', testSmartChatData);
+// const testSmartChatData = { accountId: accountId };
+// socket.emit('find-smart-chat', testSmartChatData);
 
 // function freeze(time) {
 //   const stop = new Date().getTime() + time;
