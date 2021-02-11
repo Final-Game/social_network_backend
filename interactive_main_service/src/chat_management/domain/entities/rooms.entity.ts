@@ -60,6 +60,20 @@ export class RoomEntity extends GenericEntity implements Room {
 
     return accountIds.map(async accountId => await manager.findOne(UserEntity, { where: { id: accountId } }));
   }
+  public async getParterOf(account: any): Promise<any> {
+    const members: Array<any> = await Promise.all(await this.getMembers());
+
+    console.log(`Members: ${JSON.stringify(members)}`);
+    console.log(`account: ${JSON.stringify(account)}`);
+
+    const partners: Array<any> = members.filter(item => item.id === account.id);
+
+    if (partners.length > 0) {
+      return partners[0];
+    }
+
+    return null;
+  }
 
   public async getLastestMsg(): Promise<any> {
     const msgList = await this.getMsgs();

@@ -114,7 +114,9 @@ class RoomService {
       const content: string = (lastMsg && lastMsg.content) || '';
       const createdAt: Date = (lastMsg && lastMsg.createdAt) || new Date();
 
-      return new RoomChatDto(item.id, '', item.generalName, 0, content, createdAt);
+      const partner: User = await item.getParterOf(account);
+
+      return new RoomChatDto(item.id, partner && partner.avatar, partner && partner.fullName, 0, content, createdAt);
     });
     return await Promise.all(data);
   }
