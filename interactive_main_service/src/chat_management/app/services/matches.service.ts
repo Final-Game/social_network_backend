@@ -1,4 +1,5 @@
 import { CommandBus } from 'node-cqrs';
+import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
 import { logger } from '../../../common/utils/logger';
 import container from '../../../container';
@@ -8,6 +9,7 @@ import { Match } from '../../domain/models/matches.model';
 import { MatchSetting } from '../../domain/models/match_settings.model';
 import { IMatchRepository, MatchRepository } from '../../domain/repositories/match.repos';
 import { IMatchSettingRepository, MatchSettingRepository } from '../../domain/repositories/match_setting.repos';
+import { MatcherDto } from '../dtos/matcher.dto';
 import { CreateMatchDto } from '../dtos/matches.dto';
 import { MatchSettingDto } from '../dtos/match_setting.dto';
 
@@ -74,6 +76,20 @@ class MatchService {
     });
 
     console.log(data);
+  }
+
+  public async getMatchUserRecs(accountId: string): Promise<Array<MatcherDto>> {
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
+
+    const matchers: Array<User> = await this.userRepos.findAllUser();
+
+    return matchers
+      .filter(async _m => {
+        return await account.canMatch(_m);
+      })
+      .map(_m => {
+        return new MatcherDto(_m.id, _m.fullName, _m.getAge(), _m.bio, 1);
+      });
   }
 }
 

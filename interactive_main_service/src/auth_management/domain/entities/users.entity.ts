@@ -39,6 +39,18 @@ export class UserEntity extends GenericEntity implements User {
   @Column()
   gender: number;
 
+  @Column()
+  bio: string;
+
+  @Column()
+  address: string;
+
+  @Column()
+  job: string;
+
+  @Column()
+  reason: string;
+
   @Column({ name: 'ref_id' })
   refId: string;
 
@@ -50,11 +62,24 @@ export class UserEntity extends GenericEntity implements User {
     this.triggerCreate();
   }
 
-  public async updateData(fullName: string, avatar: string, birthDate: Date, gender: number) {
+  public async updateData(
+    fullName: string,
+    avatar: string,
+    birthDate: Date,
+    gender: number,
+    bio: string,
+    address: string,
+    job: string,
+    reason: string,
+  ) {
     this.fullName = fullName;
     this.avatar = avatar;
     this.birthDate = dateToString(birthDate);
     this.gender = gender;
+    this.bio = bio;
+    this.address = address;
+    this.job = job;
+    this.reason = reason;
 
     this.triggerUpdate();
   }

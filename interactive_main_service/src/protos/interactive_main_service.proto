@@ -5,6 +5,7 @@ package interactive_main_service;
 service MatchServiceV1 {
     rpc GetAccountMatchSetting(GetAccountMatchSettingRequest) returns (GetAccountMatchSettingReply);
     rpc UpdateAccountMatchSetting(UpdateAccountMatchSettingRequest) returns (UpdateAccountMatchSettingReply);
+    rpc GetMatcherList(GetMatcherListRequest) returns (GetMatcherListReply);
 }
 
 service ChatService {
@@ -34,7 +35,7 @@ message UpdateAccountMatchSettingRequest {
 }
 
 message UpdateAccountMatchSettingReply {
-    string status = 1;    
+    string status = 1;
 }
 
 message CreateRoomChatRequest {
@@ -84,4 +85,20 @@ message GetListMessagesInRoomChatRequest {
 
 message GetListMessagesInRoomChatReply {
     repeated MessageChat data = 1;
+}
+
+message Matcher {
+  string matcher_id = 1;
+  string name = 2;
+  int32 age = 3;
+  string bio = 4;
+  int32 status = 5;
+}
+
+message GetMatcherListRequest {
+  string account_id = 1;
+}
+
+message GetMatcherListReply {
+  repeated Matcher data = 1;
 }

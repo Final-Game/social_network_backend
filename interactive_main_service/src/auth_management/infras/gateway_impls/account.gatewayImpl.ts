@@ -17,6 +17,10 @@ export class AccountGatewayImpl implements AccountGateway {
         data_response['avatar'],
         data_response['birth_date'],
         data_response['gender'] || 0,
+        data_response['bio'] || '',
+        data_response['address'] || '',
+        data_response['job'] || '',
+        data_response['reason'] || '',
       );
     } catch (error) {
       throw new BaseException(`Can't request get account info: ${error.message}`);

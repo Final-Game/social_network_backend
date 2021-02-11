@@ -80,7 +80,16 @@ class UserService {
 
     logger.info(`Account info: ${JSON.stringify(accountInfo)}`);
 
-    account.updateData(accountInfo.fullName, accountInfo.avatar, accountInfo.birthDate, accountInfo.gender);
+    account.updateData(
+      accountInfo.fullName,
+      accountInfo.avatar,
+      accountInfo.birthDate,
+      accountInfo.gender,
+      accountInfo.bio,
+      accountInfo.address,
+      accountInfo.job,
+      accountInfo.reason,
+    );
 
     await this.userRepos.save(account);
     return;

@@ -59,6 +59,20 @@ class MatchMsgHandler {
         callback(new GrpcInternalError(error.message));
       });
   };
+
+  public static getMatcherList = (call, callback) => {
+    const accountId: string = call.request.account_id;
+
+    MatchMsgHandler.matchService
+      .getMatchUserRecs(accountId)
+      .then(data => {
+        console.log(data);
+        callback(null, { data: data.map(item => item.toResData()) });
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
 }
 
 // function createMatch(call, callback) {
@@ -81,6 +95,7 @@ export const matchHandlers = [
     value: {
       GetAccountMatchSetting: MatchMsgHandler.getAccountMatchSetting,
       UpdateAccountMatchSetting: MatchMsgHandler.updateAccountMatchSetting,
+      GetMatcherList: MatchMsgHandler.getMatcherList,
     },
   },
 ];
