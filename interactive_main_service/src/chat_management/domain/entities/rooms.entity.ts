@@ -63,9 +63,6 @@ export class RoomEntity extends GenericEntity implements Room {
   public async getParterOf(account: any): Promise<any> {
     const members: Array<any> = await Promise.all(await this.getMembers());
 
-    console.log(`Members: ${JSON.stringify(members)}`);
-    console.log(`account: ${JSON.stringify(account)}`);
-
     const partners: Array<any> = members.filter(item => item.id === account.id);
 
     if (partners.length > 0) {
