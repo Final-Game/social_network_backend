@@ -5,3 +5,4 @@ from .create_room_response_dto import CreateRoomResponseDto
 from .room_chat_response_dto import RoomChatResponseDto
 from .message_chat_response_dto import MessageChatReponseDto, MediaChatDto
 from .account_info_dto import AccountInfoDto
+from .matcher_dto import MatcherDto

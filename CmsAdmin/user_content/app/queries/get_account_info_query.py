@@ -24,4 +24,8 @@ class GetAccountInfoQueryHandler(QueryHandler):
             account_profile and account_profile.avatar,
             account_profile and account_profile.birth_date,
             account_profile and account_profile.gender,
+            account_profile and account_profile.bio,
+            account_profile and account_profile.address,
+            account_profile and account_profile.school,
+            account_profile and account_profile.reason_dating,
         )

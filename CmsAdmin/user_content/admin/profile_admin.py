@@ -29,6 +29,7 @@ class ProfileAdmin(BaseAdmin):
         "school",
         "address",
         "bio",
+        "reason_dating",
     ]
 
     def avatar_image(self, obj):

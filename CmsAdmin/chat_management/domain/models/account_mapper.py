@@ -14,6 +14,10 @@ class AccountMapper(BaseModel):
 
     avatar = models.CharField(blank=True, null=True, max_length=300)
     birth_date = models.DateField(blank=True, null=True)
+    bio = models.CharField(blank=True, null=True, max_length=256)
+    address = models.CharField(blank=True, null=True, max_length=256)
+    job = models.CharField(blank=True, null=True, max_length=256)
+    reason = models.CharField(blank=True, null=True, max_length=256)
     gender = models.IntegerField(
         blank=True, null=True, choices=GenderTypeEnum.to_choices()
     )

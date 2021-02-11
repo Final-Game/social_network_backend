@@ -1,3 +1,7 @@
+import grpc
+from chat_management.app.dtos.matcher_dto import MatcherDto
+from typing import List
+from core.common.base_api_exception import BaseApiException
 from core.services.grpc_service import GrpcService
 from chat_management.app.dtos.match_setting_request_dto import MatchSettingRequestDto
 from chat_management.app.dtos.match_setting_response_dto import MatchSettingResponseDto
@@ -8,6 +12,8 @@ from codegen_protos.interactive_main_service_pb2 import (
     GetAccountMatchSettingReply,
     UpdateAccountMatchSettingRequest,
     UpdateAccountMatchSettingReply,
+    GetMatcherListRequest,
+    GetMatcherListReply,
 )
 from codegen_protos.interactive_main_service_pb2_grpc import (
     MatchServiceV1,
@@ -57,3 +63,23 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
 
         print(f"Update account match setting with status {result.status}")
         return super().update_account_match_setting(account_id, match_setting_dto)
+
+    async def get_matcher_list(self, account_id: str) -> List[MatcherDto]:
+        result: list
+
+        try:
+            async with self.get_connection() as channel:
+                stub = MatchServiceV1Stub(channel)
+                res: GetMatcherListReply = await stub.GetMatcherList(
+                    GetMatcherListRequest(account_id=account_id)
+                )
+
+                result = res.data
+        except grpc.RpcError as ex:
+            raise BaseApiException(ex.details())
+        return list(
+            map(
+                lambda x: MatcherDto(x.matcher_id, x.name, x.age, x.bio, x.status),
+                result,
+            )
+        )

@@ -33,6 +33,7 @@ class Profile(BaseModel):
     school = models.CharField(blank=True, null=True, max_length=200)
     address = models.CharField(blank=True, null=True, max_length=200)
     bio = models.CharField(blank=True, null=True, max_length=500)
+    reason_dating = models.CharField(blank=True, null=True, max_length=256)
 
     def __str__(
         self,

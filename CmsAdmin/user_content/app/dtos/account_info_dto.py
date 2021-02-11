@@ -9,3 +9,7 @@ class AccountInfoDto:
     avatar: str
     birth_date: date
     gender: int
+    bio: str = ""
+    address: str = ""
+    job: str = ""
+    reason: str = ""
