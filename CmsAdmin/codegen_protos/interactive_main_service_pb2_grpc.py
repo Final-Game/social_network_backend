@@ -24,6 +24,11 @@ class MatchServiceV1Stub(object):
             request_serializer=interactive__main__service__pb2.UpdateAccountMatchSettingRequest.SerializeToString,
             response_deserializer=interactive__main__service__pb2.UpdateAccountMatchSettingReply.FromString,
         )
+        self.GetMatcherList = channel.unary_unary(
+            "/interactive_main_service.MatchServiceV1/GetMatcherList",
+            request_serializer=interactive__main__service__pb2.GetMatcherListRequest.SerializeToString,
+            response_deserializer=interactive__main__service__pb2.GetMatcherListReply.FromString,
+        )
 
 
 class MatchServiceV1Servicer(object):
@@ -41,6 +46,12 @@ class MatchServiceV1Servicer(object):
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
+    def GetMatcherList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
+
 
 def add_MatchServiceV1Servicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +64,11 @@ def add_MatchServiceV1Servicer_to_server(servicer, server):
             servicer.UpdateAccountMatchSetting,
             request_deserializer=interactive__main__service__pb2.UpdateAccountMatchSettingRequest.FromString,
             response_serializer=interactive__main__service__pb2.UpdateAccountMatchSettingReply.SerializeToString,
+        ),
+        "GetMatcherList": grpc.unary_unary_rpc_method_handler(
+            servicer.GetMatcherList,
+            request_deserializer=interactive__main__service__pb2.GetMatcherListRequest.FromString,
+            response_serializer=interactive__main__service__pb2.GetMatcherListReply.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -113,6 +129,35 @@ class MatchServiceV1(object):
             "/interactive_main_service.MatchServiceV1/UpdateAccountMatchSetting",
             interactive__main__service__pb2.UpdateAccountMatchSettingRequest.SerializeToString,
             interactive__main__service__pb2.UpdateAccountMatchSettingReply.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
+
+    @staticmethod
+    def GetMatcherList(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            "/interactive_main_service.MatchServiceV1/GetMatcherList",
+            interactive__main__service__pb2.GetMatcherListRequest.SerializeToString,
+            interactive__main__service__pb2.GetMatcherListReply.FromString,
             options,
             channel_credentials,
             insecure,
