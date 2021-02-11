@@ -6,6 +6,7 @@ service MatchServiceV1 {
     rpc GetAccountMatchSetting(GetAccountMatchSettingRequest) returns (GetAccountMatchSettingReply);
     rpc UpdateAccountMatchSetting(UpdateAccountMatchSettingRequest) returns (UpdateAccountMatchSettingReply);
     rpc GetMatcherList(GetMatcherListRequest) returns (GetMatcherListReply);
+    rpc GetMatcherInfo(GetMatcherInfoRequest) returns (GetMatcherInfoReply);
 }
 
 service ChatService {
@@ -101,4 +102,19 @@ message GetMatcherListRequest {
 
 message GetMatcherListReply {
   repeated Matcher data = 1;
+}
+
+message GetMatcherInfoRequest {
+  string account_id = 1;
+  string matcher_id = 2;
+}
+
+message GetMatcherInfoReply {
+  string matcher_id = 1;
+  string name = 2;
+  int32 age = 3;
+  int32 gender = 4;
+  string address = 5;
+  string job = 6;
+  string reason = 7;
 }
