@@ -88,12 +88,18 @@ message GetListMessagesInRoomChatReply {
     repeated MessageChat data = 1;
 }
 
+message Media {
+  string url = 1;
+  int32 type = 2;
+}
+
 message Matcher {
   string matcher_id = 1;
   string name = 2;
   int32 age = 3;
   string bio = 4;
   int32 status = 5;
+  repeated Media medias = 6;
 }
 
 message GetMatcherListRequest {
@@ -117,4 +123,5 @@ message GetMatcherInfoReply {
   string address = 5;
   string job = 6;
   string reason = 7;
+  repeated Media medias = 8;
 }
