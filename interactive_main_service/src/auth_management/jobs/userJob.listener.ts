@@ -15,7 +15,7 @@ class UserJobListener implements JobListener {
   public registerJobs() {
     const runner = this.scheduler.getTaskRunner();
 
-    runner.schedule('0 0 * * *', () => {
+    runner.schedule('*/5 * * * *', () => {
       logger.debug(`Starting run task: update all accounts.`);
       this.userService.syncAllAccounts();
       logger.debug(`Finish run task: update all accounts`);

@@ -10,6 +10,7 @@ import { MatchSetting } from '../../domain/models/match_settings.model';
 import { IMatchRepository, MatchRepository } from '../../domain/repositories/match.repos';
 import { IMatchSettingRepository, MatchSettingRepository } from '../../domain/repositories/match_setting.repos';
 import { MatcherDto } from '../dtos/matcher.dto';
+import { MatcherInfoDto } from '../dtos/matcher_info.dto';
 import { CreateMatchDto } from '../dtos/matches.dto';
 import { MatchSettingDto } from '../dtos/match_setting.dto';
 
@@ -90,6 +91,14 @@ class MatchService {
       .map(_m => {
         return new MatcherDto(_m.id, _m.fullName, _m.getAge(), _m.bio, 1);
       });
+  }
+
+  public async getMatcherInfo(accountId: string, matcherId: string): Promise<MatcherInfoDto> {
+    const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
+    const matcher: User = await this.userRepos.findUserById(matcherId, true);
+    // TODO validate account can view matcher
+
+    return new MatcherInfoDto(matcher.id, matcher.fullName, matcher.getAge(), 1, matcher.gender, matcher.address, matcher.job, matcher.reason);
   }
 }
 

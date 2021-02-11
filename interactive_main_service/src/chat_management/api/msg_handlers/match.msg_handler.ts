@@ -66,8 +66,21 @@ class MatchMsgHandler {
     MatchMsgHandler.matchService
       .getMatchUserRecs(accountId)
       .then(data => {
-        console.log(data);
         callback(null, { data: data.map(item => item.toResData()) });
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
+
+  public static getMatcherInfo = (call, callback) => {
+    const accountId: string = call.request.account_id;
+    const matcherId: string = call.request.matcher_id;
+
+    MatchMsgHandler.matchService
+      .getMatcherInfo(accountId, matcherId)
+      .then(data => {
+        callback(null, data.toResData());
       })
       .catch(error => {
         callback(new GrpcInternalError(error.message));
@@ -96,6 +109,7 @@ export const matchHandlers = [
       GetAccountMatchSetting: MatchMsgHandler.getAccountMatchSetting,
       UpdateAccountMatchSetting: MatchMsgHandler.updateAccountMatchSetting,
       GetMatcherList: MatchMsgHandler.getMatcherList,
+      GetMatcherInfo: MatchMsgHandler.getMatcherInfo,
     },
   },
 ];
