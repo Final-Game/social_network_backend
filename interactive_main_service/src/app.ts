@@ -28,7 +28,7 @@ class App {
   private server: HTTPServer;
   private io: SocketIOServer;
 
-  constructor(routes: Routes[]) {
+  constructor(routes: Routes[], isBgService = false) {
     this.app = express();
     this.port = process.env.PORT || 3002;
     this.env = process.env.NODE_ENV || 'prod';
@@ -47,7 +47,9 @@ class App {
     this.initializeSwagger();
     this.initializeErrorHandling();
     this.handleSocketConnection();
-    this.handleBackgroundJobs();
+    if (isBgService) {
+      this.handleBackgroundJobs();
+    }
   }
 
   public listen() {

@@ -2,6 +2,7 @@ import { AccountGateway } from '../../app/gateways/account.gateway';
 import { AccountInfoDto } from '../../app/gateways/dtos/accountInfo.dto';
 import axios from 'axios';
 import BaseException from '../../../common/exceptions/BaseException';
+import { MediaDto } from '../../app/gateways/dtos/media.dto';
 
 export class AccountGatewayImpl implements AccountGateway {
   public async getAccountInfo(accountId: string): Promise<AccountInfoDto> {
@@ -11,6 +12,7 @@ export class AccountGatewayImpl implements AccountGateway {
       const res = await axios.get(`${getAccountUrl}`);
 
       const data_response: any = res.data;
+      const medias: Array<any> = data_response['medias'];
       return new AccountInfoDto(
         data_response['id'],
         data_response['full_name'],
@@ -21,6 +23,7 @@ export class AccountGatewayImpl implements AccountGateway {
         data_response['address'] || '',
         data_response['job'] || '',
         data_response['reason'] || '',
+        medias.map(_m => new MediaDto(_m['url'], _m['type'])),
       );
     } catch (error) {
       throw new BaseException(`Can't request get account info: ${error.message}`);

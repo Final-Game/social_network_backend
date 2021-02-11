@@ -14,14 +14,19 @@ import CreateUserCommandPayload from '../../domain/aggregates/payloads/createUse
 import { AccountGateway } from '../gateways/account.gateway';
 import { AccountGatewayImpl } from '../../infras/gateway_impls/account.gatewayImpl';
 import { AccountInfoDto } from '../gateways/dtos/accountInfo.dto';
+import { MediaAccountEntity } from '../../../chat_management/domain/entities/media_accounts.entity';
+import { IMediaAccountRepository, MediaAccountRepository } from '../../../chat_management/domain/repositories/media_account.repos';
+import { RunInTransaction } from '../../../common/repos/transaction';
 
 class UserService {
   private commandBus: CommandBus;
 
   private userRepos: UserRepository;
+  private mediaAccountRepos: IMediaAccountRepository;
   private accountGateway: AccountGateway;
   constructor() {
     this.userRepos = new UserRepository();
+    this.mediaAccountRepos = new MediaAccountRepository();
     this.accountGateway = new AccountGatewayImpl();
     this.commandBus = container.commandBus;
   }
@@ -80,6 +85,7 @@ class UserService {
 
     logger.info(`Account info: ${JSON.stringify(accountInfo)}`);
 
+    // Update basic info
     account.updateData(
       accountInfo.fullName,
       accountInfo.avatar,
@@ -91,8 +97,16 @@ class UserService {
       accountInfo.reason,
     );
 
-    await this.userRepos.save(account);
-    return;
+    await RunInTransaction(async manager => {
+      await this.userRepos.save(account);
+
+      // Update media info
+      this.mediaAccountRepos.removeMediasOfAccount(account.id);
+      accountInfo.medias.forEach(async _media => {
+        const _m_account = new MediaAccountEntity(account.id, _media.url, _media.type);
+        await this.mediaAccountRepos.save(_m_account);
+      });
+    });
   }
 
   public async syncAllAccounts(): Promise<void> {

@@ -1,3 +1,5 @@
+import { MediaDto } from './media.dto';
+
 export class AccountInfoDto {
   id: string;
   fullName: string;
@@ -9,7 +11,20 @@ export class AccountInfoDto {
   job: string;
   reason: string;
 
-  constructor(id: string, fullName: string, avatar: string, birthDate: Date, gender: number, bio = '', address = '', job = '', reason = '') {
+  medias: Array<MediaDto>;
+
+  constructor(
+    id: string,
+    fullName: string,
+    avatar: string,
+    birthDate: Date,
+    gender: number,
+    bio = '',
+    address = '',
+    job = '',
+    reason = '',
+    medias: Array<MediaDto> = [],
+  ) {
     this.id = id;
     this.fullName = fullName;
     this.avatar = avatar;
@@ -19,5 +34,6 @@ export class AccountInfoDto {
     this.address = address;
     this.job = job;
     this.reason = reason;
+    this.medias = medias;
   }
 }

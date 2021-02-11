@@ -14,8 +14,8 @@ function runGrpc() {
   grpcApp.listen();
 }
 
-function runRest() {
-  const app = new App(AuthManagementRoutes);
+function runRest(isBgService = false) {
+  const app = new App(AuthManagementRoutes, isBgService);
   app.listen();
 }
 
@@ -52,6 +52,7 @@ function main() {
     } else {
       if (cluster.worker.id === 1) {
         runGrpc();
+        runRest(true);
       } else {
         runRest();
       }

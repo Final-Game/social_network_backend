@@ -1,6 +1,6 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, BeforeUpdate, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export class GenericEntity {
+export class GenericEntity extends BaseEntity {
   @Column({ name: 'created_at' })
   createdAt: Date;
 

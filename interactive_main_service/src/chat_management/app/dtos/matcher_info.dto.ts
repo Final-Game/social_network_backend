@@ -1,3 +1,5 @@
+import { MediaDto } from './media.dto';
+
 export class MatcherInfoDto {
   public matcherId: string;
   public name: string;
@@ -7,8 +9,19 @@ export class MatcherInfoDto {
   public address: string;
   public job: string;
   public reason: string;
+  public medias: Array<MediaDto>;
 
-  constructor(matcherId: string, name: string, age: number, status: number, gender: number, address: string, job: string, reason: string) {
+  constructor(
+    matcherId: string,
+    name: string,
+    age: number,
+    status: number,
+    gender: number,
+    address: string,
+    job: string,
+    reason: string,
+    medias: Array<MediaDto> = [],
+  ) {
     this.matcherId = matcherId;
     this.name = name;
     this.age = age;
@@ -17,6 +30,7 @@ export class MatcherInfoDto {
     this.address = address;
     this.reason = reason;
     this.job = job;
+    this.medias = medias;
   }
 
   public toResData(): any {
@@ -29,6 +43,7 @@ export class MatcherInfoDto {
       address: this.address,
       reason: this.reason,
       job: this.job,
+      medias: this.medias.map(_m => _m.toResData()),
     };
   }
 }
