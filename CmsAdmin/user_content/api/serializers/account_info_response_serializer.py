@@ -1,3 +1,6 @@
+from user_content.api.serializers.media_response_serializer import (
+    MediaReponseSerializer,
+)
 from rest_framework import serializers
 
 
@@ -11,6 +14,7 @@ class AccountInfoResponseSerializer(serializers.Serializer):
     address = serializers.CharField(help_text="Address")
     job = serializers.CharField(help_text="Job")
     reason = serializers.CharField(help_text="Reason")
+    medias = MediaReponseSerializer(many=True, help_text="Medias")
 
     class Meta:
         fields = [
@@ -23,4 +27,5 @@ class AccountInfoResponseSerializer(serializers.Serializer):
             "address",
             "job",
             "reason",
+            "medias",
         ]

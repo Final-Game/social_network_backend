@@ -4,7 +4,7 @@ from core.domain.models.base_model import BaseModel
 
 class Collection(BaseModel):
     profile = models.OneToOneField(
-        to="Profile", on_delete=models.CASCADE, blank=False, null=False
+        to="Profile", on_delete=models.CASCADE, blank=True, null=True
     )
 
     medias = models.ManyToManyField(

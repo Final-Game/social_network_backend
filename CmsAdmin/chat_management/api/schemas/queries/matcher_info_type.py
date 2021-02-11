@@ -1,3 +1,4 @@
+from chat_management.api.schemas.queries.media_type import MediaType
 import graphene
 
 
@@ -9,3 +10,4 @@ class MatcherInfoType(graphene.ObjectType):
     address = graphene.String(description="Address")
     job = graphene.String(description="Job")
     reason = graphene.String(description="Reason")
+    medias = graphene.List(MediaType, description="Medias")

@@ -1,6 +1,6 @@
-from user_content.app.dtos.account_info_dto import AccountInfoDto
+from user_content.app.dtos.account_info_dto import AccountInfoDto, MediaDto
 from core.app.bus import Query, QueryHandler
-from user_content.models import Account, Profile
+from user_content.models import Account, Profile, Collection
 
 
 class GetAccountInfoQuery(Query):
@@ -17,6 +17,9 @@ class GetAccountInfoQueryHandler(QueryHandler):
         )
 
         account_profile: Profile = account.profile
+        collection: Collection = account_profile and getattr(
+            account_profile, "collection", None
+        )
 
         return AccountInfoDto(
             account.id,
@@ -24,6 +27,13 @@ class GetAccountInfoQueryHandler(QueryHandler):
             account_profile and account_profile.avatar,
             account_profile and account_profile.birth_date,
             account_profile and account_profile.gender,
+            collection
+            and list(
+                map(
+                    lambda x: MediaDto(x.url, x.type),
+                    collection.medias.all(),
+                )
+            ) or [],
             account_profile and account_profile.bio,
             account_profile and account_profile.address,
             account_profile and account_profile.school,

@@ -1,3 +1,4 @@
+from chat_management.app.dtos.media_dto import MediaDto
 from chat_management.app.dtos.matcher_info_dto import MatcherInfoDto
 import grpc
 from chat_management.app.dtos.matcher_dto import MatcherDto
@@ -82,7 +83,14 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
             raise BaseApiException(ex.details())
         return list(
             map(
-                lambda x: MatcherDto(x.matcher_id, x.name, x.age, x.bio, x.status),
+                lambda x: MatcherDto(
+                    x.matcher_id,
+                    x.name,
+                    x.age,
+                    x.bio,
+                    x.status,
+                    list(map(lambda _m: MediaDto(_m.url, _m.type), x.medias)),
+                ),
                 result,
             )
         )
@@ -111,4 +119,5 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
             result.address,
             result.job,
             result.reason,
+            list(map(lambda x: MediaDto(x.url, x.type), result.medias)),
         )

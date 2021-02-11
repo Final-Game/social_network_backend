@@ -16,6 +16,7 @@ class AccountAdmin(BaseAdmin):
         "type",
         "status",
     ]
+    search_fields = ["username", "id"]
     list_filter = ["type", "status"]
     list_display_links = ["username"]
     fields = ["username", "password", "connection", "profile", "type", "status"]
