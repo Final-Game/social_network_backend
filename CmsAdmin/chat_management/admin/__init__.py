@@ -6,3 +6,4 @@ from .match_admin import MatchAdmin
 from .media_message_admin import MediaMessageAdmin
 from .match_setting_admin import MatchSettingAdmin
 from .account_mapper_admin import AccountMapperAdmin
+from .media_account_admin import MediaAccountAdmin

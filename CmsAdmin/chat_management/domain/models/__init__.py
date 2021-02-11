@@ -6,3 +6,4 @@ from .match import Match
 from .media_message import MediaMessage
 from .match_setting import MatchSetting
 from .account_mapper import AccountMapper
+from .media_account import MediaAccount

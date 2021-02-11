@@ -9,6 +9,7 @@ from chat_management.models import AccountMapper
 class AccountMapperAdmin(BaseAdmin):
     list_display = [linkify("ref"), "full_name", "gender", "address"]
     list_display_links = ["full_name"]
+    search_fields = ["id", "full_name"]
     fields = [
         "ref",
         "avatar",
