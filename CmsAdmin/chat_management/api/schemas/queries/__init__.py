@@ -1,3 +1,7 @@
+from chat_management.app.queries.get_account_matcher_info_query import (
+    GetAccountMatcherInfoQuery,
+)
+from chat_management.app.dtos.matcher_info_dto import MatcherInfoDto
 from chat_management.app.queries.get_account_matcher_list_query import (
     GetAccountMatcherListQuery,
 )
@@ -25,6 +29,7 @@ from .media_chat_type import MediaChatType
 from .message_chat_type import MessageChatType
 from .match_setting_type import MatchSettingType
 from .matcher_type import MatcherType
+from .matcher_info_type import MatcherInfoType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -45,6 +50,12 @@ class Query(graphene.ObjectType, BaseAuth):
         MatchSettingType, **auth_data, description="Match setting"
     )
     matchers = graphene.List(MatcherType, **auth_data)
+    matcher_info = graphene.Field(
+        MatcherInfoType,
+        **auth_data,
+        matcher_id=graphene.String(required=True, description="Matcher id"),
+        description="Matcher info"
+    )
 
     @classmethod
     def get_bus(cls):
@@ -101,3 +112,17 @@ class Query(graphene.ObjectType, BaseAuth):
             GetAccountMatcherListQuery(account_id)
         )
         return list(map(lambda _m: _m.__dict__, matchers))
+
+    @classmethod
+    @authenticate_permission
+    def resolve_matcher_info(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        matcher_id: str = kwargs["matcher_id"]
+
+        matcher_info: MatcherInfoDto = _bus.dispatch(
+            GetAccountMatcherInfoQuery(account_id, matcher_id)
+        )
+
+        return matcher_info.__dict__

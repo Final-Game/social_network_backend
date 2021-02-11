@@ -1,6 +1,7 @@
+from chat_management.app.dtos.matcher_info_dto import MatcherInfoDto
 import grpc
 from chat_management.app.dtos.matcher_dto import MatcherDto
-from typing import List
+from typing import Any, List
 from core.common.base_api_exception import BaseApiException
 from core.services.grpc_service import GrpcService
 from chat_management.app.dtos.match_setting_request_dto import MatchSettingRequestDto
@@ -14,6 +15,8 @@ from codegen_protos.interactive_main_service_pb2 import (
     UpdateAccountMatchSettingReply,
     GetMatcherListRequest,
     GetMatcherListReply,
+    GetMatcherInfoRequest,
+    GetMatcherInfoReply,
 )
 from codegen_protos.interactive_main_service_pb2_grpc import (
     MatchServiceV1,
@@ -82,4 +85,30 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
                 lambda x: MatcherDto(x.matcher_id, x.name, x.age, x.bio, x.status),
                 result,
             )
+        )
+
+    async def get_matcher_info(
+        self, account_id: str, matcher_id: str
+    ) -> MatcherInfoDto:
+        result: Any
+
+        try:
+            async with self.get_connection() as channel:
+                stub = MatchServiceV1Stub(channel)
+                res: GetMatcherInfoReply = await stub.GetMatcherInfo(
+                    GetMatcherInfoRequest(account_id=account_id, matcher_id=matcher_id)
+                )
+
+                result = res
+        except grpc.RpcError as ex:
+            raise BaseApiException(ex.details())
+
+        return MatcherInfoDto(
+            result.matcher_id,
+            result.name,
+            result.age,
+            result.gender,
+            result.address,
+            result.job,
+            result.reason,
         )

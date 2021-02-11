@@ -1,4 +1,5 @@
 from abc import ABC
+from chat_management.app.dtos.matcher_info_dto import MatcherInfoDto
 from chat_management.app.dtos.matcher_dto import MatcherDto
 from typing import List
 from chat_management.app.dtos.match_setting_request_dto import MatchSettingRequestDto
@@ -17,4 +18,9 @@ class MatchV1Service:
         raise NotImplementedError()
 
     async def get_matcher_list(self, account_id: str) -> List[MatcherDto]:
+        raise NotImplementedError()
+
+    async def get_matcher_info(
+        self, account_id: str, matcher_id: str
+    ) -> MatcherInfoDto:
         raise NotImplementedError()
