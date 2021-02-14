@@ -120,4 +120,5 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
             result.job,
             result.reason,
             list(map(lambda x: MediaDto(x.url, x.type), result.medias)),
+            status=result.status,
         )

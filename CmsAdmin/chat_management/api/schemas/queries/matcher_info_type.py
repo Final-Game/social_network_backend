@@ -11,3 +11,4 @@ class MatcherInfoType(graphene.ObjectType):
     job = graphene.String(description="Job")
     reason = graphene.String(description="Reason")
     medias = graphene.List(MediaType, description="Medias")
+    status = graphene.Int(description="Status")

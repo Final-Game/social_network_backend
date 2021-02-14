@@ -13,3 +13,4 @@ class MatcherInfoDto:
     job: str
     reason: str
     medias: List[MediaDto]
+    status: int = 1
