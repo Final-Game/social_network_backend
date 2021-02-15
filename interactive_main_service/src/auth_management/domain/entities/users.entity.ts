@@ -21,6 +21,8 @@ import { GenericEntity } from '../../../common/entities/generic.entity';
 import { MatchSetting } from '../../../chat_management/domain/models/match_settings.model';
 import { dateToString, stringToDate } from '../../../common/utils/util';
 import { ConnectManager } from '../../../common/repos/transaction';
+import { ReactSmartRoomEntity } from '../../../chat_management/domain/entities/react_smart_rooms.entity';
+import { ReactSmartRoom, ReactType } from '../../../chat_management/domain/models/react_smart_rooms.model';
 
 @Entity('cm_account_mappers')
 export class UserEntity extends GenericEntity implements User {
@@ -52,6 +54,7 @@ export class UserEntity extends GenericEntity implements User {
   reason: string;
 
   @Column({ name: 'ref_id' })
+  @IsNotEmpty()
   refId: string;
 
   constructor(refId: string) {
@@ -111,9 +114,22 @@ export class UserEntity extends GenericEntity implements User {
   }
 
   public async joinRoom(room: any): Promise<void> {
-    const userRoom: UserRoom = new UserRoomEntity(this.id, room.id);
-    userRoom.updateNickName(this.fullName);
-    await ConnectManager.getManager().save(UserRoomEntity, userRoom);
+    let userRoom: UserRoom = await this.getUserRefRoom(room);
+
+    if (!userRoom) {
+      userRoom = new UserRoomEntity(this.id, room.id);
+      userRoom.updateNickName(this.fullName);
+      await ConnectManager.getManager().save(UserRoomEntity, userRoom);
+    }
+  }
+
+  public async reactSmartRoom(room: any): Promise<void> {
+    const userRoom: UserRoom = await this.getUserRefRoom(room);
+
+    if (userRoom) {
+      const reactSmartRoom: ReactSmartRoom = new ReactSmartRoomEntity(room.id, userRoom.id, ReactType.LOVE);
+      ConnectManager.getManager().save(ReactSmartRoomEntity, reactSmartRoom);
+    }
   }
 
   public async getUserRefRoom(room: any): Promise<any> {

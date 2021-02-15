@@ -1,3 +1,5 @@
+import { ReactType } from '../../../chat_management/domain/models/react_smart_rooms.model';
+
 export interface User {
   id: string;
   fullName: string;
@@ -18,6 +20,7 @@ export interface User {
   getRooms: () => Promise<Array<any>>;
   getCurrentSmartRooms: () => Promise<Array<any>>;
   joinRoom: (room: any) => Promise<void>;
+  reactSmartRoom: (room: any, status: ReactType) => Promise<void>;
   getUserRefRoom: (room: any) => Promise<any>;
   getMatchSetting: () => Promise<any>;
   canMatch: (partner: any) => Promise<boolean>;

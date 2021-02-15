@@ -13,4 +13,6 @@ export interface Room {
   getMsgs: () => Promise<Array<Message>>;
   isSmartRoomAlive: () => boolean;
   getParterOf: (account: any) => Promise<any>;
+  canContinueIntoNormalRoom: () => Promise<boolean>;
+  moveIntoNormalRoom: () => void;
 }

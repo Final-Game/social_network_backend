@@ -10,6 +10,7 @@ import { RoomEntity } from '../../domain/entities/rooms.entity';
 import { MediaType } from '../../domain/enums/mediaType.enum';
 import { RoomType } from '../../domain/enums/roomType.enum';
 import { Message } from '../../domain/models/message.model';
+import { ReactType } from '../../domain/models/react_smart_rooms.model';
 import { Room } from '../../domain/models/rooms.model';
 import { UserRoom } from '../../domain/models/user_rooms.model';
 import { IMessageRepository, MessageRepository } from '../../domain/repositories/message.repos';
@@ -147,11 +148,13 @@ class RoomService {
         throw new BaseException("Can't create smart chat for two partners.");
       }
 
-      if (existedRoom.isSmartRoomAlive()) {
-        return new RoomSimpleDto(existedRoom);
-      } else {
-        await this.roomRepos.delete(existedRoom.id);
-      }
+      await this.roomRepos.delete(existedRoom.id);
+
+      // if (existedRoom.isSmartRoomAlive()) {
+      //   return new RoomSimpleDto(existedRoom);
+      // } else {
+      //   await this.roomRepos.delete(existedRoom.id);
+      // }
     }
 
     const partnerAIsReady: boolean = await partnerA.isReadyForNewSmartRoom();
@@ -161,15 +164,19 @@ class RoomService {
     }
 
     // Create room
-    const room: Room = await this.roomRepos.save(new RoomEntity(RoomType.SMART));
-    await partnerA.joinRoom(room);
-    await partnerB.joinRoom(room);
+    let room: Room = null;
+
+    await RunInTransaction(async (_manager: EntityManager) => {
+      room = await this.roomRepos.save(new RoomEntity(RoomType.SMART));
+      await partnerA.joinRoom(room);
+      await partnerB.joinRoom(room);
+    });
 
     return new RoomSimpleDto(room);
   }
 
   public async checkAccountInRoom(account: User, room: Room): Promise<boolean> {
-    const availableMembers: Array<User> = await Promise.all(await room.getMembers());
+    const availableMembers: Array<User> = await room.getMembers();
 
     return availableMembers.some(mem => mem.id == account.id);
   }
@@ -179,6 +186,32 @@ class RoomService {
     const room: Room = await this.roomRepos.findById(roomId, true);
 
     return room.type == type && this.checkAccountInRoom(account, room);
+  }
+
+  public async reactSmartRoom(accountId: string, roomId: string): Promise<void> {
+    const account: User = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    if (room.type !== RoomType.SMART) {
+      throw new BaseException("Can't react this kind of room.");
+    }
+
+    await account.reactSmartRoom(room, ReactType.LOVE);
+  }
+
+  public async canMoveToNormalRoom(roomId: string): Promise<boolean> {
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    return await room.canContinueIntoNormalRoom();
+  }
+
+  public async moveIntoNormalRoom(roomId: string): Promise<void> {
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    if (await this.canMoveToNormalRoom(roomId)) {
+      room.moveIntoNormalRoom();
+      await this.roomRepos.update(roomId, room);
+    }
   }
 }
 

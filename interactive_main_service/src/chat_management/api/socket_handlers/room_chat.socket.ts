@@ -47,9 +47,30 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     }
     // join room.
     socket.join(roomId);
-    console.log(`User ${account.refId} joined to room ${roomId}`);
+    logger.info(`User ${account.refId} joined to room ${roomId}`);
 
     io.to(roomId).emit('new-mem-joined-smart-chat', { accountId: account.refId });
+  });
+
+  socket.on('react-smart-room', async data => {
+    const { accountId, roomId } = data;
+
+    // validate user can join smart room
+    const account = await getAccountReference(accountId);
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+      throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
+    }
+
+    // react smart room
+    await roomService.reactSmartRoom(account.id, roomId);
+
+    // check move to normal chat
+    const canMoveToNormalRoom: boolean = await roomService.canMoveToNormalRoom(roomId);
+
+    if (canMoveToNormalRoom) {
+      await roomService.moveIntoNormalRoom(roomId);
+      io.to(roomId).emit('goto-normal-room', { status: 'Success' });
+    }
   });
 
   socket.on('send-msg', async data => {
@@ -72,7 +93,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     roomService.sendSmartMsg(sender.id, roomId, { content: content });
 
-    io.to(roomId).emit('new-smart-msg', { accountId: sender.id, message: { content: content } });
+    io.to(roomId).emit('new-smart-msg', { accountId: sender.refId, message: { content: content } });
   });
 
   socket.on('find-smart-chat', async data => {
@@ -91,8 +112,6 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     } else {
       socket.join(smartChatListener.getAvailableRoomWaiterForUserId(accountId));
     }
-
-    return;
   });
 
   socket.on('exit-smart-chat-waiting', async data => {
@@ -101,7 +120,15 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
   });
 
   socket.on('exit-smart-chat', async data => {
-    // TODO handle logic exit smart chat.
+    const { roomId, accountId } = data;
+
+    // validate user can join smart room
+    const account = await getAccountReference(accountId);
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+      throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
+    }
+
+    io.to(roomId).emit('notify-partner-exit-room', { status: 'Success' });
   });
 };
 

@@ -1,27 +1,32 @@
 import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ReactSmartRoom } from '../models/react_smart_rooms.model';
+import { GenericEntity } from '../../../common/entities/generic.entity';
+import { ReactSmartRoom, ReactType } from '../models/react_smart_rooms.model';
 import { RoomEntity } from './rooms.entity';
 import { UserRoomEntity } from './user_rooms.entity';
 
 @Entity('cm_react_smart_rooms')
-export class ReactSmartRoomEntity implements ReactSmartRoom {
+export class ReactSmartRoomEntity extends GenericEntity implements ReactSmartRoom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(type => RoomEntity)
-  room: RoomEntity;
+  @Column({ name: 'room_id' })
+  roomId: string;
 
-  @ManyToOne(type => UserRoomEntity)
-  sender: UserRoomEntity;
+  @Column({ name: 'sender_id' })
+  senderId: string;
 
   @Column()
   @IsNotEmpty()
   status: number;
 
-  @Column({ name: 'created_at' })
-  createdAt: Date;
+  constructor(roomId: string, senderRoomId: string, status: ReactType) {
+    super();
 
-  @Column({ name: 'updated_at' })
-  updatedAt: Date;
+    this.roomId = roomId;
+    this.senderId = senderRoomId;
+    this.status = status;
+
+    this.triggerCreate();
+  }
 }

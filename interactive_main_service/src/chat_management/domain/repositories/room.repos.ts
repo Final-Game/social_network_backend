@@ -3,6 +3,7 @@ import { User } from '../../../auth_management/domain/models/users.model';
 import BaseException from '../../../common/exceptions/BaseException';
 import { BaseRepository, IBaseRepository } from '../../../common/repos/base.repos';
 import { MessageEntity } from '../entities/message.entity';
+import { ReactSmartRoomEntity } from '../entities/react_smart_rooms.entity';
 import { RoomEntity } from '../entities/rooms.entity';
 import { UserRoomEntity } from '../entities/user_rooms.entity';
 import { Room } from '../models/rooms.model';
@@ -47,6 +48,7 @@ export class RoomRepository extends BaseRepository implements IRoomRepository {
 
     // delete remove user room related
     await this.msgRepos.removeMsgsInRoom(roomId);
+    await manager.delete(ReactSmartRoomEntity, { roomId: roomId });
     await manager.delete(UserRoomEntity, { roomId: roomId });
 
     await manager.delete(this.model, roomId);
