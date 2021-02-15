@@ -16,3 +16,6 @@ class Message(BaseModel):
 
     class Meta:
         db_table = "cm_messages"
+    
+    def __str__(self) -> str:
+        return super().__str__() + f" - {self.content}"
