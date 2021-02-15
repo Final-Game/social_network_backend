@@ -7,8 +7,9 @@ class AccountMapper(BaseModel):
     ref = models.OneToOneField(
         "user_content.Account",
         on_delete=models.CASCADE,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
+        default=None,
         related_name="chat_ref_account",
     )
 
