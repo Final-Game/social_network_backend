@@ -1,6 +1,7 @@
 dependencies:
   '@grpc/grpc-js': 1.2.2
   '@grpc/proto-loader': 0.5.5
+  async-redis: 1.1.7
   axios: 0.21.1
   babel-cli: 6.26.0
   babel-preset-es2015: 6.24.1
@@ -27,6 +28,7 @@ dependencies:
   node-cqrs: 0.15.1
   node-cron: 2.0.3
   pg: 8.5.1
+  redis: 3.0.2
   reflect-metadata: 0.1.13
   socket.io: 3.1.1
   socket.io-client: 3.1.1
@@ -1370,6 +1372,15 @@ packages:
     optional: true
     resolution:
       integrity: sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
+  /async-redis/1.1.7:
+    dependencies:
+      redis: 2.8.0
+      redis-commands: 1.7.0
+    dev: false
+    engines:
+      node: '>=7.6.0'
+    resolution:
+      integrity: sha512-phpZe2/U+Ih4Lpy72KWF4+c8gymsUgzg6NV/TZUb8BLNn7soQewFxqcq9nndobfPmzXiuhMLi6GNBiQVIor/EA==
   /async/3.2.0:
     resolution:
       integrity: sha512-TR2mEZFVOj2pLStYxLht7TyfuRzaydfpxr3k9RpHIzMgw7A64dzsdqCxH1WJyQdoe8T10nDXd9wnEigmiuHIZw==
@@ -2849,6 +2860,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+  /double-ended-queue/2.1.0-0:
+    dev: false
+    resolution:
+      integrity: sha1-ED01J/0xUo9AGIEwyEHv3XgmTlw=
   /duplexer3/0.1.4:
     dev: true
     resolution:
@@ -6708,6 +6723,12 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=
+  /redis-parser/2.6.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-Uu0J2srBCPGmMcB+m2mUHnoZUEs=
   /redis-parser/3.0.0:
     dependencies:
       redis-errors: 1.2.0
@@ -6716,6 +6737,16 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=
+  /redis/2.8.0:
+    dependencies:
+      double-ended-queue: 2.1.0-0
+      redis-commands: 1.7.0
+      redis-parser: 2.6.0
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-M1OkonEQwtRmZv4tEWF2VgpG0JWJ8Fv1PhlgT5+B+uNq2cA3Rt1Yt/ryoR+vQNOQcIEgdCdfH0jr3bDpihAw1A==
   /redis/3.0.2:
     dependencies:
       denque: 1.5.0
@@ -8564,6 +8595,7 @@ specifiers:
   '@types/winston': ^2.4.4
   '@typescript-eslint/eslint-plugin': ^4.9.0
   '@typescript-eslint/parser': ^4.9.0
+  async-redis: ^1.1.7
   axios: ^0.21.1
   babel-cli: ^6.26.0
   babel-preset-es2015: ^6.24.1
@@ -8597,6 +8629,7 @@ specifiers:
   nodemon: ^2.0.6
   pg: ^8.5.1
   prettier: ^2.2.1
+  redis: ^3.0.2
   reflect-metadata: ^0.1.13
   socket.io: ^3.1.1
   socket.io-client: ^3.1.1
