@@ -21,6 +21,7 @@ import registerChatServiceSocket from './chat_management/api/socket_handlers';
 import { JobScheduler } from './common/jobs/scheduler.job';
 import CronJobScheduler from './configs/jobs/cronJob.scheduler';
 import { UserJobListener } from './auth_management/jobs/userJob.listener';
+import cacheService from './cache_service';
 class App {
   public app: express.Application;
   public port: string | number;
@@ -47,6 +48,7 @@ class App {
     this.initializeSwagger();
     this.initializeErrorHandling();
     this.handleSocketConnection();
+    this.initializeCache();
     if (isBgService) {
       this.handleBackgroundJobs();
     }
@@ -93,6 +95,10 @@ class App {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
+  }
+
+  private async initializeCache() {
+    cacheService.register();
   }
 
   private initializeSwagger() {
