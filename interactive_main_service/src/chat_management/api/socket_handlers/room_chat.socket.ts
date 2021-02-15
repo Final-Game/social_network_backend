@@ -81,18 +81,23 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     const finderId = await smartChatListener.findAvailableUserMatcher(accountId);
     if (finderId) {
-      const room: RoomSimpleDto = await roomService.createSmartRoom(finderId, accountId);
+      socket.join(smartChatListener.getAvailableRoomWaiterForUserId(finderId));
 
+      const room: RoomSimpleDto = await roomService.createSmartRoom(finderId, accountId);
       const broadCastId: string = smartChatListener.getAvailableRoomWaiterForUserId(finderId);
-      smartChatListener.notifyMatchSmartChat(broadCastId, { roomId: room.id });
+
+      // notify data.
+      io.to(broadCastId).emit('find-smart-chat-success', { roomId: room.id });
+    } else {
+      socket.join(smartChatListener.getAvailableRoomWaiterForUserId(accountId));
     }
 
     return;
   });
 
   socket.on('exit-smart-chat', async data => {
-    const accountId = getAccountReference(data['accountId']);
-    return;
+    const account = await getAccountReference(data['accountId']);
+    await smartChatListener.removeWaitingUser(account.id);
   });
 };
 

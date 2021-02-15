@@ -1,56 +1,55 @@
-import { Server as SocketIOServer } from 'socket.io';
 import UserService from '../../../auth_management/app/services/users.service';
+import cacheService from '../../../cache_service';
+import { logger } from '../../../common/utils/logger';
 
 class SmartChatListener {
   userService: UserService;
-  available_user_ids: Array<string>;
-  socket: any;
-  io: SocketIOServer;
 
   constructor() {
     this.userService = new UserService();
-    this.available_user_ids = new Array<string>();
   }
 
-  public register(io: SocketIOServer, socket: any) {
-    this.io = io;
-    this.socket = socket;
+  public async getAvailableUserIds(): Promise<Array<string>> {
+    return JSON.parse(await cacheService.get('available_user_ids')) || [];
   }
 
-  public addNewWaitingUser(userId: string) {
+  public async addNewAvailableUserId(userId: string) {
+    const available_user_ids: Array<string> = await this.getAvailableUserIds();
+    available_user_ids.push(userId);
+
+    await cacheService.set('available_user_ids', JSON.stringify(available_user_ids), 5 * 60);
+  }
+
+  public async addNewWaitingUser(userId: string) {
     console.log(`User ${userId} is waiting for smart chat.`);
-    this.available_user_ids.push(userId);
-
-    // create room owner for waiting matcher
-    this.socket.join(this.getAvailableRoomWaiterForUserId(userId));
+    await this.addNewAvailableUserId(userId);
   }
 
   public getAvailableRoomWaiterForUserId(userId: string): string {
     return `${userId}-room-waiter`;
   }
 
-  public removeWaitingUser(userId: string) {
-    this.available_user_ids = this.available_user_ids.filter(item => item != userId);
+  public async removeWaitingUser(userId: string) {
+    const available_user_ids = await this.getAvailableUserIds();
+    await cacheService.set('available_user_ids', JSON.stringify(available_user_ids.filter(item => item != userId)), 5 * 60);
   }
 
   public async findAvailableUserMatcher(upComingPartnerId: string): Promise<string | null> {
-    for (let idx = 0; idx < this.available_user_ids.length; idx++) {
-      const finderId = this.available_user_ids[idx];
+    const available_user_ids = await this.getAvailableUserIds();
+    logger.info(`Clients are waiting: ${available_user_ids}`);
+    for (let idx = 0; idx < available_user_ids.length; idx++) {
+      const finderId = available_user_ids[idx];
 
       if (await this.userService.checkUserCanMatch(finderId, upComingPartnerId)) {
-        this.socket.join(this.getAvailableRoomWaiterForUserId(finderId));
-        this.removeWaitingUser(finderId);
+        logger.info(`User ${upComingPartnerId} is matching with user ${finderId}`);
+        await this.removeWaitingUser(finderId);
 
         return finderId;
       }
     }
 
-    this.addNewWaitingUser(upComingPartnerId);
+    await this.addNewWaitingUser(upComingPartnerId);
     return null;
-  }
-
-  public notifyMatchSmartChat(broadCastId: string, data: any) {
-    this.io.to(broadCastId).emit('find-smart-chat-success', data);
   }
 }
 
