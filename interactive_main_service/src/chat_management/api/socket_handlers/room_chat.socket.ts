@@ -95,9 +95,13 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     return;
   });
 
-  socket.on('exit-smart-chat', async data => {
+  socket.on('exit-smart-chat-waiting', async data => {
     const account = await getAccountReference(data['accountId']);
     await smartChatListener.removeWaitingUser(account.id);
+  });
+
+  socket.on('exit-smart-chat', async data => {
+    // TODO handle logic exit smart chat.
   });
 };
 
