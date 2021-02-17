@@ -5,6 +5,7 @@ class VerifyStatusEnum(BaseEnum):
     PENDING: int = 0
     VERIFIED: int = 1
     REJECTED: int = -1
+    NOT_VERIFIED: int = -2
 
     def __int__(self) -> int:
         return int(self.value)

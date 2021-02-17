@@ -33,9 +33,11 @@ class GetAccountInfoQueryHandler(QueryHandler):
                     lambda x: MediaDto(x.url, x.type),
                     collection.medias.all(),
                 )
-            ) or [],
+            )
+            or [],
             account_profile and account_profile.bio,
             account_profile and account_profile.address,
             account_profile and account_profile.school,
             account_profile and account_profile.reason_dating,
+            verify_status=account.get_verify_status(),
         )

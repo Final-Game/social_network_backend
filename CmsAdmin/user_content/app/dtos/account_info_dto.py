@@ -21,3 +21,4 @@ class AccountInfoDto:
     address: str = ""
     job: str = ""
     reason: str = ""
+    verify_status: int = 0

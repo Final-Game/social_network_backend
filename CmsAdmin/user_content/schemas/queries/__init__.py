@@ -1,4 +1,6 @@
 from typing import List
+from user_content.app.queries.get_account_info_query import GetAccountInfoQuery
+from user_content.app.dtos.account_info_dto import AccountInfoDto
 from user_content.app.queries.get_account_home_page_query import (
     GetAccountHomePageQuery,
     HomePageMetadata,
@@ -36,6 +38,7 @@ from .user_story_data_type import UserStoryDataType
 from .account_timeline_type import AccountTimeLineType
 from .post_detail_type import PostDetailType
 from .account_homepage_type import AccountHomePageType
+from .account_info_type import AccountInfoType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -62,6 +65,7 @@ class Query(graphene.ObjectType, BaseAuth):
         post_id=graphene.String(required=True, description="Post id")
     )
     account_homepage = graphene.Field(AccountHomePageType, **auth_data)
+    account_info = graphene.Field(AccountInfoType, **auth_data)
 
     @classmethod
     def get_bus(cls):
@@ -143,3 +147,13 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return account_homepage.__dict__
+
+    @classmethod
+    @authenticate_permission
+    def resolve_account_info(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        account_info: AccountInfoDto = _bus.dispatch(GetAccountInfoQuery(account_id))
+
+        return account_info.__dict__
