@@ -1,4 +1,5 @@
 from typing import List
+from user_content.domain.enums.verify_status_enum import VerifyStatusEnum
 from user_content.domain.enums.account_status_enum import AccountStatusEnum
 from user_content.domain.managers.account_manager import AccountManager
 from user_content.domain.enums.account_type_enum import AccountTypeEnum
@@ -83,6 +84,15 @@ class Account(BaseModel):
 
     def change_password(self, new_password):
         self.password = make_password(new_password)
+
+    def get_verify_status(self) -> int:
+        from user_content.models import AccountVerify
+
+        account_verify: AccountVerify = getattr(self, "accountverify", None)
+        if not account_verify:
+            return VerifyStatusEnum.NOT_VERIFIED.value
+
+        return account_verify.status
 
     @property
     def article_posts(self):
