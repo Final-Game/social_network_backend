@@ -9,7 +9,6 @@ class MatchMsgHandler {
   public static matchService: MatchService = new MatchService();
 
   public static createMatch = (call, callback) => {
-    console.log(call.request);
     const senderId = call.request.sender_id;
     const receiverId = call.request.receiver_id;
     const status = call.request.status;
@@ -87,11 +86,6 @@ class MatchMsgHandler {
       });
   };
 }
-
-// function createMatch(call, callback) {
-//   console.log(call.request);
-//   callback(null, { status: 'Success' });
-// }
 
 const matchProto: any = protoLoader(MATCH_PROTO_PATH).match_service;
 const interactiveMainProto: any = protoLoader(INTERACTIVE_MAIN_PROTO_PATH).interactive_main_service;

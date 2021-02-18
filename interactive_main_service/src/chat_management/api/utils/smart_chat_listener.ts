@@ -21,7 +21,7 @@ class SmartChatListener {
   }
 
   public async addNewWaitingUser(userId: string) {
-    console.log(`User ${userId} is waiting for smart chat.`);
+    logger.debug(`User ${userId} is waiting for smart chat.`);
     await this.addNewAvailableUserId(userId);
   }
 

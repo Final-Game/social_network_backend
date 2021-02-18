@@ -7,6 +7,7 @@ import os from 'os';
 import GrpcApp from './grpc.app';
 import { chatModuleHandler } from './chat_management/api/msg_handlers';
 import path from 'path';
+import { logger } from './common/utils/logger';
 
 function runGrpc() {
   const protoHandlers = chatModuleHandler;
@@ -38,7 +39,7 @@ function main() {
   } else {
     if (cluster.isMaster) {
       const numCPUs = os.cpus().length;
-      console.log(`Master ${process.pid} is running`);
+      logger.debug(`Master ${process.pid} is running`);
 
       // Fork workers.
       for (let i = 0; i < numCPUs; i++) {
@@ -47,7 +48,7 @@ function main() {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       cluster.on('exit', (worker, _code, _signal) => {
-        console.log(`worker ${worker.process.pid} died`);
+        logger.debug(`worker ${worker.process.pid} died`);
       });
     } else {
       if (cluster.worker.id === 1) {

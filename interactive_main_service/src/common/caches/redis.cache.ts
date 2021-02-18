@@ -1,6 +1,7 @@
 import { ICache } from './cache';
 import * as redis from 'redis';
 import * as asyncRedis from 'async-redis';
+import { logger } from '../utils/logger';
 export class RedisCache implements ICache {
   private _cacheClient = null;
   public register() {
@@ -9,7 +10,7 @@ export class RedisCache implements ICache {
   }
 
   public async set(key: string, data: any, timeout: number): Promise<boolean> {
-    console.log(`Set cache: key ${key} - value ${data}`);
+    logger.debug(`Set cache: key ${key} - value ${data}`);
     return await this._cacheClient.setex(key, timeout, data);
   }
 

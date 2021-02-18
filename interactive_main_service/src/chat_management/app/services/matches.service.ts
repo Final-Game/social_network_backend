@@ -49,7 +49,6 @@ class MatchService {
       logger.info(`Match aggregate created with ID ${event.aggregateId}`);
     });
 
-    console.log(data);
     return;
   }
 
@@ -80,8 +79,6 @@ class MatchService {
     container.eventStore.once('matchSettingUpdatedEvent', event => {
       logger.info(`Match aggregate created with ID ${event.aggregateId}`);
     });
-
-    console.log(data);
   }
 
   public async getMatchUserRecs(accountId: string): Promise<Array<MatcherDto>> {
