@@ -1,7 +1,10 @@
 import { CommandBus } from 'node-cqrs';
 import { EntityManager, getManager } from 'typeorm';
+import { AccountGateway } from '../../../auth_management/app/gateways/account.gateway';
+import { AccountReportDto } from '../../../auth_management/app/gateways/dtos/accountReport.dto';
 import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
+import { AccountGatewayImpl } from '../../../auth_management/infras/gateway_impls/account.gatewayImpl';
 import BaseException from '../../../common/exceptions/BaseException';
 import { RunInTransaction } from '../../../common/repos/transaction';
 import container from '../../../container';
@@ -24,12 +27,14 @@ class RoomService {
   private roomRepos: IRoomRepository;
   private userRepos: UserRepository;
   private messageRepos: IMessageRepository;
+  private accountGw: AccountGateway;
 
   constructor() {
     this.commandBus = container.commandBus;
     this.roomRepos = new RoomRepository();
     this.userRepos = new UserRepository();
     this.messageRepos = new MessageRepository();
+    this.accountGw = new AccountGatewayImpl();
   }
 
   public async createRoomChat(accountId: string, receiverId: string): Promise<Room> {
@@ -212,6 +217,19 @@ class RoomService {
       room.moveIntoNormalRoom();
       await this.roomRepos.update(roomId, room);
     }
+  }
+
+  public async reportUserSmartRoom(accountId: string, roomId: string, reason: string): Promise<void> {
+    const account: User = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    if (room.type !== RoomType.SMART) {
+      throw new BaseException("Can't report this kind of room");
+    }
+
+    const partner: User = await room.getParterOf(account);
+
+    await this.accountGw.reportUser(account.refId, new AccountReportDto(partner.refId, reason));
   }
 }
 

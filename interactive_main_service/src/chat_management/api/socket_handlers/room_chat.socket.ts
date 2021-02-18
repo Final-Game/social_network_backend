@@ -130,6 +130,15 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     io.to(roomId).emit('notify-partner-exit-room', { status: 'Success' });
   });
+
+  socket.on('report-smart-chat', async data => {
+    const { roomId, accountId, reason } = data;
+
+    // validate user can join smart room
+    const account = await getAccountReference(accountId);
+
+    await roomService.reportUserSmartRoom(account.id, roomId, reason);
+  });
 };
 
 export default roomChatSocket;

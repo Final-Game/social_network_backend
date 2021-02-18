@@ -3,6 +3,7 @@ import { AccountInfoDto } from '../../app/gateways/dtos/accountInfo.dto';
 import axios from 'axios';
 import BaseException from '../../../common/exceptions/BaseException';
 import { MediaDto } from '../../app/gateways/dtos/media.dto';
+import { AccountReportDto } from '../../app/gateways/dtos/accountReport.dto';
 
 export class AccountGatewayImpl implements AccountGateway {
   public async getAccountInfo(accountId: string): Promise<AccountInfoDto> {
@@ -27,6 +28,18 @@ export class AccountGatewayImpl implements AccountGateway {
       );
     } catch (error) {
       throw new BaseException(`Can't request get account info: ${error.message}`);
+    }
+  }
+
+  public async reportUser(accountId: string, dto: AccountReportDto): Promise<void> {
+    const reportAccountUrl = `${process.env.USER_CONTENT_API_URL}/api/accounts/${accountId}/report`;
+    try {
+      await axios.post(reportAccountUrl, {
+        receiver_id: dto.receiverId,
+        reason: dto.reason,
+      });
+    } catch (error) {
+      throw new BaseException(`Can't request report user: ${error.message}`);
     }
   }
 }
