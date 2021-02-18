@@ -44,6 +44,13 @@ class Account(BaseModel):
         symmetrical=False,
         related_name="account_reporter_relate",
     )
+    reporting_users = models.ManyToManyField(
+        "self",
+        through="AccountReport",
+        through_fields=["sender", "receiver"],
+        symmetrical=False,
+        related_name="account_reporting_relate"
+    )
     status = models.IntegerField(
         null=True,
         blank=True,

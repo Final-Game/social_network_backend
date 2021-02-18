@@ -31,4 +31,4 @@ class AccountReport(BaseModel):
 
     class Meta:
         db_table = "uc_account_reports"
-        unique_together = ["sender", "receiver", "related_post"]
+        # unique_together = ["sender", "receiver", "related_post"]

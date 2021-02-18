@@ -55,6 +55,7 @@ class GetAccountHomePageQueryHandler(QueryHandler):
 
         related_posts: List[Post] = Post.objects.filter(
             Q(account__in=account.following_users.all())
+            & ~Q(account__in=account.reporting_users.all())
         ).order_by("-created_at")[offset_page : offset_page + pageable.limit]
         return list(related_posts)
 

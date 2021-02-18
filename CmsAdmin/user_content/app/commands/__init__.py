@@ -10,3 +10,4 @@ from .user_create_story_command import UserCreateStoryCommand
 from .user_view_story_command import UserViewStoryCommand
 from .user_delete_story_command import UserDeleteStoryCommand
 from .verify_account_command import VerifyAccountCommand
+from .report_user_command import ReportUserCommand
