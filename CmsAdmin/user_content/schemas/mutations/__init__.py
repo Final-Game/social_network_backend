@@ -16,6 +16,7 @@ from .user_view_story_mutation import UserViewStoryMutation
 from .user_delete_story_mutation import UserDeleteStoryMutation
 from .verify_account_mutation import AccountVerifyMutation
 from .report_user_mutation import ReportUserMutaion
+from .user_update_medias_mutation import UserUpdateMediasMutation
 
 
 class Mutation(graphene.ObjectType):
@@ -36,3 +37,4 @@ class Mutation(graphene.ObjectType):
     user_delete_story = UserDeleteStoryMutation.Field()
     account_verify = AccountVerifyMutation.Field()
     report_user = ReportUserMutaion.Field()
+    user_update_medias = UserUpdateMediasMutation.Field()

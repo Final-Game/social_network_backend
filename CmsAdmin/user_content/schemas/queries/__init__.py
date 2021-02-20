@@ -1,10 +1,6 @@
 from typing import List
 from user_content.app.queries.get_account_info_query import GetAccountInfoQuery
 from user_content.app.dtos.account_info_dto import AccountInfoDto
-from user_content.app.queries.get_account_home_page_query import (
-    GetAccountHomePageQuery,
-    HomePageMetadata,
-)
 from user_content.app.dtos.account_home_page_dto import AccountHomePageDto
 from user_content.app.queries.get_post_detail_query import GetPostDetailQuery
 from user_content.app.dtos.post_detail_dto import PostDetailDto
@@ -28,6 +24,12 @@ from core.authenticates.account_authentication import AccountAuthentication
 from core.schemas.base_auth import BaseAuth, authenticate_permission
 from user_content.domain.models.profile import Profile
 from user_content.app.queries.get_account_profile_query import GetAccountProfileQuery
+from user_content.app.queries.get_account_medias_query import GetAccountMediasQuery
+from user_content.app.dtos.media_data_dto import MediaDataDto
+from user_content.app.queries.get_account_home_page_query import (
+    GetAccountHomePageQuery,
+    HomePageMetadata,
+)
 from core.app.bus import Bus
 import graphene
 
@@ -39,6 +41,7 @@ from .account_timeline_type import AccountTimeLineType
 from .post_detail_type import PostDetailType
 from .account_homepage_type import AccountHomePageType
 from .account_info_type import AccountInfoType
+from .media_data_type import MediaDataType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -66,6 +69,7 @@ class Query(graphene.ObjectType, BaseAuth):
     )
     account_homepage = graphene.Field(AccountHomePageType, **auth_data)
     account_info = graphene.Field(AccountInfoType, **auth_data)
+    account_medias = graphene.List(MediaDataType, **auth_data)
 
     @classmethod
     def get_bus(cls):
@@ -157,3 +161,13 @@ class Query(graphene.ObjectType, BaseAuth):
         account_info: AccountInfoDto = _bus.dispatch(GetAccountInfoQuery(account_id))
 
         return account_info.__dict__
+
+    @classmethod
+    @authenticate_permission
+    def resolve_account_medias(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        medias: List[MediaDataDto] = _bus.dispatch(GetAccountMediasQuery(account_id))
+
+        return list(map(lambda x: x.__dict__, medias))

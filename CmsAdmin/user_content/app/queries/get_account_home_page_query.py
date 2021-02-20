@@ -1,4 +1,3 @@
-from core.common.base_enum import BaseEnum
 from user_content.app.dtos.account_home_page_dto import AccountHomePageDto
 from user_content.app.dtos.media_data_dto import MediaDataDto
 from user_content.app.dtos.article_post_dto import ArticlePostDto
@@ -10,6 +9,7 @@ from django.db.models.query_utils import Q
 from user_content.domain.models.post import Post
 from user_content.domain.models.account import Account
 from core.app.bus import Query, QueryHandler
+from core.common.base_enum import BaseEnum
 
 
 @dataclass

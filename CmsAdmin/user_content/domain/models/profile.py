@@ -68,3 +68,8 @@ class Profile(BaseModel):
             birth_date,
         )
         self.school, self.address, self.bio = school, address, bio
+
+    def create_collection(self):
+        from user_content.models import Collection
+
+        return Collection.objects.create(profile_id=self.id)
