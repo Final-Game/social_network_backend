@@ -163,7 +163,7 @@ class Query(graphene.ObjectType, BaseAuth):
         return account_info.__dict__
 
     @classmethod
-    @authenticate_permission
+    # @authenticate_permission
     def resolve_account_medias(cls, *args, **kwargs):
         _bus: Bus = cls.get_bus()
 
