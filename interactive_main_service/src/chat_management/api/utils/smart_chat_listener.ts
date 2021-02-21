@@ -1,12 +1,15 @@
 import UserService from '../../../auth_management/app/services/users.service';
 import cacheService from '../../../cache_service';
 import { logger } from '../../../common/utils/logger';
+import RoomService from '../../app/services/room.service';
 
 class SmartChatListener {
   userService: UserService;
+  roomService: RoomService;
 
   constructor() {
     this.userService = new UserService();
+    this.roomService = new RoomService();
   }
 
   public async getAvailableUserIds(): Promise<Array<string>> {
@@ -40,7 +43,10 @@ class SmartChatListener {
     for (let idx = 0; idx < available_user_ids.length; idx++) {
       const finderId = available_user_ids[idx];
 
-      if (await this.userService.checkUserCanMatch(finderId, upComingPartnerId)) {
+      if (
+        (await this.userService.checkUserCanMatch(finderId, upComingPartnerId)) &&
+        (await this.roomService.canCreateSmartRoom(finderId, upComingPartnerId))
+      ) {
         logger.info(`User ${upComingPartnerId} is matching with user ${finderId}`);
         await this.removeWaitingUser(finderId);
 

@@ -141,6 +141,20 @@ class RoomService {
     return Promise.all(msgs.map(async item => new MessageDto(item, (await (await item.getSender()).getAccount()).refId, [])));
   }
 
+  public async canCreateSmartRoom(parterAId: string, partnerBId: string): Promise<boolean> {
+    const partnerA = await this.userRepos.findUserById(parterAId, true);
+    const partnerB = await this.userRepos.findUserById(partnerBId, true);
+
+    // Validate
+    const existedRoom: Room = await this.roomRepos.findRoomByTwoPartners(partnerA, partnerB);
+
+    if (existedRoom && existedRoom.type != RoomType.SMART) {
+      return false;
+    }
+
+    return true;
+  }
+
   public async createSmartRoom(partnerAId: string, partnerBId: string): Promise<any> {
     const partnerA = await this.userRepos.findUserById(partnerAId, true);
     const partnerB = await this.userRepos.findUserById(partnerBId, true);
