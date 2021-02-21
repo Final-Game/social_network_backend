@@ -1,21 +1,27 @@
 import { CommandBus } from 'node-cqrs';
 import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
+import { RunInTransaction } from '../../../common/repos/transaction';
 import { logger } from '../../../common/utils/logger';
 import container from '../../../container';
+import { MatchEntity } from '../../domain/entities/matches.entity';
 import { MatchSettingEntity } from '../../domain/entities/match_settings.entity';
-import { Gender } from '../../domain/enums/gender.enum';
+import { Gender, getGender } from '../../domain/enums/gender.enum';
+import { MatchStatus } from '../../domain/enums/matchStatus.enum';
+import { RoomType } from '../../domain/enums/roomType.enum';
 import { Match } from '../../domain/models/matches.model';
 import { MatchSetting } from '../../domain/models/match_settings.model';
 import { MediaAccount } from '../../domain/models/media_accounts.model';
 import { IMatchRepository, MatchRepository } from '../../domain/repositories/match.repos';
 import { IMatchSettingRepository, MatchSettingRepository } from '../../domain/repositories/match_setting.repos';
 import { IMediaAccountRepository, MediaAccountRepository } from '../../domain/repositories/media_account.repos';
+import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
 import { MatcherDto } from '../dtos/matcher.dto';
 import { MatcherInfoDto } from '../dtos/matcher_info.dto';
 import { CreateMatchDto } from '../dtos/matches.dto';
 import { MatchSettingDto } from '../dtos/match_setting.dto';
 import { MediaDto } from '../dtos/media.dto';
+import RoomService from './room.service';
 
 class MatchService {
   private commandBus: CommandBus;
@@ -23,6 +29,7 @@ class MatchService {
   private matchSettingRepos: IMatchSettingRepository;
   private userRepos: UserRepository;
   private mediaAccountRepos: IMediaAccountRepository;
+  private roomService: RoomService;
 
   constructor() {
     this.commandBus = container.commandBus;
@@ -30,24 +37,47 @@ class MatchService {
     this.userRepos = new UserRepository();
     this.matchSettingRepos = new MatchSettingRepository();
     this.mediaAccountRepos = new MediaAccountRepository();
+    this.roomService = new RoomService();
   }
 
   public async createMatch(data: CreateMatchDto): Promise<Match> {
     const sender = await this.userRepos.findAccountByBaseAccountId(data.accountId, true);
-    const receiver = await this.userRepos.findAccountByBaseAccountId(data.dto.receiverId, true);
+    const receiver = await this.userRepos.findUserById(data.dto.receiverId, true);
 
-    const payload = {
-      senderId: sender.id,
-      dto: {
-        receiverId: receiver.id,
-        status: data.dto.status,
-      },
-    };
+    const status: number = data.dto.status;
+    const existedMatch: Match = await this.matchRepos.findMatchBySenderIdAndReceiverId(sender.id, receiver.id, false);
+    const targetExistedMatch: Match = await this.matchRepos.findMatchBySenderIdAndReceiverId(receiver.id, sender.id, false);
 
-    data = await this.commandBus.send('createMatchCommand', undefined, { payload });
-    container.eventStore.once('matchCreatedEvent', event => {
-      logger.info(`Match aggregate created with ID ${event.aggregateId}`);
+    await RunInTransaction(async _ => {
+      if (existedMatch) {
+        if (existedMatch.status == MatchStatus.CLOSE && status != MatchStatus.CLOSE) {
+          existedMatch.updateStatus(status);
+
+          this.matchRepos.update(existedMatch.id, existedMatch);
+        }
+      } else {
+        const match: Match = new MatchEntity(sender.id, receiver.id, status);
+        await this.matchRepos.save(match);
+      }
+
+      // Create room chat for account in receiver match user.
+      if (targetExistedMatch) {
+        await this.roomService.createRoomChat(sender.refId, receiver.refId, RoomType.MATCH);
+      }
     });
+
+    // const payload = {
+    //   senderId: sender.id,
+    //   dto: {
+    //     receiverId: receiver.id,
+    //     status: data.dto.status,
+    //   },
+    // };
+
+    // data = await this.commandBus.send('createMatchCommand', undefined, { payload });
+    // container.eventStore.once('matchCreatedEvent', event => {
+    //   logger.info(`Match aggregate created with ID ${event.aggregateId}`);
+    // });
 
     return;
   }
@@ -68,17 +98,32 @@ class MatchService {
 
   public async updateAccountMatchSetting(accountId: string, data: MatchSettingDto) {
     const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
+    const { genderTarget, maxAge, maxDistance, minAge } = data;
 
-    const payload = {
-      accountId: account.id,
-      data: data,
-    };
+    const gender = getGender(genderTarget);
 
-    data = await this.commandBus.send('updateMatchSettingCommand', undefined, { payload });
+    let matchSetting: MatchSetting = await this.matchSettingRepos.findMatchSettingByAccountId(account.id, false);
 
-    container.eventStore.once('matchSettingUpdatedEvent', event => {
-      logger.info(`Match aggregate created with ID ${event.aggregateId}`);
+    await RunInTransaction(async _ => {
+      if (!matchSetting) {
+        matchSetting = new MatchSettingEntity(account.id, gender, maxDistance, minAge, maxAge);
+        await this.matchSettingRepos.save(matchSetting);
+      } else {
+        matchSetting.updateData(gender, maxAge, minAge, maxDistance);
+        await this.matchSettingRepos.update(matchSetting.id, matchSetting);
+      }
     });
+
+    // const payload = {
+    //   accountId: account.id,
+    //   data: data,
+    // };
+
+    // data = await this.commandBus.send('updateMatchSettingCommand', undefined, { payload });
+
+    // container.eventStore.once('matchSettingUpdatedEvent', event => {
+    //   logger.info(`Match aggregate created with ID ${event.aggregateId}`);
+    // });
   }
 
   public async getMatchUserRecs(accountId: string): Promise<Array<MatcherDto>> {

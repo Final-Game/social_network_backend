@@ -37,7 +37,7 @@ class RoomService {
     this.accountGw = new AccountGatewayImpl();
   }
 
-  public async createRoomChat(accountId: string, receiverId: string): Promise<Room> {
+  public async createRoomChat(accountId: string, receiverId: string, type: RoomType = RoomType.NORMAL): Promise<Room> {
     const account = await this.userRepos.getOrCreateAccountByBaseAccountId(accountId);
     const receiver = await this.userRepos.getOrCreateAccountByBaseAccountId(receiverId);
 
@@ -59,7 +59,7 @@ class RoomService {
 
     await RunInTransaction(async (_manager: EntityManager) => {
       // Create new room chat
-      room = new RoomEntity(RoomType.NORMAL);
+      room = new RoomEntity(type);
       room = await this.roomRepos.save(room);
       await account.joinRoom(room);
       await receiver.joinRoom(room);
