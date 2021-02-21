@@ -1,4 +1,5 @@
 from typing import List
+from user_content.app.queries.get_user_story_query import GetUserStoryQuery
 from user_content.app.queries.get_account_info_query import GetAccountInfoQuery
 from user_content.app.dtos.account_info_dto import AccountInfoDto
 from user_content.app.dtos.account_home_page_dto import AccountHomePageDto
@@ -61,6 +62,11 @@ class Query(graphene.ObjectType, BaseAuth):
     )
     user_followers = graphene.List(UserFollowType, **auth_data)
     user_stories = graphene.List(UserStoryDataType, **auth_data)
+    user_story = graphene.Field(
+        UserStoryDataType,
+        **auth_data,
+        partner_id=graphene.String(required=True, description="Partner id")
+    )
     account_timeline = graphene.Field(AccountTimeLineType, **auth_data)
     user_post_detail = graphene.Field(
         PostDetailType,
@@ -111,6 +117,20 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return list(map(lambda x: x.to_dict(), user_stories))
+
+    @classmethod
+    @authenticate_permission
+    def resolve_user_story(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        partner_id: str = kwargs["partner_id"]
+
+        user_story: UserStoryDataDto = _bus.dispatch(
+            GetUserStoryQuery(account_id, partner_id)
+        )
+
+        return  user_story.to_dict()
 
     @classmethod
     # @authenticate_permission

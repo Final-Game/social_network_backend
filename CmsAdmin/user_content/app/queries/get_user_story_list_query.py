@@ -41,13 +41,13 @@ class GetUserStoryListQueryHandler(QueryHandler):
         )
 
     @staticmethod
-    def get_user_followers_has_story(account: Account) -> UserStoryDataDto:
+    def get_user_followers_has_story(account: Account) -> List[UserStory]:
         following_users_queryset: List[Account] = account.following_users
 
         return following_users_queryset.filter(Q(userstory__isnull=False))
 
 
-def map_account_to_user_story_data(account: Account):
+def map_account_to_user_story_data(account: Account) -> UserStoryDataDto:
     user_stories: List[UserStory] = list(
         filter(lambda x: x.is_visible(), list(account.userstory_set.all()))
     )

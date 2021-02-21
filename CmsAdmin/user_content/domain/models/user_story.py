@@ -38,9 +38,11 @@ class UserStory(BaseModel):
         db_table = "user_content_user_story"
 
     def is_visible(self) -> bool:
-        import pytz
+        # import pytz
 
-        threshold: datetime = datetime.utcnow().replace(tzinfo=pytz.UTC) - timedelta(
-            days=1
-        )
-        return self.created_at > threshold
+        # threshold: datetime = datetime.utcnow().replace(tzinfo=pytz.UTC) - timedelta(
+        #     days=1
+        # )
+        # return self.created_at > threshold
+
+        return True

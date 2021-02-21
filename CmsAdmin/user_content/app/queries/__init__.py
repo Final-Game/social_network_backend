@@ -6,3 +6,4 @@ from .get_post_detail_query import GetPostDetailQuery
 from .get_account_home_page_query import GetAccountHomePageQuery
 from .get_account_info_query import GetAccountInfoQuery
 from .get_account_medias_query import GetAccountMediasQuery
+from .get_user_story_query import GetUserStoryQuery
