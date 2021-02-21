@@ -73,3 +73,6 @@ class Profile(BaseModel):
         from user_content.models import Collection
 
         return Collection.objects.create(profile_id=self.id)
+
+    def update_avatar(self, media_url: str):
+        self.avatar = media_url

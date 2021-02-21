@@ -17,3 +17,4 @@ from .post_detail_dto import PostReactDto, PostDetailDto, UserCommentDto
 from .account_home_page_dto import AccountHomePageDto
 from .account_verify_dto import AccountVerifyDto
 from .report_user_dto import ReportUserDto
+from .avatar_account_dto import AvatarAccountDto
