@@ -139,7 +139,7 @@ class RoomService {
 
     const partner: User = await room.getParterOf(account);
 
-    return new RoomInfoDto(room.id, partner.id, partner.fullName);
+    return new RoomInfoDto(room.id, partner.refId, partner.fullName);
   }
 
   public async getMessagesInRoomChat(accountId: string, roomId: string): Promise<Array<MessageDto>> {
