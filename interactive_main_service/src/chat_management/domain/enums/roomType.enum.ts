@@ -1,5 +1,6 @@
 export enum RoomType {
+  SMART_PENDING = -1,
   NORMAL = 0,
-  SMART,
-  MATCH,
+  SMART = 1,
+  MATCH = 2,
 }

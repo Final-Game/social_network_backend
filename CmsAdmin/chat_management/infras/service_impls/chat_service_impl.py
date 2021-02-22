@@ -70,6 +70,7 @@ class ChatServiceImpl(GrpcService, ChatService):
                     x.latest_msg,
                     maya.parse(x.latest_msg_time).datetime(),
                     x.num_un_read_msg,
+                    type=x.type
                 ),
                 result,
             )

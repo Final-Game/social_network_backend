@@ -104,7 +104,7 @@ export class UserEntity extends GenericEntity implements User {
       .where('user_room.account_id = :account_id', { account_id: this.id })
       .getMany();
 
-    return (await Promise.all(userRooms.map(async ur => await ur.getRoom()))).filter(room => room.isSmartRoomAlive());
+    return (await Promise.all(userRooms.map(async ur => await ur.getRoom()))).filter(room => room.canChatNormal());
   }
 
   public async isReadyForNewSmartRoom(): Promise<boolean> {

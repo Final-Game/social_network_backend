@@ -122,7 +122,7 @@ class RoomService {
 
       const partner: User = await item.getParterOf(account);
 
-      return new RoomChatDto(item.id, partner && partner.avatar, partner && partner.fullName, 0, content, createdAt);
+      return new RoomChatDto(item.id, partner && partner.avatar, partner && partner.fullName, 0, content, createdAt, item.type);
     });
     return await Promise.all(data);
   }
@@ -148,8 +148,12 @@ class RoomService {
     // Validate
     const existedRoom: Room = await this.roomRepos.findRoomByTwoPartners(partnerA, partnerB);
 
-    if (existedRoom && existedRoom.type != RoomType.SMART) {
-      return false;
+    if (existedRoom) {
+      if (existedRoom.type == RoomType.SMART_PENDING && !existedRoom.isSmartRoomAlive()) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     return true;
@@ -163,11 +167,11 @@ class RoomService {
     const existedRoom: Room = await this.roomRepos.findRoomByTwoPartners(partnerA, partnerB);
 
     if (existedRoom) {
-      if (existedRoom.type != RoomType.SMART) {
+      if (existedRoom.type == RoomType.SMART_PENDING && !existedRoom.isSmartRoomAlive()) {
+        await this.roomRepos.delete(existedRoom.id);
+      } else {
         throw new BaseException("Can't create smart chat for two partners.");
       }
-
-      await this.roomRepos.delete(existedRoom.id);
 
       // if (existedRoom.isSmartRoomAlive()) {
       //   return new RoomSimpleDto(existedRoom);
@@ -186,7 +190,7 @@ class RoomService {
     let room: Room = null;
 
     await RunInTransaction(async (_manager: EntityManager) => {
-      room = await this.roomRepos.save(new RoomEntity(RoomType.SMART));
+      room = await this.roomRepos.save(new RoomEntity(RoomType.SMART_PENDING));
       await partnerA.joinRoom(room);
       await partnerB.joinRoom(room);
     });
@@ -200,6 +204,13 @@ class RoomService {
     return availableMembers.some(mem => mem.id == account.id);
   }
 
+  public async checkAccountInRoomNormalChat(accountId: string, roomId: string): Promise<boolean> {
+    const account: User = await this.userRepos.findUserById(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    return room.canChatNormal() && this.checkAccountInRoom(account, room);
+  }
+
   public async checkAccountInRoomType(accountId: string, roomId: string, type: number): Promise<boolean> {
     const account: User = await this.userRepos.findUserById(accountId, true);
     const room: Room = await this.roomRepos.findById(roomId, true);
@@ -211,24 +222,24 @@ class RoomService {
     const account: User = await this.userRepos.findUserById(accountId, true);
     const room: Room = await this.roomRepos.findById(roomId, true);
 
-    if (room.type !== RoomType.SMART) {
+    if (room.type !== RoomType.SMART_PENDING) {
       throw new BaseException("Can't react this kind of room.");
     }
 
     await account.reactSmartRoom(room, ReactType.LOVE);
   }
 
-  public async canMoveToNormalRoom(roomId: string): Promise<boolean> {
+  public async canMoveToNormalChat(roomId: string): Promise<boolean> {
     const room: Room = await this.roomRepos.findById(roomId, true);
 
-    return await room.canContinueIntoNormalRoom();
+    return await room.canContinueChatNormal();
   }
 
   public async moveIntoNormalRoom(roomId: string): Promise<void> {
     const room: Room = await this.roomRepos.findById(roomId, true);
 
-    if (await this.canMoveToNormalRoom(roomId)) {
-      room.moveIntoNormalRoom();
+    if (await this.canMoveToNormalChat(roomId)) {
+      room.makeRoomNormalChatForSmartChat();
       await this.roomRepos.update(roomId, room);
     }
   }
@@ -237,7 +248,7 @@ class RoomService {
     const account: User = await this.userRepos.findUserById(accountId, true);
     const room: Room = await this.roomRepos.findById(roomId, true);
 
-    if (room.type !== RoomType.SMART) {
+    if (room.type !== RoomType.SMART_PENDING) {
       throw new BaseException("Can't report this kind of room");
     }
 

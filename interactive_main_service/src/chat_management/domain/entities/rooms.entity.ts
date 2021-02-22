@@ -89,10 +89,10 @@ export class RoomEntity extends GenericEntity implements Room {
   public isSmartRoomAlive(): boolean {
     const threshTime = new Date(this.createdAt.getTime() + 4 * 60 * 1000); // delay a minute for setup
 
-    return this.type == RoomType.SMART && new Date() <= threshTime;
+    return this.type == RoomType.SMART_PENDING && new Date() <= threshTime;
   }
 
-  public async canContinueIntoNormalRoom(): Promise<boolean> {
+  public async canContinueChatNormal(): Promise<boolean> {
     const manager = getConnection().manager;
     const members = await this.getMembers();
 
@@ -115,9 +115,13 @@ export class RoomEntity extends GenericEntity implements Room {
     return true;
   }
 
-  public moveIntoNormalRoom(): void {
-    this.type = RoomType.NORMAL;
+  public makeRoomNormalChatForSmartChat(): void {
+    this.type = RoomType.SMART;
 
     this.triggerUpdate();
+  }
+
+  public canChatNormal(): boolean {
+    return [RoomType.MATCH, RoomType.NORMAL, RoomType.SMART].includes(this.type);
   }
 }

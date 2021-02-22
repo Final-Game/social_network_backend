@@ -10,3 +10,4 @@ class RoomChatResponseDto:
     latest_msg: str
     latest_msg_time: datetime
     num_un_read_msg: int
+    type: int = 0
