@@ -26,7 +26,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     // Validate user can join current room
     const account = await getAccountReference(userId);
-    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.NORMAL))) {
+    if (!(await roomService.checkAccountInRoomNormalChat(account.id, roomId))) {
       throw new BaseException(`Account ${account.refId} can't join this room.`);
     }
 
@@ -42,7 +42,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     // validate user can join smart room
     const account = await getAccountReference(accountId);
-    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART_PENDING))) {
       throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
     }
     // join room.
@@ -57,7 +57,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     // validate user can join smart room
     const account = await getAccountReference(accountId);
-    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART_PENDING))) {
       throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
     }
 
@@ -65,9 +65,9 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     await roomService.reactSmartRoom(account.id, roomId);
 
     // check move to normal chat
-    const canMoveToNormalRoom: boolean = await roomService.canMoveToNormalRoom(roomId);
+    const canMoveToNormalChat: boolean = await roomService.canMoveToNormalChat(roomId);
 
-    if (canMoveToNormalRoom) {
+    if (canMoveToNormalChat) {
       await roomService.moveIntoNormalRoom(roomId);
       io.to(roomId).emit('goto-normal-room', { status: 'Success' });
     }
@@ -124,7 +124,7 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
 
     // validate user can join smart room
     const account = await getAccountReference(accountId);
-    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART))) {
+    if (!(await roomService.checkAccountInRoomType(account.id, roomId, RoomType.SMART_PENDING))) {
       throw new BaseException(`Account ${account.refId} isn't existed in this room.`);
     }
 
