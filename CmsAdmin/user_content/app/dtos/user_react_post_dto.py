@@ -10,5 +10,5 @@ class UserReactPostDto(object):
         self.validate()
 
     def validate(self):
-        if self.type not in ["LIKE", "LOVE"]:
+        if self.type not in ["LIKE", "LOVE", "HAHA"]:
             raise BaseApiException("Invalid react type")

@@ -12,3 +12,4 @@ class ArticlePostDto:
     medias: List[MediaData] = None
     user_comment_count: int = 0
     user_react_count: int = 0
+    react_status: str = None

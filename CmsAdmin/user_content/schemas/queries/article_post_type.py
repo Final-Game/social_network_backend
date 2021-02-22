@@ -9,3 +9,4 @@ class ArticlePostType(graphene.ObjectType):
     medias = graphene.List(MediaDataType, description="medias")
     user_comment_count = graphene.Int(description="User comment count")
     user_react_count = graphene.Int(description="User react count")
+    react_status = graphene.String(description="React status: LOVE/HAVA")
