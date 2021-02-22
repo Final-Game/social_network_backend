@@ -4,6 +4,7 @@ from user_content.domain.models.post import Post
 from user_content.app.dtos.report_user_dto import ReportUserDto
 from user_content.domain.models.account import Account
 from core.app.bus import Command, CommandHandler
+from django.db import transaction
 
 
 class ReportUserCommand(Command):
@@ -38,7 +39,9 @@ class ReportUserCommandHandler(CommandHandler):
 
         self.validate_account_can_report_receiver(account, receiver, related_post)
 
-        AccountReport.objects.create(**_data)
+        with transaction.atomic():
+            account.un_follow(receiver)
+            AccountReport.objects.create(**_data)
 
     def validate_account_can_report_receiver(
         self, account: Account, receiver: Account, related_post: Post
