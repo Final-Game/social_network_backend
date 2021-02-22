@@ -5,21 +5,26 @@ from core.common.base_enum import BaseEnum
 class ReactTypeEnum(BaseEnum):
     LIKE: int = 0
     LOVE: int = 1
+    HAHA: int = 2
 
     def __int__(self) -> int:
         return int(self.value)
 
     @classmethod
     def to_choices(cls):
-        return ((int(cls.LIKE), "Like"), (int(cls.LOVE), "Love"))
+        return (
+            (int(cls.LIKE), "Like"),
+            (int(cls.LOVE), "Love"),
+            (cls.HAHA.value, "Haha"),
+        )
 
     @classmethod
     def to_dict(cls) -> dict:
-        return {int(cls.LIKE): "Like", int(cls.LOVE): "Love"}
+        return {int(cls.LIKE): "Like", int(cls.LOVE): "Love", cls.HAHA.value: "Haha"}
 
     @classmethod
     def values(cls) -> List[str]:
-        return ["LIKE", "LOVE"]
+        return ["LIKE", "LOVE", "HAHA"]
 
     @classmethod
     def from_value(cls, val_str: str):
@@ -27,6 +32,8 @@ class ReactTypeEnum(BaseEnum):
             return int(cls.LIKE)
         elif val_str == "LOVE":
             return int(cls.LOVE)
+        elif val_str == "HAHA":
+            return cls.HAHA.value
         else:
             return None
 
@@ -36,5 +43,7 @@ class ReactTypeEnum(BaseEnum):
             return "LIKE"
         elif val_int == cls.LOVE:
             return "LOVE"
+        elif val_int == cls.HAHA:
+            return "HAHA"
         else:
             return None

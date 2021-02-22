@@ -2,6 +2,7 @@ from core.common.base_enum import BaseEnum
 
 
 class RoomTypeEnum(BaseEnum):
+    SMART_PENDING: int = -1
     NORMAL: int = 0
     SMART: int = 1
     MATCH: int = 2
@@ -13,6 +14,8 @@ class RoomTypeEnum(BaseEnum):
             return "SMART"
         elif self.value == self.MATCH:
             return "MATCH"
+        elif self.value == self.SMART_PENDING:
+            return "SMART_PENDING"
 
         return super().__str__()
 
@@ -25,4 +28,5 @@ class RoomTypeEnum(BaseEnum):
             (int(cls.NORMAL), str(cls.NORMAL)),
             (int(cls.SMART), str(cls.SMART)),
             (int(cls.MATCH), str(cls.MATCH)),
+            (int(cls.SMART_PENDING), str(cls.SMART_PENDING)),
         )

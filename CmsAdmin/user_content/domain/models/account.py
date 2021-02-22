@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 from user_content.domain.enums.verify_status_enum import VerifyStatusEnum
 from user_content.domain.enums.account_status_enum import AccountStatusEnum
 from user_content.domain.managers.account_manager import AccountManager
@@ -49,7 +49,7 @@ class Account(BaseModel):
         through="AccountReport",
         through_fields=["sender", "receiver"],
         symmetrical=False,
-        related_name="account_reporting_relate"
+        related_name="account_reporting_relate",
     )
     status = models.IntegerField(
         null=True,
@@ -127,3 +127,6 @@ class Account(BaseModel):
             type=int(AccountTypeEnum.NORMAL),
             profile=profile,
         )
+
+    def un_follow(self, partner: Any):
+        self.following_users.remove(partner)

@@ -10,12 +10,12 @@ class UserReactPost(BaseModel):
     type = models.IntegerField(
         blank=False,
         null=False,
-        help_text="love or live",
+        help_text="love or haha",
         choices=ReactTypeEnum.to_choices(),
         default=ReactTypeEnum.LIKE,
     )
     sender = models.ForeignKey(
-        to="Account", on_delete=models.CASCADE, null=False, blank=False
+        to="Account", on_delete=models.CASCADE, null=True, blank=True
     )
 
     class Meta:
