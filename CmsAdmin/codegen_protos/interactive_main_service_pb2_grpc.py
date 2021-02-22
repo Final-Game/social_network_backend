@@ -184,6 +184,11 @@ class ChatServiceStub(object):
                 request_serializer=interactive__main__service__pb2.GetListRoomChatRequest.SerializeToString,
                 response_deserializer=interactive__main__service__pb2.GetListRoomChatReply.FromString,
                 )
+        self.GetRoomChatInfo = channel.unary_unary(
+                '/interactive_main_service.ChatService/GetRoomChatInfo',
+                request_serializer=interactive__main__service__pb2.GetRoomChatInfoRequest.SerializeToString,
+                response_deserializer=interactive__main__service__pb2.GetRoomChatInfoReply.FromString,
+                )
         self.GetMessagesInRoomChat = channel.unary_unary(
                 '/interactive_main_service.ChatService/GetMessagesInRoomChat',
                 request_serializer=interactive__main__service__pb2.GetListMessagesInRoomChatRequest.SerializeToString,
@@ -201,6 +206,12 @@ class ChatServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetListRoomChat(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetRoomChatInfo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -224,6 +235,11 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     servicer.GetListRoomChat,
                     request_deserializer=interactive__main__service__pb2.GetListRoomChatRequest.FromString,
                     response_serializer=interactive__main__service__pb2.GetListRoomChatReply.SerializeToString,
+            ),
+            'GetRoomChatInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRoomChatInfo,
+                    request_deserializer=interactive__main__service__pb2.GetRoomChatInfoRequest.FromString,
+                    response_serializer=interactive__main__service__pb2.GetRoomChatInfoReply.SerializeToString,
             ),
             'GetMessagesInRoomChat': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMessagesInRoomChat,
@@ -271,6 +287,23 @@ class ChatService(object):
         return grpc.experimental.unary_unary(request, target, '/interactive_main_service.ChatService/GetListRoomChat',
             interactive__main__service__pb2.GetListRoomChatRequest.SerializeToString,
             interactive__main__service__pb2.GetListRoomChatReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetRoomChatInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/interactive_main_service.ChatService/GetRoomChatInfo',
+            interactive__main__service__pb2.GetRoomChatInfoRequest.SerializeToString,
+            interactive__main__service__pb2.GetRoomChatInfoReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

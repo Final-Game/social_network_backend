@@ -1,3 +1,7 @@
+from chat_management.app.queries.get_account_room_info_query import (
+    GetAccountRoomInfoQuery,
+)
+from chat_management.app.dtos.room_info_dto import RoomInfoDto
 from chat_management.app.queries.get_account_matcher_info_query import (
     GetAccountMatcherInfoQuery,
 )
@@ -30,6 +34,7 @@ from .message_chat_type import MessageChatType
 from .match_setting_type import MatchSettingType
 from .matcher_type import MatcherType
 from .matcher_info_type import MatcherInfoType
+from .room_info_type import RoomInfoType
 
 auth_data: dict = {
     "auth_token": graphene.String(required=True, description="Auth token"),
@@ -55,6 +60,12 @@ class Query(graphene.ObjectType, BaseAuth):
         **auth_data,
         matcher_id=graphene.String(required=True, description="Matcher id"),
         description="Matcher info"
+    )
+    room_info = graphene.Field(
+        RoomInfoType,
+        **auth_data,
+        room_id=graphene.String(required=True, description="Room id"),
+        description="Room info"
     )
 
     @classmethod
@@ -126,3 +137,17 @@ class Query(graphene.ObjectType, BaseAuth):
         )
 
         return matcher_info.__dict__
+
+    @classmethod
+    @authenticate_permission
+    def resolve_room_info(cls, *args, **kwargs):
+        _bus: Bus = cls.get_bus()
+
+        account_id: str = kwargs["account_id"]
+        room_id: str = kwargs["room_id"]
+
+        room_info: RoomInfoDto = _bus.dispatch(
+            GetAccountRoomInfoQuery(account_id, room_id)
+        )
+
+        return room_info.__dict__

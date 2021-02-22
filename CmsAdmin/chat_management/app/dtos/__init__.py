@@ -8,3 +8,4 @@ from .message_chat_response_dto import MessageChatReponseDto, MediaChatDto
 from .account_info_dto import AccountInfoDto
 from .matcher_dto import MatcherDto
 from .matcher_info_dto import MatcherInfoDto
+from .room_info_dto import RoomInfoDto

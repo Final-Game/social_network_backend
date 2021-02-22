@@ -20,6 +20,7 @@ import { IMessageRepository, MessageRepository } from '../../domain/repositories
 import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
 import { MessageDto } from '../dtos/message.dto';
 import { RoomChatDto } from '../dtos/room_chat.dto';
+import { RoomInfoDto } from '../dtos/room_info.dto';
 import { RoomSimpleDto } from '../dtos/room_simple.dto';
 
 class RoomService {
@@ -125,6 +126,20 @@ class RoomService {
       return new RoomChatDto(item.id, partner && partner.avatar, partner && partner.fullName, 0, content, createdAt, item.type);
     });
     return await Promise.all(data);
+  }
+
+  public async getAccountRoomChatInfo(accountId: string, roomId: string): Promise<RoomInfoDto> {
+    const account = await this.userRepos.findAccountByBaseAccountId(accountId, true);
+    const room: Room = await this.roomRepos.findById(roomId, true);
+
+    const availableRooms: Array<Room> = await account.getRooms();
+    if (!availableRooms.some(item => item.id == room.id)) {
+      throw new BaseException(`This user can't access to room ${room.id}`);
+    }
+
+    const partner: User = await room.getParterOf(account);
+
+    return new RoomInfoDto(room.id, partner.id, partner.fullName);
   }
 
   public async getMessagesInRoomChat(accountId: string, roomId: string): Promise<Array<MessageDto>> {

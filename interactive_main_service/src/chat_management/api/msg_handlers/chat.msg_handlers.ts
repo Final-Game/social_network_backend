@@ -1,6 +1,7 @@
 import { INTERACTIVE_MAIN_PROTO_PATH } from '../../../common/grpc/contants';
 import protoLoader from '../../../common/grpc/protoLoader';
 import { RoomChatDto } from '../../app/dtos/room_chat.dto';
+import { RoomInfoDto } from '../../app/dtos/room_info.dto';
 import RoomService from '../../app/services/room.service';
 import { GrpcInternalError } from '../errors/internal.error';
 
@@ -35,6 +36,20 @@ class ChatMsgHandler {
       });
   };
 
+  public static getRoomInfo = (call, callback) => {
+    const accountId: string = call.request.account_id;
+    const roomId: string = call.request.room_id;
+
+    ChatMsgHandler.roomService
+      .getAccountRoomChatInfo(accountId, roomId)
+      .then((data: RoomInfoDto) => {
+        callback(null, data.toResData());
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
+
   public static getMessagesInRoomChat = (call, callback) => {
     const accountId = call.request.account_id;
     const roomId = call.request.room_id;
@@ -59,6 +74,7 @@ export const chatHandlers = [
       CreateRoomChat: ChatMsgHandler.createRoomChat,
       GetListRoomChat: ChatMsgHandler.getRoomChatList,
       GetMessagesInRoomChat: ChatMsgHandler.getMessagesInRoomChat,
+      GetRoomChatInfo: ChatMsgHandler.getRoomInfo,
     },
   },
 ];

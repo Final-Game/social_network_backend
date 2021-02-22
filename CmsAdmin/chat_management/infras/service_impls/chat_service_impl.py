@@ -1,3 +1,4 @@
+from chat_management.app.dtos.room_info_dto import RoomInfoDto
 from datetime import datetime
 import maya
 from core.common.base_api_exception import BaseApiException
@@ -8,7 +9,7 @@ from chat_management.app.dtos.message_chat_response_dto import (
     MessageChatReponseDto,
 )
 from chat_management.app.dtos.room_chat_response_dto import RoomChatResponseDto
-from typing import List
+from typing import Any, List
 from chat_management.app.dtos.create_room_response_dto import CreateRoomResponseDto
 from chat_management.app.services import ChatService
 import grpc
@@ -20,6 +21,8 @@ from codegen_protos.interactive_main_service_pb2 import (
     GetListMessagesInRoomChatRequest,
     GetListMessagesInRoomChatReply,
     UpdateAccountMatchSettingReply,
+    GetRoomChatInfoReply,
+    GetRoomChatInfoRequest,
 )
 
 
@@ -54,7 +57,7 @@ class ChatServiceImpl(GrpcService, ChatService):
             async with self.get_connection() as channel:
                 stub = ChatServiceStub(channel)
                 res: GetListRoomChatReply = await stub.GetListRoomChat(
-                    GetListMessagesInRoomChatRequest(account_id=account_id)
+                    GetListRoomChatRequest(account_id=account_id)
                 )
 
                 result = res.data
@@ -70,11 +73,33 @@ class ChatServiceImpl(GrpcService, ChatService):
                     x.latest_msg,
                     maya.parse(x.latest_msg_time).datetime(),
                     x.num_un_read_msg,
-                    type=x.type
+                    type=x.type,
                 ),
                 result,
             )
         )
+
+    async def get_room_info(self, account_id: str, room_id: str) -> RoomInfoDto:
+        result: Any
+
+        try:
+            async with self.get_connection() as channel:
+                stub = ChatServiceStub(channel)
+                res: GetRoomChatInfoReply = await stub.GetRoomChatInfo(
+                    GetRoomChatInfoRequest(account_id=account_id, room_id=room_id)
+                )
+                result = res
+        except grpc.RpcError as ex:
+            raise BaseApiException(es.details())
+
+        return RoomInfoDto(
+            result.id,
+            result.partner_id,
+            result.partner_name
+        )
+
+        
+        return super().get_room_info(account_id, room_id)
 
     async def get_messages_in_room_chat(
         self, account_id: str, room_id: str
