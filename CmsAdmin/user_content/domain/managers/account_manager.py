@@ -23,7 +23,12 @@ class AccountManager(Manager):
         return account
 
     def query_user_follows_for_account(self, account, pageable: Pageable = None):
-        condition = ~Q(followers__id=account.id) & ~Q(id=account.id)
+        condition = (
+            ~Q(followers__id=account.id)
+            & ~Q(id=account.id)
+            & Q(accountverify__status=1)
+            & ~Q(id__in=list(map(lambda x: x.id, account.reporting_users.all())))
+        )
 
         account_list = super(AccountManager, self).get_queryset().filter(condition)
         if pageable:
