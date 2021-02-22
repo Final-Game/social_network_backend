@@ -1,3 +1,5 @@
+from chat_management.app.dtos.matcher_data_dto import MatcherDataDto
+from chat_management.app.dtos.matching_data_dto import MatchingDataDto
 from chat_management.app.dtos.media_dto import MediaDto
 from chat_management.app.dtos.matcher_info_dto import MatcherInfoDto
 import grpc
@@ -18,6 +20,8 @@ from codegen_protos.interactive_main_service_pb2 import (
     GetMatcherListReply,
     GetMatcherInfoRequest,
     GetMatcherInfoReply,
+    GetMatchingDataReply,
+    GetMatchingDataRequest,
 )
 from codegen_protos.interactive_main_service_pb2_grpc import (
     MatchServiceV1,
@@ -121,4 +125,31 @@ class MatchV1ServiceImpl(GrpcService, MatchV1Service):
             result.reason,
             list(map(lambda x: MediaDto(x.url, x.type), result.medias)),
             status=result.status,
+        )
+
+    async def get_matching_data(self) -> MatchingDataDto:
+        result: Any
+
+        try:
+            async with self.get_connection() as channel:
+                stub = MatchServiceV1Stub(channel)
+                res: GetMatchingDataReply = await stub.GetMatchingData(
+                    GetMatcherInfoRequest()
+                )
+
+                result = res
+        except grpc.RpcError as ex:
+            raise BaseApiException(ex.details())
+
+        return MatchingDataDto(
+            num_smart_chat_users=result.num_smart_chat_users,
+            num_traditional_match_users=result.num_traditional_match_users,
+            nearly_users=list(
+                map(
+                    lambda x: MatcherDataDto(
+                        x.id, x.avatar, x.name, x.bio, x.age, x.gender
+                    ),
+                    result.nearly_users,
+                )
+            ),
         )

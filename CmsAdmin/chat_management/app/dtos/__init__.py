@@ -9,3 +9,5 @@ from .account_info_dto import AccountInfoDto
 from .matcher_dto import MatcherDto
 from .matcher_info_dto import MatcherInfoDto
 from .room_info_dto import RoomInfoDto
+from .matcher_data_dto import MatcherDataDto
+from .matching_data_dto import MatchingDataDto

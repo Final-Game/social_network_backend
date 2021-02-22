@@ -7,6 +7,7 @@ service MatchServiceV1 {
     rpc UpdateAccountMatchSetting(UpdateAccountMatchSettingRequest) returns (UpdateAccountMatchSettingReply);
     rpc GetMatcherList(GetMatcherListRequest) returns (GetMatcherListReply);
     rpc GetMatcherInfo(GetMatcherInfoRequest) returns (GetMatcherInfoReply);
+    rpc GetMatchingData(GetMatchingDataRequest) returns (GetMatchingDataReply);
 }
 
 service ChatService {
@@ -138,4 +139,22 @@ message GetMatcherInfoReply {
   string reason = 7;
   repeated Media medias = 8;
   int32 status = 9;
+}
+
+message GetMatchingDataRequest {
+}
+
+message MatcherData {
+  string id = 1;
+  string avatar = 2;
+  string name = 3;
+  string  bio = 4;
+  int32 age = 5;
+  int32 gender = 6;
+}
+
+message GetMatchingDataReply {
+  repeated MatcherData nearly_users = 1;
+  int32 num_smart_chat_users = 2;
+  int32 num_traditional_match_users = 3;
 }

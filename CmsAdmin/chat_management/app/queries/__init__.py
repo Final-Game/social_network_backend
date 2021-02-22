@@ -4,3 +4,4 @@ from .get_account_match_setting_query import GetAccountMatchSettingQuery
 from .get_account_matcher_list_query import GetAccountMatcherListQuery
 from .get_account_matcher_info_query import GetAccountMatcherInfoQuery
 from .get_account_room_info_query import GetAccountRoomInfoQuery
+from .get_matching_data_query import GetMatchingDataQuery

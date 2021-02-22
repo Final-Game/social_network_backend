@@ -19,6 +19,7 @@ import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.
 import { MatcherDto } from '../dtos/matcher.dto';
 import { MatcherInfoDto } from '../dtos/matcher_info.dto';
 import { CreateMatchDto } from '../dtos/matches.dto';
+import { MatcherData, MatchingDataDto } from '../dtos/matching_data_dto';
 import { MatchSettingDto } from '../dtos/match_setting.dto';
 import { MediaDto } from '../dtos/media.dto';
 import RoomService from './room.service';
@@ -168,6 +169,18 @@ class MatchService {
       matcher.job,
       matcher.reason,
       medias.map(_m => new MediaDto(_m.mediaUrl, _m.type)),
+    );
+  }
+
+  public async getMatchingData(): Promise<MatchingDataDto> {
+    const matchers: Array<User> = await this.userRepos.findAllUser();
+
+    return new MatchingDataDto(
+      7,
+      9,
+      matchers.map(matcher => {
+        return new MatcherData(matcher.id, matcher.avatar, matcher.fullName, matcher.bio, matcher.getAge(), matcher.gender);
+      }),
     );
   }
 }

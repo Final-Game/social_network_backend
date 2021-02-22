@@ -85,6 +85,17 @@ class MatchMsgHandler {
         callback(new GrpcInternalError(error.message));
       });
   };
+
+  public static getMatchingData = (call, callback) => {
+    MatchMsgHandler.matchService
+      .getMatchingData()
+      .then(data => {
+        callback(null, data.toResData());
+      })
+      .catch(error => {
+        callback(new GrpcInternalError(error.message));
+      });
+  };
 }
 
 const matchProto: any = protoLoader(MATCH_PROTO_PATH).match_service;
@@ -104,6 +115,7 @@ export const matchHandlers = [
       UpdateAccountMatchSetting: MatchMsgHandler.updateAccountMatchSetting,
       GetMatcherList: MatchMsgHandler.getMatcherList,
       GetMatcherInfo: MatchMsgHandler.getMatcherInfo,
+      GetMatchingData: MatchMsgHandler.getMatchingData,
     },
   },
 ];

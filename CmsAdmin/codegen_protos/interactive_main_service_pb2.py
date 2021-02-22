@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1einteractive_main_service.proto\x12\x18interactive_main_service\"3\n\x1dGetAccountMatchSettingRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"l\n\x1bGetAccountMatchSettingReply\x12\x0f\n\x07min_age\x18\x01 \x01(\x05\x12\x0f\n\x07max_age\x18\x02 \x01(\x05\x12\x14\n\x0cmax_distance\x18\x03 \x01(\x05\x12\x15\n\rtarget_gender\x18\x04 \x01(\t\"\x85\x01\n UpdateAccountMatchSettingRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07min_age\x18\x02 \x01(\x05\x12\x0f\n\x07max_age\x18\x03 \x01(\x05\x12\x14\n\x0cmax_distance\x18\x04 \x01(\x05\x12\x15\n\rtarget_gender\x18\x05 \x01(\t\"0\n\x1eUpdateAccountMatchSettingReply\x12\x0e\n\x06status\x18\x01 \x01(\t\"@\n\x15\x43reateRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x13\n\x0breceiver_id\x18\x02 \x01(\t\"&\n\x13\x43reateRoomChatReply\x12\x0f\n\x07room_id\x18\x01 \x01(\t\",\n\x16GetListRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x98\x01\n\x12RoomChatListResult\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x61vt_icon_url\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x12\n\nlatest_msg\x18\x04 \x01(\t\x12\x17\n\x0flatest_msg_time\x18\x05 \x01(\t\x12\x17\n\x0fnum_un_read_msg\x18\x06 \x01(\x05\x12\x0c\n\x04type\x18\x07 \x01(\x05\"R\n\x14GetListRoomChatReply\x12:\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32,.interactive_main_service.RoomChatListResult\"&\n\tMediaChat\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\"\x8a\x01\n\x0bMessageChat\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\x37\n\nmedia_data\x18\x04 \x03(\x0b\x32#.interactive_main_service.MediaChat\x12\x12\n\ncreated_at\x18\x05 \x01(\t\"G\n GetListMessagesInRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07room_id\x18\x02 \x01(\t\"U\n\x1eGetListMessagesInRoomChatReply\x12\x33\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32%.interactive_main_service.MessageChat\"=\n\x16GetRoomChatInfoRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07room_id\x18\x02 \x01(\t\"L\n\x14GetRoomChatInfoReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\npartner_id\x18\x02 \x01(\t\x12\x14\n\x0cpartner_name\x18\x03 \x01(\t\"\"\n\x05Media\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\x05\"\x86\x01\n\x07Matcher\x12\x12\n\nmatcher_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0b\n\x03\x61ge\x18\x03 \x01(\x05\x12\x0b\n\x03\x62io\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\x05\x12/\n\x06medias\x18\x06 \x03(\x0b\x32\x1f.interactive_main_service.Media\"+\n\x15GetMatcherListRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"F\n\x13GetMatcherListReply\x12/\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32!.interactive_main_service.Matcher\"?\n\x15GetMatcherInfoRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x12\n\nmatcher_id\x18\x02 \x01(\t\"\xc3\x01\n\x13GetMatcherInfoReply\x12\x12\n\nmatcher_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0b\n\x03\x61ge\x18\x03 \x01(\x05\x12\x0e\n\x06gender\x18\x04 \x01(\x05\x12\x0f\n\x07\x61\x64\x64ress\x18\x05 \x01(\t\x12\x0b\n\x03job\x18\x06 \x01(\t\x12\x0e\n\x06reason\x18\x07 \x01(\t\x12/\n\x06medias\x18\x08 \x03(\x0b\x32\x1f.interactive_main_service.Media\x12\x0e\n\x06status\x18\t \x01(\x05\x32\x93\x04\n\x0eMatchServiceV1\x12\x88\x01\n\x16GetAccountMatchSetting\x12\x37.interactive_main_service.GetAccountMatchSettingRequest\x1a\x35.interactive_main_service.GetAccountMatchSettingReply\x12\x91\x01\n\x19UpdateAccountMatchSetting\x12:.interactive_main_service.UpdateAccountMatchSettingRequest\x1a\x38.interactive_main_service.UpdateAccountMatchSettingReply\x12p\n\x0eGetMatcherList\x12/.interactive_main_service.GetMatcherListRequest\x1a-.interactive_main_service.GetMatcherListReply\x12p\n\x0eGetMatcherInfo\x12/.interactive_main_service.GetMatcherInfoRequest\x1a-.interactive_main_service.GetMatcherInfoReply2\xf9\x03\n\x0b\x43hatService\x12p\n\x0e\x43reateRoomChat\x12/.interactive_main_service.CreateRoomChatRequest\x1a-.interactive_main_service.CreateRoomChatReply\x12s\n\x0fGetListRoomChat\x12\x30.interactive_main_service.GetListRoomChatRequest\x1a..interactive_main_service.GetListRoomChatReply\x12s\n\x0fGetRoomChatInfo\x12\x30.interactive_main_service.GetRoomChatInfoRequest\x1a..interactive_main_service.GetRoomChatInfoReply\x12\x8d\x01\n\x15GetMessagesInRoomChat\x12:.interactive_main_service.GetListMessagesInRoomChatRequest\x1a\x38.interactive_main_service.GetListMessagesInRoomChatReplyb\x06proto3'
+  serialized_pb=b'\n\x1einteractive_main_service.proto\x12\x18interactive_main_service\"3\n\x1dGetAccountMatchSettingRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"l\n\x1bGetAccountMatchSettingReply\x12\x0f\n\x07min_age\x18\x01 \x01(\x05\x12\x0f\n\x07max_age\x18\x02 \x01(\x05\x12\x14\n\x0cmax_distance\x18\x03 \x01(\x05\x12\x15\n\rtarget_gender\x18\x04 \x01(\t\"\x85\x01\n UpdateAccountMatchSettingRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07min_age\x18\x02 \x01(\x05\x12\x0f\n\x07max_age\x18\x03 \x01(\x05\x12\x14\n\x0cmax_distance\x18\x04 \x01(\x05\x12\x15\n\rtarget_gender\x18\x05 \x01(\t\"0\n\x1eUpdateAccountMatchSettingReply\x12\x0e\n\x06status\x18\x01 \x01(\t\"@\n\x15\x43reateRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x13\n\x0breceiver_id\x18\x02 \x01(\t\"&\n\x13\x43reateRoomChatReply\x12\x0f\n\x07room_id\x18\x01 \x01(\t\",\n\x16GetListRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"\x98\x01\n\x12RoomChatListResult\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x61vt_icon_url\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x12\n\nlatest_msg\x18\x04 \x01(\t\x12\x17\n\x0flatest_msg_time\x18\x05 \x01(\t\x12\x17\n\x0fnum_un_read_msg\x18\x06 \x01(\x05\x12\x0c\n\x04type\x18\x07 \x01(\x05\"R\n\x14GetListRoomChatReply\x12:\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32,.interactive_main_service.RoomChatListResult\"&\n\tMediaChat\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\"\x8a\x01\n\x0bMessageChat\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\x37\n\nmedia_data\x18\x04 \x03(\x0b\x32#.interactive_main_service.MediaChat\x12\x12\n\ncreated_at\x18\x05 \x01(\t\"G\n GetListMessagesInRoomChatRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07room_id\x18\x02 \x01(\t\"U\n\x1eGetListMessagesInRoomChatReply\x12\x33\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32%.interactive_main_service.MessageChat\"=\n\x16GetRoomChatInfoRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07room_id\x18\x02 \x01(\t\"L\n\x14GetRoomChatInfoReply\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\npartner_id\x18\x02 \x01(\t\x12\x14\n\x0cpartner_name\x18\x03 \x01(\t\"\"\n\x05Media\x12\x0b\n\x03url\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\x05\"\x86\x01\n\x07Matcher\x12\x12\n\nmatcher_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0b\n\x03\x61ge\x18\x03 \x01(\x05\x12\x0b\n\x03\x62io\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\x05\x12/\n\x06medias\x18\x06 \x03(\x0b\x32\x1f.interactive_main_service.Media\"+\n\x15GetMatcherListRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\"F\n\x13GetMatcherListReply\x12/\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32!.interactive_main_service.Matcher\"?\n\x15GetMatcherInfoRequest\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x12\n\nmatcher_id\x18\x02 \x01(\t\"\xc3\x01\n\x13GetMatcherInfoReply\x12\x12\n\nmatcher_id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0b\n\x03\x61ge\x18\x03 \x01(\x05\x12\x0e\n\x06gender\x18\x04 \x01(\x05\x12\x0f\n\x07\x61\x64\x64ress\x18\x05 \x01(\t\x12\x0b\n\x03job\x18\x06 \x01(\t\x12\x0e\n\x06reason\x18\x07 \x01(\t\x12/\n\x06medias\x18\x08 \x03(\x0b\x32\x1f.interactive_main_service.Media\x12\x0e\n\x06status\x18\t \x01(\x05\"\x18\n\x16GetMatchingDataRequest\"a\n\x0bMatcherData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06\x61vatar\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0b\n\x03\x62io\x18\x04 \x01(\t\x12\x0b\n\x03\x61ge\x18\x05 \x01(\x05\x12\x0e\n\x06gender\x18\x06 \x01(\x05\"\x96\x01\n\x14GetMatchingDataReply\x12;\n\x0cnearly_users\x18\x01 \x03(\x0b\x32%.interactive_main_service.MatcherData\x12\x1c\n\x14num_smart_chat_users\x18\x02 \x01(\x05\x12#\n\x1bnum_traditional_match_users\x18\x03 \x01(\x05\x32\x88\x05\n\x0eMatchServiceV1\x12\x88\x01\n\x16GetAccountMatchSetting\x12\x37.interactive_main_service.GetAccountMatchSettingRequest\x1a\x35.interactive_main_service.GetAccountMatchSettingReply\x12\x91\x01\n\x19UpdateAccountMatchSetting\x12:.interactive_main_service.UpdateAccountMatchSettingRequest\x1a\x38.interactive_main_service.UpdateAccountMatchSettingReply\x12p\n\x0eGetMatcherList\x12/.interactive_main_service.GetMatcherListRequest\x1a-.interactive_main_service.GetMatcherListReply\x12p\n\x0eGetMatcherInfo\x12/.interactive_main_service.GetMatcherInfoRequest\x1a-.interactive_main_service.GetMatcherInfoReply\x12s\n\x0fGetMatchingData\x12\x30.interactive_main_service.GetMatchingDataRequest\x1a..interactive_main_service.GetMatchingDataReply2\xf9\x03\n\x0b\x43hatService\x12p\n\x0e\x43reateRoomChat\x12/.interactive_main_service.CreateRoomChatRequest\x1a-.interactive_main_service.CreateRoomChatReply\x12s\n\x0fGetListRoomChat\x12\x30.interactive_main_service.GetListRoomChatRequest\x1a..interactive_main_service.GetListRoomChatReply\x12s\n\x0fGetRoomChatInfo\x12\x30.interactive_main_service.GetRoomChatInfoRequest\x1a..interactive_main_service.GetRoomChatInfoReply\x12\x8d\x01\n\x15GetMessagesInRoomChat\x12:.interactive_main_service.GetListMessagesInRoomChatRequest\x1a\x38.interactive_main_service.GetListMessagesInRoomChatReplyb\x06proto3'
 )
 
 
@@ -962,12 +962,151 @@ _GETMATCHERINFOREPLY = _descriptor.Descriptor(
   serialized_end=1833,
 )
 
+
+_GETMATCHINGDATAREQUEST = _descriptor.Descriptor(
+  name='GetMatchingDataRequest',
+  full_name='interactive_main_service.GetMatchingDataRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1835,
+  serialized_end=1859,
+)
+
+
+_MATCHERDATA = _descriptor.Descriptor(
+  name='MatcherData',
+  full_name='interactive_main_service.MatcherData',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='interactive_main_service.MatcherData.id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='avatar', full_name='interactive_main_service.MatcherData.avatar', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='interactive_main_service.MatcherData.name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='bio', full_name='interactive_main_service.MatcherData.bio', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='age', full_name='interactive_main_service.MatcherData.age', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='gender', full_name='interactive_main_service.MatcherData.gender', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1861,
+  serialized_end=1958,
+)
+
+
+_GETMATCHINGDATAREPLY = _descriptor.Descriptor(
+  name='GetMatchingDataReply',
+  full_name='interactive_main_service.GetMatchingDataReply',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='nearly_users', full_name='interactive_main_service.GetMatchingDataReply.nearly_users', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='num_smart_chat_users', full_name='interactive_main_service.GetMatchingDataReply.num_smart_chat_users', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='num_traditional_match_users', full_name='interactive_main_service.GetMatchingDataReply.num_traditional_match_users', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1961,
+  serialized_end=2111,
+)
+
 _GETLISTROOMCHATREPLY.fields_by_name['data'].message_type = _ROOMCHATLISTRESULT
 _MESSAGECHAT.fields_by_name['media_data'].message_type = _MEDIACHAT
 _GETLISTMESSAGESINROOMCHATREPLY.fields_by_name['data'].message_type = _MESSAGECHAT
 _MATCHER.fields_by_name['medias'].message_type = _MEDIA
 _GETMATCHERLISTREPLY.fields_by_name['data'].message_type = _MATCHER
 _GETMATCHERINFOREPLY.fields_by_name['medias'].message_type = _MEDIA
+_GETMATCHINGDATAREPLY.fields_by_name['nearly_users'].message_type = _MATCHERDATA
 DESCRIPTOR.message_types_by_name['GetAccountMatchSettingRequest'] = _GETACCOUNTMATCHSETTINGREQUEST
 DESCRIPTOR.message_types_by_name['GetAccountMatchSettingReply'] = _GETACCOUNTMATCHSETTINGREPLY
 DESCRIPTOR.message_types_by_name['UpdateAccountMatchSettingRequest'] = _UPDATEACCOUNTMATCHSETTINGREQUEST
@@ -989,6 +1128,9 @@ DESCRIPTOR.message_types_by_name['GetMatcherListRequest'] = _GETMATCHERLISTREQUE
 DESCRIPTOR.message_types_by_name['GetMatcherListReply'] = _GETMATCHERLISTREPLY
 DESCRIPTOR.message_types_by_name['GetMatcherInfoRequest'] = _GETMATCHERINFOREQUEST
 DESCRIPTOR.message_types_by_name['GetMatcherInfoReply'] = _GETMATCHERINFOREPLY
+DESCRIPTOR.message_types_by_name['GetMatchingDataRequest'] = _GETMATCHINGDATAREQUEST
+DESCRIPTOR.message_types_by_name['MatcherData'] = _MATCHERDATA
+DESCRIPTOR.message_types_by_name['GetMatchingDataReply'] = _GETMATCHINGDATAREPLY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 GetAccountMatchSettingRequest = _reflection.GeneratedProtocolMessageType('GetAccountMatchSettingRequest', (_message.Message,), {
@@ -1138,6 +1280,27 @@ GetMatcherInfoReply = _reflection.GeneratedProtocolMessageType('GetMatcherInfoRe
   })
 _sym_db.RegisterMessage(GetMatcherInfoReply)
 
+GetMatchingDataRequest = _reflection.GeneratedProtocolMessageType('GetMatchingDataRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETMATCHINGDATAREQUEST,
+  '__module__' : 'interactive_main_service_pb2'
+  # @@protoc_insertion_point(class_scope:interactive_main_service.GetMatchingDataRequest)
+  })
+_sym_db.RegisterMessage(GetMatchingDataRequest)
+
+MatcherData = _reflection.GeneratedProtocolMessageType('MatcherData', (_message.Message,), {
+  'DESCRIPTOR' : _MATCHERDATA,
+  '__module__' : 'interactive_main_service_pb2'
+  # @@protoc_insertion_point(class_scope:interactive_main_service.MatcherData)
+  })
+_sym_db.RegisterMessage(MatcherData)
+
+GetMatchingDataReply = _reflection.GeneratedProtocolMessageType('GetMatchingDataReply', (_message.Message,), {
+  'DESCRIPTOR' : _GETMATCHINGDATAREPLY,
+  '__module__' : 'interactive_main_service_pb2'
+  # @@protoc_insertion_point(class_scope:interactive_main_service.GetMatchingDataReply)
+  })
+_sym_db.RegisterMessage(GetMatchingDataReply)
+
 
 
 _MATCHSERVICEV1 = _descriptor.ServiceDescriptor(
@@ -1147,8 +1310,8 @@ _MATCHSERVICEV1 = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=1836,
-  serialized_end=2367,
+  serialized_start=2114,
+  serialized_end=2762,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetAccountMatchSetting',
@@ -1190,6 +1353,16 @@ _MATCHSERVICEV1 = _descriptor.ServiceDescriptor(
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
+  _descriptor.MethodDescriptor(
+    name='GetMatchingData',
+    full_name='interactive_main_service.MatchServiceV1.GetMatchingData',
+    index=4,
+    containing_service=None,
+    input_type=_GETMATCHINGDATAREQUEST,
+    output_type=_GETMATCHINGDATAREPLY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_MATCHSERVICEV1)
 
@@ -1203,8 +1376,8 @@ _CHATSERVICE = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=2370,
-  serialized_end=2875,
+  serialized_start=2765,
+  serialized_end=3270,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateRoomChat',
