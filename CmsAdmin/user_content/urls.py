@@ -1,3 +1,4 @@
+from user_content.api.match_event_api import match_event_api
 from user_content.api.account_report_api import account_report_api
 from user_content.api.resources.account_verify_api import AccountVerifyApi
 from user_content.api.resources.user_account_api import UserAccountApi
@@ -34,4 +35,5 @@ cms_urlpatterns = [
 urlpatterns = [
     url(r"^accounts/(?P<account_id>[\w-]+)/info$", account_info_api),
     url(r"^accounts/(?P<account_id>[\w-]+)/report$", account_report_api),
+    url(r"^match_events$", match_event_api),
 ] + cms_urlpatterns

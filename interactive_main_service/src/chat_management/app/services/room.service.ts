@@ -174,6 +174,21 @@ class RoomService {
     return true;
   }
 
+  public async removeSmartRoomPending(roomId: string): Promise<void> {
+    const room: Room = await this.roomRepos.findById(roomId, false);
+
+    if (room && room.type === RoomType.SMART_PENDING) {
+      await this.roomRepos.delete(room.id);
+    }
+  }
+
+  public async getPartnerInRoom(accountId: string, roomId: string): Promise<any> {
+    const room: Room = await this.roomRepos.findById(roomId, false);
+    const account: User = await this.userRepos.findUserById(accountId, true);
+
+    return await room.getParterOf(account);
+  }
+
   public async createSmartRoom(partnerAId: string, partnerBId: string): Promise<any> {
     const partnerA = await this.userRepos.findUserById(partnerAId, true);
     const partnerB = await this.userRepos.findUserById(partnerBId, true);

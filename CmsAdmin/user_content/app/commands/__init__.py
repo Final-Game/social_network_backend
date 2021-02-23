@@ -13,3 +13,4 @@ from .verify_account_command import VerifyAccountCommand
 from .report_user_command import ReportUserCommand
 from .user_update_medias_command import UserUpdateMediasCommand
 from .user_update_avatar_command import UserUpdateAvatarCommand
+from .user_match_event_command import UserMatchEventCommand

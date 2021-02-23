@@ -4,12 +4,14 @@ import { User } from '../../../auth_management/domain/models/users.model';
 import BaseException from '../../../common/exceptions/BaseException';
 import { logger } from '../../../common/utils/logger';
 import { RoomSimpleDto } from '../../app/dtos/room_simple.dto';
+import MatchService from '../../app/services/matches.service';
 import RoomService from '../../app/services/room.service';
 import { RoomType } from '../../domain/enums/roomType.enum';
 import smartChatListener from '../utils/smart_chat_listener';
 
 const roomService: RoomService = new RoomService();
 const userService: UserService = new UserService();
+const matchService: MatchService = new MatchService();
 
 async function getAccountReference(accountId: string): Promise<User> {
   const user: User = await userService.getOrCreateAccountByAccountId(accountId);
@@ -70,6 +72,10 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     if (canMoveToNormalChat) {
       await roomService.moveIntoNormalRoom(roomId);
       io.to(roomId).emit('goto-normal-room', { status: 'Success' });
+
+      // Complete matching.
+      const partner = await roomService.getPartnerInRoom(account.id, roomId);
+      matchService.completeMatch(account, partner);
     }
   });
 
@@ -129,6 +135,9 @@ const roomChatSocket = (io: SocketIOServer, socket: any) => {
     }
 
     io.to(roomId).emit('notify-partner-exit-room', { status: 'Success' });
+
+    // Remove room on out.
+    await roomService.removeSmartRoomPending(roomId);
   });
 
   socket.on('report-smart-chat', async data => {

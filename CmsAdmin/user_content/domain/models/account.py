@@ -130,3 +130,7 @@ class Account(BaseModel):
 
     def un_follow(self, partner: Any):
         self.following_users.remove(partner)
+
+    def follow(self, partner: Any):
+        if partner not in self.following_users.all():
+            self.following_users.add(partner)

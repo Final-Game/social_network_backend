@@ -1,6 +1,8 @@
 import { CommandBus } from 'node-cqrs';
+import { EventGateway } from '../../../auth_management/app/gateways/event.gateway';
 import { User } from '../../../auth_management/domain/models/users.model';
 import UserRepository from '../../../auth_management/domain/repositories/user.repos';
+import { EventGatewayImpl } from '../../../auth_management/infras/gateway_impls/event.gatewayimpl';
 import { RunInTransaction } from '../../../common/repos/transaction';
 import { logger } from '../../../common/utils/logger';
 import container from '../../../container';
@@ -15,7 +17,6 @@ import { MediaAccount } from '../../domain/models/media_accounts.model';
 import { IMatchRepository, MatchRepository } from '../../domain/repositories/match.repos';
 import { IMatchSettingRepository, MatchSettingRepository } from '../../domain/repositories/match_setting.repos';
 import { IMediaAccountRepository, MediaAccountRepository } from '../../domain/repositories/media_account.repos';
-import { IRoomRepository, RoomRepository } from '../../domain/repositories/room.repos';
 import { MatcherDto } from '../dtos/matcher.dto';
 import { MatcherInfoDto } from '../dtos/matcher_info.dto';
 import { CreateMatchDto } from '../dtos/matches.dto';
@@ -31,6 +32,7 @@ class MatchService {
   private userRepos: UserRepository;
   private mediaAccountRepos: IMediaAccountRepository;
   private roomService: RoomService;
+  private eventGateway: EventGateway;
 
   constructor() {
     this.commandBus = container.commandBus;
@@ -39,6 +41,7 @@ class MatchService {
     this.matchSettingRepos = new MatchSettingRepository();
     this.mediaAccountRepos = new MediaAccountRepository();
     this.roomService = new RoomService();
+    this.eventGateway = new EventGatewayImpl();
   }
 
   public async createMatch(data: CreateMatchDto): Promise<Match> {
@@ -64,6 +67,7 @@ class MatchService {
       // Create room chat for account in receiver match user.
       if (targetExistedMatch) {
         await this.roomService.createRoomChat(sender.refId, receiver.refId, RoomType.MATCH);
+        await this.completeMatch(sender, receiver);
       }
     });
 
@@ -182,6 +186,11 @@ class MatchService {
         return new MatcherData(matcher.id, matcher.avatar, matcher.fullName, matcher.bio, matcher.getAge(), matcher.gender);
       }),
     );
+  }
+
+  public async completeMatch(account: User, partner: User) {
+    // Notify socinal network service
+    await this.eventGateway.matchUser(account.refId, partner.refId);
   }
 }
 
